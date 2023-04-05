@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import os
+import os, sys
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(f'{parent}')
 
 # from flask import Flask, request, render_template
 # from flask.ext.babel import Babel
@@ -8,7 +12,7 @@ import os
 # from flask.ext.cors import CORS
 # from flask_restplus import apidoc
 
-from import_layouts.states.rj.rio_de_janeiro import cuidando_utils
+import cuidando_utils
 # from .config import DefaultConfig, INSTANCE_FOLDER_PATH
 # from .extensions import db, api
 # from .execucao import execucao
