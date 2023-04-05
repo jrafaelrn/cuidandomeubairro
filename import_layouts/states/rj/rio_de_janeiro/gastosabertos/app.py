@@ -8,7 +8,7 @@ import os
 # from flask.ext.cors import CORS
 # from flask_restplus import apidoc
 
-import cuidando_utils
+from import_layouts.states.rj.rio_de_janeiro import cuidando_utils
 # from .config import DefaultConfig, INSTANCE_FOLDER_PATH
 # from .extensions import db, api
 # from .execucao import execucao

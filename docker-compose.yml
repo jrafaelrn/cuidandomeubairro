@@ -1,30 +1,75 @@
-version: '3'
+version: '3.7'
 services:
-
-  # Serviço GraphQL
-  graphql:
-    build: ./graphql 
-    ports:
-      - "4000:4000" 
-    depends_on:
-      - database 
-
 
   # Serviço de Banco de Dados
   database:
     image: postgres 
     environment:
-      - POSTGRES_USER=usuario 
-      - POSTGRES_PASSWORD=senha 
-      - POSTGRES_DB=cmb 
+      - POSTGRES_USER=${POSTGRES_USER} 
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - my-network
     ports:
-      - "5432:5432" 
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: always
+    
+    #command: >
+    #  bash -c "
+    #    sleep 15s && \
+    #    psql -U ${POSTGRES_DB} -c \"SELECT * FROM pg_extension WHERE extname = 'postgis'\" ${POSTGRES_DB} | grep -q 1 || \
+    #    psql -U ${POSTGRES_DB} -c 'CREATE EXTENSION postgis;' ${POSTGRES_DB} && \
+    #    tail -f /dev/null
+    #  "
+    #
 
 
+  # https://hasura.io/docs/latest/getting-started/docker-simple/
+  # Serviço GraphQL
+  graphql:
+    image: hasura/graphql-engine
+    ports:
+    - 8080:8080
+    networks:
+      - my-network
+    depends_on:
+    - database
+    restart: always
+    environment:
+      ## postgres database to store Hasura metadata
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
+      
+      ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
+      PG_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
+      
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      
+      ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
+      # HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+      ## uncomment next line to set an admin secret
+      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+
+  
+  # Aplicação principal
   aplicattion:
-    build: ./application 
+    build: .
+    networks:
+      - my-network
     ports:
-      - "3000:3000" 
+      - 3000:3000
     depends_on:
       - graphql 
       - database
+    #restart: always
+    command: "flask initdb"
+
+
+networks:
+  my-network:
