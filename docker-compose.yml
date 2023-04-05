@@ -1,0 +1,30 @@
+version: '3'
+services:
+
+  # Serviço GraphQL
+  graphql:
+    build: ./graphql 
+    ports:
+      - "4000:4000" 
+    depends_on:
+      - database 
+
+
+  # Serviço de Banco de Dados
+  database:
+    image: postgres 
+    environment:
+      - POSTGRES_USER=usuario 
+      - POSTGRES_PASSWORD=senha 
+      - POSTGRES_DB=cmb 
+    ports:
+      - "5432:5432" 
+
+
+  aplicattion:
+    build: ./application 
+    ports:
+      - "3000:3000" 
+    depends_on:
+      - graphql 
+      - database
