@@ -12,7 +12,7 @@ import requests
 from flask import Flask, current_app
 from flask_cors import CORS
 from flask_migrate import Migrate
-from flask_restplus import Api, apidoc
+from flask_restx import Api, apidoc
 from flask_sqlalchemy import SQLAlchemy
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.backends import default_backend

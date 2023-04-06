@@ -1,6 +1,6 @@
 setuptools
 flask
-flask-restplus
+flask-restx
 flask-cors
 flask-sqlalchemy
 pandas
@@ -16,3 +16,6 @@ geoalchemy2
 docopt
 geopy
 shapely
+Werkzeug
+markupsafe==2.0.1
+debugpy

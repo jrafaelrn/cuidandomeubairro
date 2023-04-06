@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os, sys
+import os
+#import sys
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(f'{parent}')
+#current = os.path.dirname(os.path.realpath(__file__))
+#parent = os.path.dirname(current)
+#sys.path.append(f'{parent}')
 
 # from flask import Flask, request, render_template
 # from flask.ext.babel import Babel
@@ -29,6 +30,7 @@ from .sender import send_update_notifications
 def create_app(settings_folder):
     """Create a Flask app."""
     app = cuidando_utils.create_app(settings_folder, api, init_sv='public')
+    print(app)
 
     # if app_name is None:
     #     app_name = DefaultConfig.PROJECT

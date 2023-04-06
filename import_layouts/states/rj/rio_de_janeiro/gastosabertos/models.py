@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import os, sys
+
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
 from geoalchemy2 import Geometry
 
-from cuidando_utils import db
+#current = os.path.dirname(os.path.realpath(__file__))
+#parent = os.path.dirname(current)
+#sys.path.append(f'{parent}')
 
+import cuidando_utils
+db = cuidando_utils.db
 
 class Execucao(db.Model):
 

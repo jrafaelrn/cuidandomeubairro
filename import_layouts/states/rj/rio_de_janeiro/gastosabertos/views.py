@@ -4,7 +4,7 @@ from __future__ import unicode_literals  # unicode by default
 import json
 
 from flask import current_app
-from flask_restplus import Resource
+from flask_restx import Resource
 from sqlalchemy import desc
 
 from .models import Execucao, History, ExecucaoYearInfo
