@@ -3,7 +3,9 @@ services:
 
   # Serviço de Banco de Dados
   database:
-    image: postgres 
+    build: 
+      context: ./
+      dockerfile: DockerfileDB
     environment:
       - POSTGRES_USER=${POSTGRES_USER} 
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -15,15 +17,6 @@ services:
     volumes:
       - /db-data:/var/lib/postgresql/data
     restart: always
-    
-    #command: >
-    #  bash -c "
-    #    sleep 15s && \
-    #    psql -U ${POSTGRES_DB} -c \"SELECT * FROM pg_extension WHERE extname = 'postgis'\" ${POSTGRES_DB} | grep -q 1 || \
-    #    psql -U ${POSTGRES_DB} -c 'CREATE EXTENSION postgis;' ${POSTGRES_DB} && \
-    #    tail -f /dev/null
-    #  "
-    #
 
 
   # https://hasura.io/docs/latest/getting-started/docker-simple/
@@ -68,9 +61,18 @@ services:
     depends_on:
       - graphql 
       - database
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER} 
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
+    volumes:
+      - .:/app
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
       
     #restart: always
-    #command: "flask initdb"
 
 
 networks:

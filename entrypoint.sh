@@ -5,18 +5,30 @@ set -e
 pwd
 ls -lah
 
-cd gastos_abertos
+cd ./import_layouts/states/sp/sao_paulo/gastos_abertos
 
-pwd
-ls -lah
+echo "Waiting for postgres... 5 seconds"
+sleep 5
 
-python3 setup.py install
+
+# Check if PostGIS extension is already installed
+psql_output=$(PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_DB -tAc 'SELECT extname FROM pg_extension')
+
+if echo $psql_output | grep -q postgis; then
+    echo "----> PostGIS extension already exists!"
+else
+   PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_DB -c 'CREATE EXTENSION postgis;'
+fi
+
+
+python setup.py install
 #python3 cuidando_utils/setup.py install
 
 #export FLASK_APP=app.py
-#flask run
+#python manage.py run
 
 
-fab reset initdb importdata generate_jsons
-python manage.py run
+flask initdb
+flask run
+
 
