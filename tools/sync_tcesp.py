@@ -1,6 +1,7 @@
 import requests
 import zipfile
 import datetime
+import os
 
 from tqdm import tqdm
 from slice_tce_dateset import *
@@ -36,7 +37,13 @@ def unzip_data(filename: str, destination: str):
         zip_ref.extractall(destination)
         
         
-
+def clear_temp_files():
+    
+    print("Clearing temp files...")
+    os.remove('./original_data/despesas-2022.zip')
+    os.remove('./original_data/despesas-2022.csv')
+    
+    
 
 if __name__ == '__main__':
     
@@ -49,5 +56,9 @@ if __name__ == '__main__':
         download_data(url, f'original_data/{file_name}')        
         unzip_data(f'original_data/{file_name}', 'original_data/')
         
-        # from slice_tce_dateset.py
-        run() 
+    # from slice_tce_dateset.py
+    run() 
+        
+    # Clear temp files
+    clear_temp_files()
+        

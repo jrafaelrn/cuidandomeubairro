@@ -4,7 +4,7 @@ import csv
 # Set pandas options para considerar '' como null
 pd.options.mode.use_inf_as_na = True
 
-FILE_PATH = './despesas-2022.csv'
+FILE_PATH = './original_data/despesas-2022.csv'
 
 statistics = []
 total_rows = 0
@@ -60,7 +60,7 @@ def save_city(header, data, cidade_name):
     print(f'=> => Salvando arquivo da cidade {total_cities}: {cidade_name} => Total linhas acumuladas: {total_lines}')
     
     pandas_dataset = pd.DataFrame(data, columns=header)
-    pandas_dataset.to_csv(f'./cidades/{cidade_name}.csv', sep=';', encoding='ISO-8859-1', index=False)
+    pandas_dataset.to_csv(f'./original_data/cidades/{cidade_name}.csv', sep=';', encoding='ISO-8859-1', index=False)
 
 
 
