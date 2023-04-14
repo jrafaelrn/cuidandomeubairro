@@ -105,11 +105,8 @@ def update_statistics(column_index, total_rows, empty_rows):
     
     #print(f"=> => Estatistica da coluna [{actual_statistics['column_name']}] atualizada com sucesso - Adicionado {total_rows} linhas e {empty_rows} linhas vazias")
         
-    
-    
 
-if __name__ == '__main__':
-    
+def run():
     print('Lendo o dataset...')
     
     slice_tce_dataset(FILE_PATH)
@@ -119,3 +116,7 @@ if __name__ == '__main__':
     with open('result.json', 'w') as f:
         f.write(f'{statistics}')
 
+    
+
+if __name__ == '__main__':
+    run()    
