@@ -42,10 +42,14 @@ O arquivo é gerado com o seguinte esquema:
 
 Para executar é necessário instalar algumas bibliotecas:
 
-<code> pip install unicode </code>
+```bash
+pip install unicode
+```
 
 Depis para rodar:
 
-<code> python search_terms.py </code>
+```bash
+python search_terms.py
+```
 
 
