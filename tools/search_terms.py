@@ -7,8 +7,8 @@ import datetime
 from unidecode import unidecode
 from city import City
 
-FOLDER_PATH = '/home/jrrn/gits/TCC/cidades'
-TERMS_FILE = 'tools/terms.txt'
+FOLDER_PATH = 'original_data/cidades'
+TERMS_FILE = 'terms.txt'
 TERMS_CONTENT = None
 DESCRIPTION_COLUMN = 24
 CITY_COLUMN = 2
@@ -16,16 +16,32 @@ statistics = {}
 total_files = 1
 
 
-def find_from_path(folder_path: str, layout: str):
+############# 1 #############
+
+def load_terms(terms_file: str):
+
+    global TERMS_CONTENT
+
+    with open(terms_file, 'r') as f:
+        TERMS_CONTENT = f.read().splitlines()
+        TERMS_CONTENT = [term.lower() for term in TERMS_CONTENT]
+        print(f'Loaded {len(TERMS_CONTENT)} terms: \n {TERMS_CONTENT}')
+
+
+
+############# 2 #############
+
+def search_from_path(folder_path: str, layout: str):
 
     # Loop through the files in the folder
     for file in os.listdir(folder_path):
 
         full_path = os.path.join(folder_path, file)
-
+        
         if os.path.isfile(full_path):
             if layout == 'tcesp':
                 layout_tcesp(full_path)
+                #save_statistics('csv')
         
 
 
@@ -53,8 +69,6 @@ def layout_tcesp(full_path: str):
 
 
         
-
-
 def search_line(line: str):
 
     global TERMS_CONTENT
@@ -97,46 +111,52 @@ def update_statistics(city_name: str, regex_expression: str):
 
 
 
-def save_statistics(format: str):
+
+############# 3 #############
+
+def save_statistics(format: str = None):
 
     global statistics
     
     if format == 'json':
-        with open('statistics_terms.json', 'w', encoding='utf-8') as f:         
-            
-            data = ''
-            for city in statistics.values():
-                city_dict = city.to_dict()
-                data += json.dumps(city_dict, indent=4, ensure_ascii=False)
-            
-            f.write(data)
-            return
-        
+        save_statistics_json(statistics)
+        return
    
     if format == 'csv':
-        with open('statistics_terms.csv', 'w') as f:
-            f.write('cidade,termo,frequencia\n')
-            for city_name, city in statistics.items():
-                for term, quantity in city.statistics.items():
-                    f.write(f'{city_name},{term},{quantity}\n')
-        
+        save_statistics_csv(statistics)
+        return
+    
+    # Default
+    save_statistics_json(statistics)
+    save_statistics_csv(statistics)
         
 
+
+def save_statistics_json(statistics: dict):
+    with open('statistics_terms.json', 'w', encoding='utf-8') as f:         
+        
+        data = ''
+        for city in statistics.values():
+            city_dict = city.to_dict()
+            data += json.dumps(city_dict, indent=4, ensure_ascii=False)
+        
+        f.write(data)
+  
+        
+def save_statistics_csv(statistics: dict):
+    with open('statistics_terms.csv', 'w') as f:
+        header = 'cidade;termo;frequencia\n' 
+        f.write(header)
+        
+        for city_name, city in statistics.items():
+            for term, quantity in city.terms.items():
+                line = f'{city_name};{term};{quantity}\n'
+                f.write(line)
 
 
 
 
     
-
-
-def load_terms(terms_file: str):
-
-    global TERMS_CONTENT
-
-    with open(terms_file, 'r') as f:
-        TERMS_CONTENT = f.read().splitlines()
-        TERMS_CONTENT = [term.lower() for term in TERMS_CONTENT]
-        print(f'Loaded {len(TERMS_CONTENT)} terms: \n {TERMS_CONTENT}')
 
 
 
@@ -145,9 +165,14 @@ if __name__ == '__main__':
     
     print(f"Starting at {datetime.datetime.now().strftime('%H:%M:%S')}")
 
-    # Load terms into memory
+    # 1 - Load terms into memory
     load_terms(TERMS_FILE)
-    find_from_path(FOLDER_PATH, 'tcesp')    
-    save_statistics('json'
-                    )
+    
+    # 2 - Search for terms in the files
+    search_from_path(FOLDER_PATH, layout='tcesp')
+    
+    # 3 - Save statistics in CSV and JSON by default
+    # Optional: parameter 'format=json' or 'format=csv'
+    save_statistics()
+    
     print(f"Finished at {datetime.datetime.now().strftime('%H:%M:%S')}")

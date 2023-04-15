@@ -1,0 +1,140 @@
+cidade;termo;frequencia
+Regente Feijó;(avenida|av\.|\sav\s);181
+Regente Feijó;escola;2607
+Regente Feijó;distrito;61
+Regente Feijó;vila;129
+Regente Feijó;bairro;361
+Regente Feijó;hospital;532
+Regente Feijó;praca;843
+Regente Feijó;estadio;108
+Regente Feijó;ginasio;304
+Regente Feijó;conjunto habitacional;42
+Regente Feijó;parque;117
+Regente Feijó;(jardim|jd\.);144
+Regente Feijó;biblioteca;71
+Regente Feijó;quadra;92
+Regente Feijó;ponte;134
+Regente Feijó;cemiterio;120
+Regente Feijó;(travessa|trav\.);16
+Regente Feijó;ladeira;9
+Regente Feijó;maternidade;42
+Regente Feijó;chacara;4
+Regente Feijó;instituto;6
+Itapirapuã Paulista;escola;786
+Itapirapuã Paulista;distrito;108
+Itapirapuã Paulista;praca;42
+Itapirapuã Paulista;bairro;24
+Itapirapuã Paulista;(jardim|jd\.);12
+Itapirapuã Paulista;ladeira;15
+Itapirapuã Paulista;ponte;3
+Itapirapuã Paulista;cemiterio;33
+Itapirapuã Paulista;(avenida|av\.|\sav\s);15
+Itapirapuã Paulista;hospital;3
+Itapecerica da Serra;hospital;626
+Itapecerica da Serra;escola;1299
+Itapecerica da Serra;quadra;8
+Itapecerica da Serra;(jardim|jd\.);81
+Itapecerica da Serra;ladeira;13
+Itapecerica da Serra;praca;23
+Itapecerica da Serra;vila;7
+Itapecerica da Serra;(avenida|av\.|\sav\s);33
+Itapecerica da Serra;bairro;3
+Itapecerica da Serra;ponte;20
+Itapecerica da Serra;viela;7
+Itapecerica da Serra;favela;24
+Itapecerica da Serra;parque;22
+Itapecerica da Serra;ginasio;11
+Itapecerica da Serra;conjunto habitacional;3
+Itapetininga;bairro;607
+Itapetininga;(jardim|jd\.);752
+Itapetininga;escola;7260
+Itapetininga;vila;412
+Itapetininga;hospital;820
+Itapetininga;distrito;101
+Itapetininga;quadra;178
+Itapetininga;(avenida|av\.|\sav\s);108
+Itapetininga;ladeira;27
+Itapetininga;ponte;98
+Itapetininga;praca;28
+Itapetininga;biblioteca;19
+Itapetininga;instituto;155
+Itapetininga;ginasio;12
+Itapetininga;estadio;3
+Itapetininga;(travessa|trav\.);18
+Itapetininga;chacara;7
+Itapetininga;parque;3
+Itapetininga;conjunto habitacional;1
+Mariápolis;escola;643
+Mariápolis;ladeira;3
+Mariápolis;ponte;7
+Mariápolis;hospital;76
+Mariápolis;estadio;13
+Mariápolis;quadra;25
+Mariápolis;(jardim|jd\.);15
+Mariápolis;(avenida|av\.|\sav\s);27
+Mariápolis;parque;12
+Mariápolis;centro cultural;9
+Mariápolis;vila;3
+Mariápolis;instituto;9
+Mariápolis;cemiterio;6
+Mariápolis;praca;36
+Mariápolis;(travessa|trav\.);3
+Mariápolis;bairro;3
+Pedregulho;praca;97
+Pedregulho;escola;1263
+Pedregulho;(jardim|jd\.);160
+Pedregulho;vila;62
+Pedregulho;bairro;414
+Pedregulho;(avenida|av\.|\sav\s);56
+Pedregulho;ladeira;30
+Pedregulho;cemiterio;24
+Pedregulho;distrito;89
+Pedregulho;parque;49
+Pedregulho;ponte;15
+Pedregulho;hospital;12
+Pedregulho;quadra;34
+Pedregulho;viela;6
+Pedregulho;estadio;3
+Pedregulho;centro cultural;6
+Pedregulho;complexo esportivo;3
+Pedregulho;(travessa|trav\.);3
+Pedregulho;biblioteca;4
+Balbinos;escola;684
+Balbinos;hospital;149
+Balbinos;(jardim|jd\.);121
+Balbinos;bairro;170
+Balbinos;(avenida|av\.|\sav\s);38
+Balbinos;praca;42
+Floreal;praca;258
+Floreal;escola;2593
+Floreal;hospital;536
+Floreal;(avenida|av\.|\sav\s);231
+Floreal;distrito;15
+Floreal;biblioteca;13
+Floreal;ponte;50
+Floreal;quadra;42
+Floreal;estadio;49
+Floreal;cemiterio;36
+Floreal;maternidade;3
+Floreal;parque;3
+Floreal;ladeira;3
+Floreal;vila;6
+Floreal;(jardim|jd\.);9
+Floreal;corrego;3
+Peruíbe;vila;190
+Peruíbe;escola;215
+Peruíbe;praca;42
+Peruíbe;hospital;254
+Peruíbe;instituto;169
+Peruíbe;ladeira;27
+Peruíbe;conjunto habitacional;6
+Peruíbe;ponte;140
+Peruíbe;bairro;85
+Peruíbe;quadra;349
+Peruíbe;biblioteca;34
+Peruíbe;(avenida|av\.|\sav\s);44
+Peruíbe;(jardim|jd\.);84
+Peruíbe;parque;59
+Peruíbe;(travessa|trav\.);24
+Peruíbe;cemiterio;15
+Peruíbe;maternidade;7

@@ -1,3 +1,4 @@
 tools/__pycache__
 .conda/*
 tools/original_data/*
+tools/result.json
