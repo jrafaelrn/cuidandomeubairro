@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+      "name": "Python: Tools",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}/tools",
+    }
+  ]
+}

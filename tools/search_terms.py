@@ -37,7 +37,7 @@ def search_from_path(folder_path: str, layout: str):
     for file in os.listdir(folder_path):
 
         full_path = os.path.join(folder_path, file)
-        
+
         if os.path.isfile(full_path):
             if layout == 'tcesp':
                 layout_tcesp(full_path)
@@ -51,22 +51,42 @@ def layout_tcesp(full_path: str):
     enc = 'ISO-8859-1'
     global DESCRIPTION_COLUMN
     global total_files
+    global statistics
 
     with open(full_path, newline='', encoding=enc) as f:
 
         print(f'Opening file {total_files}: {full_path}...')
         total_files += 1
+        total_lines = 0
+        city = None
 
+        # Ignore the header
         reader = csv.reader(f, delimiter=';', quotechar='"')
         next(reader)
 
         for i, row in enumerate(reader):
+            
+            if i == 0:
+                city_name = row[CITY_COLUMN]
+                city = create_city(city_name)
+            
             regex_find = search_line(row[DESCRIPTION_COLUMN])
             #print(f'Found: {regex_find}\t\t=> {row[DESCRIPTION_COLUMN]}')
 
             if regex_find:
-                update_statistics(row[CITY_COLUMN], regex_find)
+                update_statistics(city, regex_find)
+            
+            total_lines += 1
+                
+        # Update the global statistics
+        city.set_total_rows(total_lines)
+        total_lines = 0
 
+
+def create_city(city_name: str):
+    city = City(city_name)
+    statistics[city_name] = city
+    return city
 
         
 def search_line(line: str):
@@ -82,32 +102,10 @@ def search_line(line: str):
     return None
 
 
-'''
-Statistics structure:
-{
-    "Adamantina": {
-        "av|avenida": 1,
-        "praca": 5
-    },
-    "Araçatuba": {
-        "av|avenida": 10,
-        "praca": 2
-    },
-    ...
-}
-'''
-
-def update_statistics(city_name: str, regex_expression: str):
-
-    global statistics
-
-    # Check if city was in the statistics, if not, create a new one
-    city = statistics.get(city_name, City(city_name))
-
+def update_statistics(city: City, regex_expression: str):
     city.update_term(regex_expression)
 
-    # Update the global statistics
-    statistics[city_name] = city
+    
 
 
 

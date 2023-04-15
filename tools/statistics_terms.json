@@ -20,7 +20,8 @@
         "ladeira": 9,
         "maternidade": 42,
         "chacara": 4,
-        "instituto": 6
+        "instituto": 6,
+        "total_rows": 81606
     }
 }{
     "Itapirapuã Paulista": {
@@ -33,135 +34,7 @@
         "ponte": 3,
         "cemiterio": 33,
         "(avenida|av\\.|\\sav\\s)": 15,
-        "hospital": 3
-    }
-}{
-    "Itapecerica da Serra": {
-        "hospital": 626,
-        "escola": 1299,
-        "quadra": 8,
-        "(jardim|jd\\.)": 81,
-        "ladeira": 13,
-        "praca": 23,
-        "vila": 7,
-        "(avenida|av\\.|\\sav\\s)": 33,
-        "bairro": 3,
-        "ponte": 20,
-        "viela": 7,
-        "favela": 24,
-        "parque": 22,
-        "ginasio": 11,
-        "conjunto habitacional": 3
-    }
-}{
-    "Itapetininga": {
-        "bairro": 607,
-        "(jardim|jd\\.)": 752,
-        "escola": 7260,
-        "vila": 412,
-        "hospital": 820,
-        "distrito": 101,
-        "quadra": 178,
-        "(avenida|av\\.|\\sav\\s)": 108,
-        "ladeira": 27,
-        "ponte": 98,
-        "praca": 28,
-        "biblioteca": 19,
-        "instituto": 155,
-        "ginasio": 12,
-        "estadio": 3,
-        "(travessa|trav\\.)": 18,
-        "chacara": 7,
-        "parque": 3,
-        "conjunto habitacional": 1
-    }
-}{
-    "Mariápolis": {
-        "escola": 643,
-        "ladeira": 3,
-        "ponte": 7,
-        "hospital": 76,
-        "estadio": 13,
-        "quadra": 25,
-        "(jardim|jd\\.)": 15,
-        "(avenida|av\\.|\\sav\\s)": 27,
-        "parque": 12,
-        "centro cultural": 9,
-        "vila": 3,
-        "instituto": 9,
-        "cemiterio": 6,
-        "praca": 36,
-        "(travessa|trav\\.)": 3,
-        "bairro": 3
-    }
-}{
-    "Pedregulho": {
-        "praca": 97,
-        "escola": 1263,
-        "(jardim|jd\\.)": 160,
-        "vila": 62,
-        "bairro": 414,
-        "(avenida|av\\.|\\sav\\s)": 56,
-        "ladeira": 30,
-        "cemiterio": 24,
-        "distrito": 89,
-        "parque": 49,
-        "ponte": 15,
-        "hospital": 12,
-        "quadra": 34,
-        "viela": 6,
-        "estadio": 3,
-        "centro cultural": 6,
-        "complexo esportivo": 3,
-        "(travessa|trav\\.)": 3,
-        "biblioteca": 4
-    }
-}{
-    "Balbinos": {
-        "escola": 684,
-        "hospital": 149,
-        "(jardim|jd\\.)": 121,
-        "bairro": 170,
-        "(avenida|av\\.|\\sav\\s)": 38,
-        "praca": 42
-    }
-}{
-    "Floreal": {
-        "praca": 258,
-        "escola": 2593,
-        "hospital": 536,
-        "(avenida|av\\.|\\sav\\s)": 231,
-        "distrito": 15,
-        "biblioteca": 13,
-        "ponte": 50,
-        "quadra": 42,
-        "estadio": 49,
-        "cemiterio": 36,
-        "maternidade": 3,
-        "parque": 3,
-        "ladeira": 3,
-        "vila": 6,
-        "(jardim|jd\\.)": 9,
-        "corrego": 3
-    }
-}{
-    "Peruíbe": {
-        "vila": 190,
-        "escola": 215,
-        "praca": 42,
-        "hospital": 254,
-        "instituto": 169,
-        "ladeira": 27,
-        "conjunto habitacional": 6,
-        "ponte": 140,
-        "bairro": 85,
-        "quadra": 349,
-        "biblioteca": 34,
-        "(avenida|av\\.|\\sav\\s)": 44,
-        "(jardim|jd\\.)": 84,
-        "parque": 59,
-        "(travessa|trav\\.)": 24,
-        "cemiterio": 15,
-        "maternidade": 7
+        "hospital": 3,
+        "total_rows": 23036
     }
 }
