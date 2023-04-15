@@ -8,7 +8,7 @@ viela
 vila
 ponte
 parque
-escola
+escola\s
 bairro
 quadra
 corrego
@@ -47,6 +47,7 @@ Fábrica do Samba
 Unibes
 Elevado Costa e Silva
 Centro de Manejo da Fauna Silvestre
+creche\s
 crematorio
 AACD
 GRAAC

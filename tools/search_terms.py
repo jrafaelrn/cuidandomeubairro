@@ -71,7 +71,7 @@ def layout_tcesp(full_path: str):
                 city = create_city(city_name)
             
             regex_find = search_line(row[DESCRIPTION_COLUMN])
-            #print(f'Found: {regex_find}\t\t=> {row[DESCRIPTION_COLUMN]}')
+            print(f'\nFound: {regex_find}\t\t=> {row[DESCRIPTION_COLUMN]}')
 
             if regex_find:
                 update_statistics(city, regex_find)
