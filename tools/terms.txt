@@ -8,7 +8,7 @@ viela
 vila
 ponte
 parque
-escola\s
+escola(s)?\s
 bairro
 quadra
 corrego
