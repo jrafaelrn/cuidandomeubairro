@@ -3,7 +3,10 @@ import csv
 import re
 import json
 import datetime
+import multiprocessing as mp
+import time
 
+from multiprocessing import Process, Lock, Value
 from unidecode import unidecode
 from city import City
 
@@ -12,8 +15,12 @@ TERMS_FILE = 'terms.txt'
 TERMS_CONTENT = None
 DESCRIPTION_COLUMN = 24
 CITY_COLUMN = 2
-statistics = {}
-total_files = 1
+
+# Multiprocessing variables
+total_files = Value('i', 0)
+total_files.value = 1
+manager = mp.Manager()
+statistics = manager.dict()
 
 
 ############# 1 #############
@@ -25,38 +32,69 @@ def load_terms(terms_file: str):
     with open(terms_file, 'r') as f:
         TERMS_CONTENT = f.read().splitlines()
         TERMS_CONTENT = [term.lower() for term in TERMS_CONTENT]
+        TERMS_CONTENT = [unidecode(term) for term in TERMS_CONTENT]
         print(f'Loaded {len(TERMS_CONTENT)} terms: \n {TERMS_CONTENT}')
 
 
 
 ############# 2 #############
 
-def search_from_path(folder_path: str, layout: str):
-
-    # Loop through the files in the folder
-    for file in os.listdir(folder_path):
-
-        full_path = os.path.join(folder_path, file)
-
-        if os.path.isfile(full_path):
-            if layout == 'tcesp':
-                layout_tcesp(full_path)
-                #save_statistics('csv')
+def start_search():
+    
+    file_paths = [os.path.join(FOLDER_PATH, file) for file in os.listdir(FOLDER_PATH)]
+    file_paths = file_paths[7:10]
+    num_files = len(file_paths)
+    
+    cores = mp.cpu_count()
+    core_multiplier = 10
+    print(f'Running in {cores} cores...')
+    processes = []
+    running = 0
+    completed = 0
+    
+    while completed < num_files:        
+        while running < (cores * core_multiplier) and len(file_paths) > 0:
+            
+            file = file_paths.pop(0)
+            p = Process(target=search_from_file, args=(file, 'tcesp'))
+            processes.append(p)            
+            p.start()
+            running += 1
+            
+        for process in processes:
+            if process.is_alive():
+                process.join()
+            else:
+                completed += 1
+                running -= 1
+                processes.remove(process)
         
+            
+            
 
+
+
+def search_from_file(full_path: str, layout: str):
+
+    global total_files
+    print(f'Opening file {total_files.value}: {full_path}...')
+    total_files.value = total_files.value + 1
+    
+    if os.path.isfile(full_path):
+        if layout == 'tcesp':
+            layout_tcesp(full_path)
+            #save_statistics('csv')
+        
+    print(f'-- > Finished file {full_path}...')
 
 
 def layout_tcesp(full_path: str):
 
     enc = 'ISO-8859-1'
     global DESCRIPTION_COLUMN
-    global total_files
-    global statistics
 
     with open(full_path, newline='', encoding=enc) as f:
 
-        print(f'Opening file {total_files}: {full_path}...')
-        total_files += 1
         total_lines = 0
         city = None
 
@@ -83,10 +121,18 @@ def layout_tcesp(full_path: str):
         total_lines = 0
 
 
+
+
 def create_city(city_name: str):
+    
+    global statistics
+    print(f'Statistics Length: {len(statistics)}')
     city = City(city_name)
-    statistics[city_name] = city
+    statistics[city_name] = city    
+    
     return city
+
+
 
         
 def search_line(line: str):
@@ -115,6 +161,8 @@ def update_statistics(city: City, regex_expression: str):
 def save_statistics(format: str = None):
 
     global statistics
+    statistics_data = statistics.values()
+    print(f'Saving statistics - Length: {len(statistics)} - Content: {statistics}')
     
     if format == 'json':
         save_statistics_json(statistics)
@@ -167,7 +215,7 @@ if __name__ == '__main__':
     load_terms(TERMS_FILE)
     
     # 2 - Search for terms in the files
-    search_from_path(FOLDER_PATH, layout='tcesp')
+    start_search()
     
     # 3 - Save statistics in CSV and JSON by default
     # Optional: parameter 'format=json' or 'format=csv'
