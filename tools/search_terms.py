@@ -12,6 +12,7 @@ TERMS_FILE = 'terms.txt'
 TERMS_CONTENT = None
 DESCRIPTION_COLUMN = 24
 CITY_COLUMN = 2
+CODE_CITY_COLUMN = 3
 statistics = {}
 total_files = 1
 
@@ -41,7 +42,7 @@ def search_from_path(folder_path: str, layout: str):
         if os.path.isfile(full_path):
             if layout == 'tcesp':
                 layout_tcesp(full_path)
-                #save_statistics('csv')
+                #save_statistics()
         
 
 
@@ -68,7 +69,8 @@ def layout_tcesp(full_path: str):
             
             if i == 0:
                 city_name = row[CITY_COLUMN]
-                city = create_city(city_name)
+                city_code = row[CODE_CITY_COLUMN]
+                city = create_city(city_name, city_code)
             
             regex_find = search_line(row[DESCRIPTION_COLUMN])
             #print(f'\nFound: {regex_find}\t\t=> {row[DESCRIPTION_COLUMN]}')
@@ -83,8 +85,8 @@ def layout_tcesp(full_path: str):
         total_lines = 0
 
 
-def create_city(city_name: str):
-    city = City(city_name)
+def create_city(city_name: str, city_code: str):
+    city = City(city_name, city_code)
     statistics[city_name] = city
     return city
 
@@ -131,6 +133,7 @@ def save_statistics(format: str = None):
 
 
 def save_statistics_json(statistics: dict):
+    print('Saving statistics in JSON...')
     with open('statistics_terms.json', 'w', encoding='utf-8') as f:         
         
         data = ''
@@ -142,14 +145,22 @@ def save_statistics_json(statistics: dict):
   
         
 def save_statistics_csv(statistics: dict):
+    print('Saving statistics in CSV...')
     with open('statistics_terms.csv', 'w') as f:
-        header = 'cidade;termo;frequencia\n' 
+        
+        header = 'cod_cidade;cidade;termo;frequencia\n' 
         f.write(header)
+        content = []
         
         for city_name, city in statistics.items():
             for term, quantity in city.terms.items():
-                line = f'{city_name};{term};{quantity}\n'
-                f.write(line)
+                if term == 'cod_cidade':
+                    continue
+                line = f'{city.code};{city_name};{term};{quantity}\n'
+                content.append(line)
+
+        f.writelines(content)
+                
 
 
 
