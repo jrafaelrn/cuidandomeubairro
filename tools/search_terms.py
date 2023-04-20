@@ -21,6 +21,7 @@ total_files = Value('i', 0)
 total_files.value = 1
 manager = mp.Manager()
 statistics = manager.dict()
+cities = {}
 
 
 ############# 1 #############
@@ -41,6 +42,8 @@ def load_terms(terms_file: str):
 
 def start_search():
     
+    global cities
+    
     file_paths = [os.path.join(FOLDER_PATH, file) for file in os.listdir(FOLDER_PATH)]
     file_paths = file_paths[7:10]
     num_files = len(file_paths)
@@ -52,11 +55,16 @@ def start_search():
     running = 0
     completed = 0
     
+    for file in file_paths:
+        file_name = os.path.basename(file).replace('.csv', '')
+        cities[file_name] = City(file_name)
+    
     while completed < num_files:        
         while running < (cores * core_multiplier) and len(file_paths) > 0:
             
             file = file_paths.pop(0)
-            p = Process(target=search_from_file, args=(file, 'tcesp'))
+            city = cities[os.path.basename(file).replace('.csv', '')]
+            p = Process(target=search_from_file, args=(city, file, 'tcesp'))
             processes.append(p)            
             p.start()
             running += 1
@@ -69,12 +77,15 @@ def start_search():
                 running -= 1
                 processes.remove(process)
         
+    
+    global statistics
+    print(f'Finished all files. Statistics: {len(statistics)} - \n\t Content: {[stt.to_dict() for stt in statistics.values()]}')
             
             
 
 
 
-def search_from_file(full_path: str, layout: str):
+def search_from_file(city: City, full_path: str, layout: str):
 
     global total_files
     print(f'Opening file {total_files.value}: {full_path}...')
@@ -82,13 +93,13 @@ def search_from_file(full_path: str, layout: str):
     
     if os.path.isfile(full_path):
         if layout == 'tcesp':
-            layout_tcesp(full_path)
+            layout_tcesp(city, full_path)
             #save_statistics('csv')
         
     print(f'-- > Finished file {full_path}...')
 
 
-def layout_tcesp(full_path: str):
+def layout_tcesp(city: City, full_path: str):
 
     enc = 'ISO-8859-1'
     global DESCRIPTION_COLUMN
@@ -96,17 +107,12 @@ def layout_tcesp(full_path: str):
     with open(full_path, newline='', encoding=enc) as f:
 
         total_lines = 0
-        city = None
 
         # Ignore the header
         reader = csv.reader(f, delimiter=';', quotechar='"')
         next(reader)
 
         for i, row in enumerate(reader):
-            
-            if i == 0:
-                city_name = row[CITY_COLUMN]
-                city = create_city(city_name)
             
             regex_find = search_line(row[DESCRIPTION_COLUMN])
             #print(f'\nFound: {regex_find}\t\t=> {row[DESCRIPTION_COLUMN]}')
@@ -119,6 +125,8 @@ def layout_tcesp(full_path: str):
         # Update the global statistics
         city.set_total_rows(total_lines)
         total_lines = 0
+        
+    print(f'Finished file {full_path}... - Statistics: {len(statistics)} - \n\t Content: {[stt.to_dict() for stt in statistics.values()]}')
 
 
 
@@ -126,6 +134,7 @@ def layout_tcesp(full_path: str):
 def create_city(city_name: str):
     
     global statistics
+    statistics_data = statistics.values()
     print(f'Statistics Length: {len(statistics)}')
     city = City(city_name)
     statistics[city_name] = city    
@@ -140,7 +149,7 @@ def search_line(line: str):
     global TERMS_CONTENT
     line = unidecode(line).lower()
     #print(f'Searching line: {line}...')
-
+ 
     for regex in TERMS_CONTENT:
         if re.search(regex, line, re.IGNORECASE):
             return regex
