@@ -1,9 +1,10 @@
 class City:
     
-    def __init__(self, name):
+    def __init__(self, name: str, code: str):
         self.name = name
         self.terms = {}
         self.total_rows = 0
+        self.code = code
         
         
     def update_term(self, term):
@@ -14,6 +15,7 @@ class City:
     
     def to_dict(self):
         self.terms['total_rows'] = self.total_rows
+        self.terms['cod_cidade'] = self.code
         return {self.name: self.terms}
     
     

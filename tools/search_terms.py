@@ -11,10 +11,12 @@ from unidecode import unidecode
 from city import City
 
 FOLDER_PATH = 'original_data/cidades'
+STATISTICS_PATH = 'statistics'
 TERMS_FILE = 'terms.txt'
 TERMS_CONTENT = None
 DESCRIPTION_COLUMN = 24
 CITY_COLUMN = 2
+CODE_CITY_COLUMN = 3
 
 # Multiprocessing variables
 total_files = Value('i', 0)
@@ -40,14 +42,13 @@ def load_terms(terms_file: str):
 
 ############# 2 #############
 
-def start_search():
+def start_search():    
     
-    global cities
+    ### 2.1 ###
+    cities_files = get_cities_files()
+    num_files = len(cities_files)
     
-    file_paths = [os.path.join(FOLDER_PATH, file) for file in os.listdir(FOLDER_PATH)]
-    file_paths = file_paths[7:10]
-    num_files = len(file_paths)
-    
+    # Variables for multiprocessing
     cores = mp.cpu_count()
     core_multiplier = 10
     print(f'Running in {cores} cores...')
@@ -55,15 +56,15 @@ def start_search():
     running = 0
     completed = 0
     
-    for file in file_paths:
-        file_name = os.path.basename(file).replace('.csv', '')
-        cities[file_name] = City(file_name)
     
     while completed < num_files:        
-        while running < (cores * core_multiplier) and len(file_paths) > 0:
+        while running < (cores * core_multiplier) and len(cities_files) > 0:
             
-            file = file_paths.pop(0)
+            global cities
+            file = cities_files.pop(0)
             city = cities[os.path.basename(file).replace('.csv', '')]
+            
+            ### 2.2 ###
             p = Process(target=search_from_file, args=(city, file, 'tcesp'))
             processes.append(p)            
             p.start()
@@ -80,10 +81,30 @@ def start_search():
     
     global statistics
     print(f'Finished all files. Statistics: {len(statistics)} - \n\t Content: {[stt.to_dict() for stt in statistics.values()]}')
-            
+
+
+
+
+############# 2.1 #############
+
+def get_cities_files():
+    
+    global cities
+    
+    file_paths = [os.path.join(FOLDER_PATH, file) for file in os.listdir(FOLDER_PATH)]
+    # Filter temporary files
+    file_paths = file_paths[7:10]
+    
+    for file in file_paths:
+        file_name = os.path.basename(file).replace('.csv', '')
+        cities[file_name] = City(file_name)
+        
+    return file_paths
+    
             
 
 
+############# 2.1 #############
 
 def search_from_file(city: City, full_path: str, layout: str):
 
@@ -94,10 +115,13 @@ def search_from_file(city: City, full_path: str, layout: str):
     if os.path.isfile(full_path):
         if layout == 'tcesp':
             layout_tcesp(city, full_path)
-            #save_statistics('csv')
+            save_statistics()
         
     print(f'-- > Finished file {full_path}...')
 
+
+
+############# 2.2 #############
 
 def layout_tcesp(city: City, full_path: str):
 
@@ -165,9 +189,22 @@ def update_statistics(city: City, regex_expression: str):
 
 
 
+'''
 ############# 3 #############
+    
+Save statistics in CSV and JSON by default
+Optional: parameter 'format=json' or 'format=csv'
 
-def save_statistics(format: str = None):
+Args:
+    filename: The file to save the statistics to.
+    format: The format to save the statistics in. 
+
+Raises:
+    FileNotFoundError: If the output directory does not exist.
+
+'''
+
+def save_statistics(filename: str, format: str = None):
 
     global statistics
     statistics_data = statistics.values()
@@ -187,8 +224,13 @@ def save_statistics(format: str = None):
         
 
 
-def save_statistics_json(statistics: dict):
-    with open('statistics_terms.json', 'w', encoding='utf-8') as f:         
+def save_statistics_json(statistics: dict, filename: str):
+    
+    print('Saving statistics in JSON...')
+    global STATISTICS_PATH
+    filename = f'{os.path.join(STATISTICS_PATH, filename) }.json'
+    
+    with open(filename, 'w', encoding='utf-8') as f:         
         
         data = ''
         for city in statistics.values():
@@ -197,17 +239,28 @@ def save_statistics_json(statistics: dict):
         
         f.write(data)
   
+  
         
-def save_statistics_csv(statistics: dict):
-    with open('statistics_terms.csv', 'w') as f:
-        header = 'cidade;termo;frequencia\n' 
+def save_statistics_csv(statistics: dict, filename: str):
+    
+    print('Saving statistics in CSV...')
+    global STATISTICS_PATH
+    filename = f'{os.path.join(STATISTICS_PATH, filename) }.csv'
+    
+    with open(filename, 'w') as f:
+        
+        header = 'cod_cidade;cidade;termo;frequencia\n' 
         f.write(header)
+        content = []
         
         for city_name, city in statistics.items():
             for term, quantity in city.terms.items():
-                line = f'{city_name};{term};{quantity}\n'
-                f.write(line)
+                if term == 'cod_cidade':
+                    continue
+                line = f'{city.code};{city_name};{term};{quantity}\n'
+                content.append(line)
 
+        f.writelines(content)
 
 
 
@@ -225,9 +278,5 @@ if __name__ == '__main__':
     
     # 2 - Search for terms in the files
     start_search()
-    
-    # 3 - Save statistics in CSV and JSON by default
-    # Optional: parameter 'format=json' or 'format=csv'
-    save_statistics()
     
     print(f"Finished at {datetime.datetime.now().strftime('%H:%M:%S')}")
