@@ -21,9 +21,7 @@ CODE_CITY_COLUMN = 3
 # Multiprocessing variables
 total_files = Value('i', 0)
 total_files.value = 1
-manager = mp.Manager()
-statistics = manager.dict()
-cities = {}
+cities = []
 
 
 ############# 1 #############
@@ -44,9 +42,11 @@ def load_terms(terms_file: str):
 
 def start_search():    
     
+    global cities
+    
     ### 2.1 ###
-    cities_files = get_cities_files()
-    num_files = len(cities_files)
+    get_cities()
+    num_files = len(cities)
     
     # Variables for multiprocessing
     cores = mp.cpu_count()
@@ -58,17 +58,16 @@ def start_search():
     
     
     while completed < num_files:        
-        while running < (cores * core_multiplier) and len(cities_files) > 0:
+        while running < (cores * core_multiplier) and len(cities) > 0:
             
-            global cities
-            file = cities_files.pop(0)
-            city = cities[os.path.basename(file).replace('.csv', '')]
+            city = cities.pop(0)
             
             ### 2.2 ###
-            p = Process(target=search_from_file, args=(city, file, 'tcesp'))
+            p = Process(target=search_from_file, args=(city, 'tcesp'))
             processes.append(p)            
             p.start()
             running += 1
+            time.sleep(0.5)
             
         for process in processes:
             if process.is_alive():
@@ -78,50 +77,50 @@ def start_search():
                 running -= 1
                 processes.remove(process)
         
-    
-    global statistics
-    print(f'Finished all files. Statistics: {len(statistics)} - \n\t Content: {[stt.to_dict() for stt in statistics.values()]}')
+    print(f'Finished all files!')
 
 
 
 
 ############# 2.1 #############
 
-def get_cities_files():
+def get_cities():
     
     global cities
-    
     file_paths = [os.path.join(FOLDER_PATH, file) for file in os.listdir(FOLDER_PATH)]
-    # Filter temporary files
-    file_paths = file_paths[7:10]
     
     for file in file_paths:
         file_name = os.path.basename(file).replace('.csv', '')
-        cities[file_name] = City(file_name)
+        city_code = file_name.split('-')[0]
+        city_name = file_name.split('-')[1]
         
-    return file_paths
+        city = City(city_name, city_code)
+        city.set_file_path(file)
+        cities.append(city)
+        
     
             
 
 
-############# 2.1 #############
+############# 2.2 #############
 
-def search_from_file(city: City, full_path: str, layout: str):
+def search_from_file(city: City, layout: str):
 
     global total_files
+    full_path = city.get_file_path()
     print(f'Opening file {total_files.value}: {full_path}...')
     total_files.value = total_files.value + 1
     
     if os.path.isfile(full_path):
         if layout == 'tcesp':
             layout_tcesp(city, full_path)
-            save_statistics()
+            save_statistics(city)
         
     print(f'-- > Finished file {full_path}...')
 
 
 
-############# 2.2 #############
+############# 2.3 #############
 
 def layout_tcesp(city: City, full_path: str):
 
@@ -149,25 +148,10 @@ def layout_tcesp(city: City, full_path: str):
         # Update the global statistics
         city.set_total_rows(total_lines)
         total_lines = 0
-        
-    print(f'Finished file {full_path}... - Statistics: {len(statistics)} - \n\t Content: {[stt.to_dict() for stt in statistics.values()]}')
 
 
 
-
-def create_city(city_name: str):
-    
-    global statistics
-    statistics_data = statistics.values()
-    print(f'Statistics Length: {len(statistics)}')
-    city = City(city_name)
-    statistics[city_name] = city    
-    
-    return city
-
-
-
-        
+       
 def search_line(line: str):
 
     global TERMS_CONTENT
@@ -204,61 +188,54 @@ Raises:
 
 '''
 
-def save_statistics(filename: str, format: str = None):
+def save_statistics(city: City, format: str = None):
 
-    global statistics
-    statistics_data = statistics.values()
-    print(f'Saving statistics - Length: {len(statistics)} - Content: {statistics}')
-    
     if format == 'json':
-        save_statistics_json(statistics)
+        save_statistics_json(city)
         return
    
     if format == 'csv':
-        save_statistics_csv(statistics)
+        save_statistics_csv(city)
         return
     
     # Default
-    save_statistics_json(statistics)
-    save_statistics_csv(statistics)
+    save_statistics_json(city)
+    save_statistics_csv(city)
         
 
 
-def save_statistics_json(statistics: dict, filename: str):
+def save_statistics_json(city: City):
     
-    print('Saving statistics in JSON...')
+    statistics = city.terms_statistics_to_dict()
+    filename = city.get_file_name().replace('.csv', '')
+    print(f'Saving statistics in JSON...: {filename}')
+    
     global STATISTICS_PATH
-    filename = f'{os.path.join(STATISTICS_PATH, filename) }.json'
+    filename = f'{STATISTICS_PATH}/json/{filename}.json'
     
-    with open(filename, 'w', encoding='utf-8') as f:         
-        
-        data = ''
-        for city in statistics.values():
-            city_dict = city.to_dict()
-            data += json.dumps(city_dict, indent=4, ensure_ascii=False)
-        
+    with open(filename, 'w', encoding='utf-8') as f:   
+        data = json.dumps(statistics, indent=4, ensure_ascii=False)        
         f.write(data)
   
   
         
-def save_statistics_csv(statistics: dict, filename: str):
+def save_statistics_csv(city: City):
     
-    print('Saving statistics in CSV...')
     global STATISTICS_PATH
-    filename = f'{os.path.join(STATISTICS_PATH, filename) }.csv'
+    statistics = city.terms_statistics_to_dict()
+    filename = f'{STATISTICS_PATH}/csv/{city.get_file_name()}.csv'
+    print(f'Saving statistics in CSV...: {filename}')
     
-    with open(filename, 'w') as f:
-        
+    with open(filename, 'w') as f:        
         header = 'cod_cidade;cidade;termo;frequencia\n' 
         f.write(header)
         content = []
         
-        for city_name, city in statistics.items():
-            for term, quantity in city.terms.items():
-                if term == 'cod_cidade':
-                    continue
-                line = f'{city.code};{city_name};{term};{quantity}\n'
-                content.append(line)
+        for term, quantity in statistics.items():
+            if term == 'cod_cidade':
+                continue
+            line = f'{city.code};{city.name};{term};{quantity}\n'
+            content.append(line)
 
         f.writelines(content)
 
