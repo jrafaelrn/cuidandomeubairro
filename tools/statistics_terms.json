@@ -1,44 +1,41 @@
 {
-    "Regente Feijó": {
-        "(avenida|av\\.|\\sav\\s)": 181,
-        "creche\\s": 857,
-        "distrito": 61,
-        "vila": 129,
-        "bairro": 361,
-        "hospital": 532,
-        "praca": 843,
-        "estadio": 108,
-        "ginasio": 304,
-        "escola(s)?\\s": 929,
-        "conjunto habitacional": 42,
-        "parque": 117,
-        "(jardim|jd\\.)": 144,
-        "biblioteca": 76,
-        "quadra": 92,
-        "ponte": 134,
-        "cemiterio": 120,
-        "(travessa|trav\\.)": 16,
-        "ladeira": 11,
-        "maternidade": 42,
-        "chacara": 4,
-        "instituto": 6,
-        "total_rows": 81606,
-        "cod_cidade": "3542404"
+    "Itapirapuã Paulista": {
+        "total_rows": 0
     }
 }{
-    "Itapirapuã Paulista": {
-        "escola(s)?\\s": 663,
-        "creche\\s": 40,
-        "distrito": 108,
-        "praca": 42,
-        "bairro": 24,
-        "(jardim|jd\\.)": 12,
-        "ladeira": 15,
-        "ponte": 3,
-        "cemiterio": 33,
-        "(avenida|av\\.|\\sav\\s)": 15,
-        "hospital": 3,
-        "total_rows": 23036,
-        "cod_cidade": "3522653"
+    "Itapecerica da Serra": {
+        "total_rows": 0
+    }
+}{
+    "Mariápolis": {
+        "total_rows": 0
+    }
+}{
+    "Regente Feijó": {
+        "total_rows": 0
+    }
+}{
+    "Itapetininga": {
+        "total_rows": 0
+    }
+}{
+    "Pedregulho": {
+        "total_rows": 0
+    }
+}{
+    "Balbinos": {
+        "total_rows": 0
+    }
+}{
+    "Floreal": {
+        "total_rows": 0
+    }
+}{
+    "Peruíbe": {
+        "total_rows": 0
+    }
+}{
+    "Ribeirão dos Índios": {
+        "total_rows": 0
     }
 }

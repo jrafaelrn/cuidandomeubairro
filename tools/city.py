@@ -10,13 +10,30 @@ class City:
     def update_term(self, term):
         self.terms[term] = self.terms.get(term, 0) + 1
         
-    def set_total_rows(self, total_rows):
-        self.total_rows = total_rows
-    
-    def to_dict(self):
+    def terms_statistics_to_dict(self):
         self.terms['total_rows'] = self.total_rows
         self.terms['cod_cidade'] = self.code
-        return {self.name: self.terms}
+        return self.terms
+    
+    
+    def set_total_rows(self, total_rows):
+        self.total_rows = total_rows
+        
+        
+    # File Path
+    def set_file_path(self, file_path):
+        self.file_path = file_path
+        
+    def get_file_path(self):
+        return self.file_path
+    
+    
+    def get_file_name(self):
+        # Get name from full path and remove the extension
+        file_name = self.file_path.split('/')[-1]
+        file_extension = file_name.split('.')[-1]
+        return file_name.replace(f'.{file_extension}', '')
+    
     
     
     def __eq__(self, __value: object) -> bool:

@@ -11,6 +11,8 @@ total_rows = 0
 empty_rows = 0
 total_cities = 0
 total_lines = 0
+CODE_CITY_COLUMN = 3
+NAME_CITY_COLUMN = 2
 
 
 
@@ -29,24 +31,27 @@ def slice_tce_dataset(file_path: str):
         # Init the variables
         chunk_size = 100000
         chunk = []
-        city = ''
+        city_code = ''
+        city_name = ''
         
         for i, row in enumerate(reader):
             
-            if city == '':
-                city = row[2]
+            if city_code == '':
+                city_code = row[CODE_CITY_COLUMN]                
             
-            if city != row[2]:
-                # Salva os dados atuais
-                save_city(header, chunk, city)
+            # Check if city is the same
+            # If not, save the current chunk
+            if city_code != row[CODE_CITY_COLUMN]:                
+                save_city(header, chunk, city_name)
                 
-                # Reseta as variáveis
-                city = row[2]
+                # Reset the variables
+                city_code = row[CODE_CITY_COLUMN]
                 chunk = []
             
             chunk.append(row)
+            city_name = f'{city_code}-{row[NAME_CITY_COLUMN]}'
         
-        save_city(header, chunk, city)
+        save_city(header, chunk, city_name)
         
         
 
