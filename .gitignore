@@ -3,3 +3,4 @@ tools/__pycache__
 tools/original_data/*
 tools/statistics
 tools/result.json
+nominatim-data/*
