@@ -4,11 +4,13 @@ import re
 import json
 import datetime
 import multiprocessing as mp
+import timeit
 import time
 
 from multiprocessing import Process, Lock, Value
 from unidecode import unidecode
 from city import City
+from search_location import search_local
 
 FOLDER_PATH = 'original_data/cidades'
 STATISTICS_PATH = 'statistics'
@@ -23,6 +25,10 @@ total_files = Value('i', 0)
 total_files.value = 1
 cities = []
 
+    
+time_total_searchs = Value('d', 0)
+time_counters_searchs = Value('i', 0)
+total_success_searchs = Value('i', 0)
 
 ############# 1 #############
 
@@ -50,7 +56,7 @@ def start_search():
     
     # Variables for multiprocessing
     cores = mp.cpu_count()
-    core_multiplier = 10
+    core_multiplier = 3
     print(f'Running in {cores} cores...')
     processes = []
     running = 0
@@ -89,6 +95,9 @@ def get_cities():
     global cities
     file_paths = [os.path.join(FOLDER_PATH, file) for file in os.listdir(FOLDER_PATH)]
     
+    # Temp filter
+    # file_paths = file_paths[1:10]
+    
     for file in file_paths:
         file_name = os.path.basename(file).replace('.csv', '')
         city_code = file_name.split('-')[0]
@@ -116,7 +125,16 @@ def search_from_file(city: City, layout: str):
             layout_tcesp(city, full_path)
             save_statistics(city)
         
-    print(f'-- > Finished file {full_path}...')
+    print(f'\n----- > Finished file {full_path}...')
+    
+    global time_total_searchs
+    global time_counters_searchs
+    global total_success_searchs
+    print(f'Total time (sec): {time_total_searchs.value}')
+    print(f'Total searchs: {time_counters_searchs.value}')
+    print(f'Average time (sec): {time_total_searchs.value / time_counters_searchs.value}')
+    print(f'Total success searchs: {total_success_searchs.value}')
+    print(f'Average success searchs(%): {(total_success_searchs.value / time_counters_searchs.value) * 100}')
 
 
 
@@ -150,7 +168,52 @@ def layout_tcesp(city: City, full_path: str):
         total_lines = 0
 
 
-
+'''
+original_description = "obra inaugural na praca vereador xyz 2569 - Bairro ABC"
+[
+    {
+        "search_term": "obra inaugural na praca vereador xyz",
+        "variation": -1,
+        "positions": {
+            latitude: 123.123,
+            longitude: 123.123,
+        },
+    }
+    {
+        "search_term": "praca vereador xyz",
+        "variation": 2,
+        "locations": {
+            latitude: 123.456,
+            longitude: 123.456,        
+        }
+    },
+    {
+        "search_term": "praca vereador xyz 2569 - Bairro ABC",
+        "variation": 6,
+        "locations": {
+            latitude: 123.456,        
+            latitude: 123.456,
+        }
+    }
+]
+'''
+class Location:
+    
+    def __init__(self, original_description: str) -> None:
+        self.original_description = original_description
+        self.searchs = []
+        
+        
+    def add_search(self, search_term: str, variation: int, locations: list):
+        
+        search = {}
+        search['search_term'] = search_term
+        search['variation'] = variation
+        search['locations'] = locations
+        self.searchs.append(search)
+        
+        
+        
        
 def search_line(line: str):
 
@@ -159,7 +222,11 @@ def search_line(line: str):
     #print(f'Searching line: {line}...')
  
     for regex in TERMS_CONTENT:
-        if re.search(regex, line, re.IGNORECASE):
+        position  = re.search(regex, line, re.IGNORECASE)
+        if position:
+            #end = position.start() + 60 if position.start() + 60 < len(line) else len(line)
+            #search_locations(line[position.start():end])
+            search_locations(line)
             return regex
 
     return None
@@ -168,7 +235,27 @@ def search_line(line: str):
 def update_statistics(city: City, regex_expression: str):
     city.update_term(regex_expression)
 
+
+
+def search_locations(text: str):
     
+    global time_total_searchs
+    global time_counters_searchs
+    global total_success_searchs
+    
+    start_time = time.time()
+    location_geo = search_local(text)
+    end_time = time.time()
+    time_total_searchs.value = time_total_searchs.value + (end_time - start_time)
+    time_counters_searchs.value = time_counters_searchs.value + 1
+    
+    if location_geo:
+        lat, lon = location_geo.latitude, location_geo.longitude
+        #print(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
+        location = Location(text)
+        location.add_search(text, -1, [{'latitude': lat, 'longitude': lon}])
+        total_success_searchs.value = total_success_searchs.value + 1
+
 
 
 
