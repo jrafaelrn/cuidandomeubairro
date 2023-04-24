@@ -4,3 +4,4 @@ tools/original_data/*
 tools/statistics
 tools/result.json
 nominatim-data/*
+app/.env

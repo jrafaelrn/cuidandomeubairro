@@ -11,3 +11,4 @@ Werkzeug
 markupsafe==2.0.1
 debugpy
 geopy
+python-dotenv
