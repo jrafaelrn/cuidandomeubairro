@@ -5,6 +5,7 @@ class City:
         self.terms = {}
         self.total_rows = 0
         self.code = code
+        self.locations_variations = {}
         
         
     def update_term(self, term):
@@ -12,7 +13,7 @@ class City:
         
     def terms_statistics_to_dict(self):
         self.terms['total_rows'] = self.total_rows
-        self.terms['cod_cidade'] = self.code
+        self.terms['cod_cidade'] = self.code        
         return self.terms
     
     
