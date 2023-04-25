@@ -11,9 +11,7 @@ from importlib import import_module
 
 telegram = Telegram()
 
-
 def log_and_telegram(message):
-    global telegram
     print(message)
     telegram.sendMessage(message)
     
