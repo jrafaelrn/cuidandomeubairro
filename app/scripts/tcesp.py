@@ -1,5 +1,7 @@
 import requests
+
 from tqdm import tqdm
+from importlib import import_module
 from ..classes.city import City
 from ..classes.extractor import Extractor
 

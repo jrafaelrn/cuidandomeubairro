@@ -27,12 +27,14 @@ def execute_scripts():
     
     for file in os.listdir(scripts_folder):
         if file.endswith('.py'):
-            module = import_module(file.replace('.py', ''))
-            execute(file, module)
+            execute(file))
             
             
-def execute(file, module):
+def execute(file):
+    
     print(f'Running file: {file}')
+    module = import_module(file.replace('.py', ''))
+    
     try:
         module.run()
         log_and_telegram(f'Finished successfully: {file}')
