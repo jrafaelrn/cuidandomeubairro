@@ -1,5 +1,6 @@
 tools/__pycache__
 app/tools/__pycache__
+app/tools/__pycache__/*
 app/scripts/__pycache__
 .conda/*
 tools/original_data/*
@@ -7,3 +8,4 @@ tools/statistics
 tools/result.json
 nominatim-data/*
 app/.env
+app/data_temp/logs/*
