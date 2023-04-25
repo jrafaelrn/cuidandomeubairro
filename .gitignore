@@ -1,4 +1,6 @@
 tools/__pycache__
+app/tools/__pycache__
+app/scripts/__pycache__
 .conda/*
 tools/original_data/*
 tools/statistics
