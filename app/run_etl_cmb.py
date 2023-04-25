@@ -27,7 +27,7 @@ def execute_scripts():
     
     for file in os.listdir(scripts_folder):
         if file.endswith('.py'):
-            execute(file))
+            execute(file)
             
             
 def execute(file):
