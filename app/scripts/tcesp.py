@@ -1,9 +1,12 @@
 import requests
+import logging
 
 from tqdm import tqdm
 from importlib import import_module
 from ..classes.city import City
 from ..classes.extractor import Extractor
+
+log = logging.getLogger(__name__)
 
 
 class Extractor_tce(Extractor):
@@ -20,7 +23,7 @@ class Extractor_tce(Extractor):
 
     def download_data(self, url: str, filename: str):
         
-        print(f"Downloading {url}...")
+        log.info(f"Downloading {url}...")
         
         req = requests.get(url, stream=True)
         total_size_bytes = int(req.headers.get('content-length', 0))
@@ -34,9 +37,9 @@ class Extractor_tce(Extractor):
         
         progress_bar.close()
         if total_size_bytes != 0 and progress_bar.n != total_size_bytes:
-            print("ERROR, something went wrong")
+            log.error("ERROR, something went wrong")
         else:
-            print(f"Downloaded {filename} successfully")
+            log.info(f"Downloaded {filename} successfully")
             
 
 

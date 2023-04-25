@@ -1,7 +1,11 @@
 import os
 import requests
+import logging
 
 from dotenv import load_dotenv
+
+log = logging.getLogger(__name__)
+
 
 class Telegram(object):
 
@@ -24,14 +28,14 @@ class Telegram(object):
         try:
             return os.environ['TELEGRAM_API_KEY']
         except Exception as e:
-            print(f'Error - Get KEY from environment: {e}')    
+            log.error(f'Error - Get KEY from environment: {e}')    
             return None
         
     def get_chat_id(self):
         try:
             return os.environ['TELEGRAM_CHAT_ID']
         except Exception as e:
-            print(f'Error - Get CHAT ID from environment: {e}')    
+            log.error(f'Error - Get CHAT ID from environment: {e}')    
             return None
 
     
@@ -39,16 +43,16 @@ class Telegram(object):
 
     def sendMessage(self, content: str):
 
-        print(f'<<--- Sending message by Telegram: [{content}] -- to chat: {self.TELEGRAM_CHAT_ID}')
+        log.debug(f'<<--- Sending message by Telegram: [{content}] -- to chat: {self.TELEGRAM_CHAT_ID}')
         link_resp = f'{self.url_base}sendMessage?chat_id={self.TELEGRAM_CHAT_ID}&text={content}'
         
         resp = requests.get(link_resp)
-        #print(f'\t<<--- Send message - Response: {resp.status_code} - {resp.text}')
+        #log.debug(f'\t<<--- Send message - Response: {resp.status_code} - {resp.text}')
         
         if resp.status_code == 200:
-            print("OK - Message sent")
+            log.debug("OK - Message sent")
         else:
-            print("Error - Message not sent")
+            log.error("Error - Message not sent")
 
 
 
@@ -56,4 +60,4 @@ class Telegram(object):
         
         link_req = f'{self.url_base}getUpdates'
         resp = requests.get(link_req)
-        print(f'<<--- Get updates - Response: {resp.status_code} - {resp.text}')
+        log.debug(f'<<--- Get updates - Response: {resp.status_code} - {resp.text}')

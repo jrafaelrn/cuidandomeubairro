@@ -6,12 +6,14 @@ import datetime
 import multiprocessing as mp
 import timeit
 import time
+import logging
 
 from multiprocessing import Process, Lock, Value
 from app.classes.city.city import City
 from app.classes.city.search_location import search_local
 from tqdm import tqdm
 
+log = logging.getLogger(__name__)
 
 FOLDER_PATH = 'original_data/cidades'
 STATISTICS_PATH = 'statistics'
@@ -42,7 +44,7 @@ def load_terms(terms_file: str):
         TERMS_CONTENT = f.read().splitlines()
         TERMS_CONTENT = [term.lower() for term in TERMS_CONTENT]
         TERMS_CONTENT = [unidecode(term) for term in TERMS_CONTENT]
-        print(f'Loaded {len(TERMS_CONTENT)} terms: \n {TERMS_CONTENT}')
+        log.debug(f'Loaded {len(TERMS_CONTENT)} terms: \n {TERMS_CONTENT}')
 
 
 ############# 2 #############
@@ -58,7 +60,7 @@ def start_search():
     # Variables for multiprocessing
     cores = mp.cpu_count()
     core_multiplier = 2
-    print(f'Running in {cores} cores...')
+    log.debug(f'Running in {cores} cores...')
     processes = []
     running = 0
     completed = 0
@@ -86,7 +88,7 @@ def start_search():
                 processes.remove(process)
                 progress_bar.update(1)
 
-    print(f'Finished all files!')
+    log.info(f'Finished all files!')
     progress_bar.close()
 
 
@@ -116,7 +118,7 @@ def search_from_file(city: City, layout: str):
 
     global total_files
     full_path = city.get_file_path()
-    print(f'Opening file {total_files.value}: {full_path}...')
+    log.debug(f'Opening file {total_files.value}: {full_path}...')
     total_files.value = total_files.value + 1
 
     if os.path.isfile(full_path):
@@ -124,16 +126,16 @@ def search_from_file(city: City, layout: str):
             layout_tcesp(city, full_path)
             save_statistics(city)
 
-    print(f'\n----- > Finished file {full_path}...')
+    log.debug(f'\n----- > Finished file {full_path}...')
 
     global time_total_searchs
     global time_counters_searchs
     global total_success_searchs
-    print(f'Total time (sec): {time_total_searchs.value}')
-    print(f'Total searchs: {time_counters_searchs.value}')
-    print(f'Average time (sec): {time_total_searchs.value / time_counters_searchs.value}')
-    print(f'Total success searchs: {total_success_searchs.value}')
-    print(f'Average success searchs(%): {(total_success_searchs.value / time_counters_searchs.value) * 100}')
+    log.debug(f'Total time (sec): {time_total_searchs.value}')
+    log.debug(f'Total searchs: {time_counters_searchs.value}')
+    log.debug(f'Average time (sec): {time_total_searchs.value / time_counters_searchs.value}')
+    log.debug(f'Total success searchs: {total_success_searchs.value}')
+    log.debug(f'Average success searchs(%): {(total_success_searchs.value / time_counters_searchs.value) * 100}')
 
 
 ############# 2.3 #############
@@ -151,53 +153,27 @@ def layout_tcesp(city: City, full_path: str):
         reader = csv.reader(f, delimiter=';', quotechar='"')
         next(reader)
 
+        # Loop through the file
         for i, row in enumerate(reader):
 
             regex_find = search_line(row[DESCRIPTION_COLUMN])
-            #print(f'\nFound: {regex_find}\t\t=> {row[DESCRIPTION_COLUMN]}')
 
             if regex_find:
                 update_statistics(city, regex_find)
-            #contar_consistencia(row[8], row[DESCRIPTION_COLUMN])
-            total_lines += 1
             
-            if total_lines == 1000:
-                break
+            total_lines += 1
             
 
         # Update the global statistics
         city.set_total_rows(total_lines)
-        #global incosistencias
-        #print(f'Total linhas: {total_lines} x Total inconsistencias: {incosistencias}')
         total_lines = 0
 
-
-empenhos = {}
-incosistencias = 0
-
-
-def contar_consistencia(numEmpenho: str, descricao):
-    global empenhos
-    global incosistencias
-
-    numEmpenho = numEmpenho.strip()
-
-    empenho = empenhos.get(numEmpenho, None)
-
-    if empenho is None:
-        empenhos[numEmpenho] = descricao
-    else:
-        if empenho != descricao:
-            print(
-                f'\nInconsistencia: {numEmpenho} \n=> Antiga: {empenho} \n=> Nova: {descricao}')
-            empenhos[numEmpenho] = descricao
-            incosistencias += 1
 
 
 def search_line(line: str):
 
     global TERMS_CONTENT
-    #print(f'Searching line: {line}...')
+    #console.debug(f'Searching line: {line}...')
 
     for regex in TERMS_CONTENT:
         position = re.search(regex, line, re.IGNORECASE)
@@ -226,7 +202,7 @@ def search_locations(text: str):
 
     if location_geo:
         lat, lon = location_geo.latitude, location_geo.longitude
-        #print(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
+        #log.debug(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
         total_success_searchs.value = total_success_searchs.value + 1
         return True
 
@@ -295,7 +271,7 @@ def save_statistics_json(city: City):
 
     statistics = city.terms_statistics_to_dict()
     filename = city.get_file_name().replace('.csv', '')
-    print(f'Saving statistics in JSON...: {filename}')
+    log.debug(f'Saving statistics in JSON...: {filename}')
 
     global STATISTICS_PATH
     filename = f'{STATISTICS_PATH}/json/{filename}.json'
@@ -311,7 +287,7 @@ def save_statistics_csv(city: City):
     global locations_variation
     statistics = city.terms_statistics_to_dict()
     filename = f'{STATISTICS_PATH}/csv/{city.get_file_name()}.csv'
-    print(f'Saving statistics in CSV...: {filename}')
+    log.debug(f'Saving statistics in CSV...: {filename}')
 
     with open(filename, 'w') as f:
         header = 'cod_cidade;cidade;termo;frequencia\n'
@@ -334,7 +310,7 @@ def save_statistics_csv(city: City):
 
 if __name__ == '__main__':
 
-    print(f"Starting at {datetime.datetime.now().strftime('%H:%M:%S')}")
+    log.debug(f"Starting at {datetime.datetime.now().strftime('%H:%M:%S')}")
 
     # 1 - Load terms into memory
     load_terms(TERMS_FILE)
@@ -342,4 +318,4 @@ if __name__ == '__main__':
     # 2 - Search for terms in the files
     start_search()
 
-    print(f"Finished at {datetime.datetime.now().strftime('%H:%M:%S')}")
+    log.debug(f"Finished at {datetime.datetime.now().strftime('%H:%M:%S')}")

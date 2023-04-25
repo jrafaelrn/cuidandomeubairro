@@ -5,9 +5,8 @@ geolocator = Nominatim(domain='localhost:8088', scheme='http')
 
 def search_local(location: str):
     
-    #print(f'Searching location: {location}...')
     location = geolocator.geocode(location, timeout=10)
-    #print(f'\tReturn Location: {location}...')
+    
     if not location:
         return None
     

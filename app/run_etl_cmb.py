@@ -1,7 +1,7 @@
 import os
 import sys
 import datetime
-import logging
+import logging as log
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(APP_DIR))
@@ -13,9 +13,10 @@ from importlib import import_module
 telegram = Telegram()   
 
 
+
 def configure_logs():
-    logging.basicConfig(
-        level=logging.DEBUG,
+    log.basicConfig(
+        level=log.DEBUG,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
         filename=f'{APP_DIR}/data_temp/logs/run_etl_cmb.log',
         filemode='a'
@@ -35,14 +36,20 @@ def execute_scripts():
             
 def execute(file):
     
-    print(f'Running file: {file}')
+    log.info(f'Running file: {file}')
     module = import_module(file.replace('.py', ''))
     
     try:
         module.run()
-        telegram.sendMessage(f'Finished successfully: {file}')
+    
+        message = f'Finished successfully: {file}' 
+        log.info(message)
+        telegram.sendMessage(message)
+    
     except Exception as e:
-        telegram.sendMessage(f'Error running file: {file} --> {e}')
+        message = f'Error running file: {file} --> {e}'
+        log.error(message)
+        telegram.sendMessage(message)
 
 
 

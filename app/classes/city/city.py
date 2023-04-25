@@ -1,8 +1,11 @@
 import pandas as pd
+import logging
 
 from lowercase import lowercase_text
 from undecode import undecode_text
 from ..extractor.extractor import Extractor
+
+log = logging.getLogger(__name__)
 
 
 class City:
@@ -39,7 +42,7 @@ class City:
             self.load()
         
         except Exception as e:
-            print(f'Error in ETL: {e}')
+            log.error(f'Error in ETL: {e}')
             
         
         

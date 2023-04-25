@@ -1,5 +1,8 @@
 import pandas as pd
 import csv
+import logging
+
+log = logging.getLogger(__name__)
 
 # Set pandas options para considerar '' como null
 pd.options.mode.use_inf_as_na = True
@@ -62,7 +65,7 @@ def save_city(header, data, cidade_name):
     global total_cities
     total_lines += len(data)
     total_cities += 1
-    print(f'=> => Salvando arquivo da cidade {total_cities}: {cidade_name} => Total linhas acumuladas: {total_lines}')
+    log.debug(f'=> => Salvando arquivo da cidade {total_cities}: {cidade_name} => Total linhas acumuladas: {total_lines}')
     
     pandas_dataset = pd.DataFrame(data, columns=header)
     pandas_dataset.to_csv(f'./original_data/cidades/{cidade_name}.csv', sep=';', encoding='ISO-8859-1', index=False)
@@ -108,14 +111,14 @@ def update_statistics(column_index, total_rows, empty_rows):
     actual_statistics['total_rows'] += total_rows
     actual_statistics['empty_rows'] += empty_rows   
     
-    #print(f"=> => Estatistica da coluna [{actual_statistics['column_name']}] atualizada com sucesso - Adicionado {total_rows} linhas e {empty_rows} linhas vazias")
+    #log.debug(f"=> => Estatistica da coluna [{actual_statistics['column_name']}] atualizada com sucesso - Adicionado {total_rows} linhas e {empty_rows} linhas vazias")
         
 
 def run():
-    print('Lendo o dataset...')
+    log.debug('Lendo o dataset...')
     
     slice_tce_dataset(FILE_PATH)
-    print(f'Estatística final = {statistics}')
+    log.debug(f'Estatística final = {statistics}')
     
     # Salva o resultado em um arquivo JSON
     with open('result.json', 'w') as f:
