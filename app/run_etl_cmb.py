@@ -2,13 +2,13 @@ import os
 import sys
 import datetime
 import logging as log
-
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(APP_DIR))
+import timeit
 
 from tools.telegram import Telegram
 from importlib import import_module
 
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(APP_DIR))
 
 telegram = Telegram()   
 
@@ -51,8 +51,8 @@ def execute(file):
         telegram.sendMessage(message)
     
     except Exception as e:
-        message = f'Error running file: {file} --> {e}'
-        log.error(message)
+        message = f'Error running file: {file} \n--> {e}'
+        log.error(message.replace('\n', ' '))
         telegram.sendMessage(message)
 
 
@@ -66,9 +66,15 @@ if __name__ == '__main__':
     # Configure log level, format and file
     configure_logs()
     
-    telegram.sendMessage(f"Starting ETL at: {datetime.datetime.now().strftime('%H:%M:%S')}")
+    message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
+    log.info(message)
+    telegram.sendMessage(message)
     
-    # Run every Python file in the scripts folder
-    execute_scripts()
     
-    telegram.sendMessage(f"Finished ETL at: {datetime.datetime.now().strftime('%H:%M:%S')}")
+    # Run every Python file in the scripts folder and measure the time
+    total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)
+    
+    
+    message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time}'
+    log.info(message.replace('\n', ' '))
+    telegram.sendMessage(message)

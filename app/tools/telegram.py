@@ -43,7 +43,7 @@ class Telegram(object):
 
     def sendMessage(self, content: str):
 
-        log.debug(f'<<--- Sending message by Telegram: [{content}] -- to chat: {self.TELEGRAM_CHAT_ID}')
+        log.debug(f'<<--- Sending message by Telegram: [{content}] -- to chat: {self.TELEGRAM_CHAT_ID}'.replace('\n', ' ')
         link_resp = f'{self.url_base}sendMessage?chat_id={self.TELEGRAM_CHAT_ID}&text={content}'
         
         resp = requests.get(link_resp)

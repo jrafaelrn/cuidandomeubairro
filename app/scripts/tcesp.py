@@ -1,10 +1,18 @@
+import os
+import sys
 import requests
 import logging
 
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(f'{os.path.dirname(APP_DIR)}/classes/city')
+sys.path.append(f'{os.path.dirname(APP_DIR)}/classes/extractor')
+
 from tqdm import tqdm
 from importlib import import_module
-from ..classes.city import City
-from ..classes.extractor import Extractor
+from city import City
+from extractor import Extractor
+
+
 
 log = logging.getLogger(__name__)
 
