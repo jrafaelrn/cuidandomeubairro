@@ -1,0 +1,1 @@
+print('Running file: __init__.py from app/classes/extrator')

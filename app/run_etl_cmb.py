@@ -1,13 +1,15 @@
 import os
-import sys
 import datetime
 import logging as log
 import timeit
+import sys
 
 from tools.telegram import Telegram
 from tools.human_readable import convert_seconds_to_human_readable
+from config import configure_paths
 from importlib import import_module
 
+APP_PATH = os.path.dirname(os.path.abspath(__file__))
 
 telegram = Telegram()   
 
@@ -16,17 +18,16 @@ def configure_logs():
     log.basicConfig(
         level=log.DEBUG,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
-        filename=f'./app/data_temp/logs/run_etl_cmb.log',
+        filename=f'{APP_PATH}/data_temp/logs/run_etl_cmb.log',
         filemode='a'
     )
 
 
 
+
 def execute_scripts():
     
-    # Add the scripts folder to the path environment
-    scripts_folder = f'./app/scripts'
-    sys.path.append(scripts_folder)
+    scripts_folder = f'{APP_PATH}/scripts'
     
     # Loop through the files and run Python files
     for file in os.listdir(scripts_folder):
@@ -61,13 +62,14 @@ def execute(file):
 
 if __name__ == '__main__':
     
-    # Configure log level, format and file
+    # Configure environment
+    configure_paths(APP_PATH)
     configure_logs()
     
     # Log start process and send Telegram
     message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
     log.info(message)
-    telegram.sendMessage(message)
+    #telegram.sendMessage(message)
     
     
     # Run every Python file in the scripts folder and measure the time

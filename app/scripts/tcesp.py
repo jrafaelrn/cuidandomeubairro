@@ -1,23 +1,18 @@
-import os
-import sys
-import requests
 import logging
 
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(f'{os.path.dirname(APP_DIR)}/classes/city')
-sys.path.append(f'{os.path.dirname(APP_DIR)}/classes/extractor')
-
-from tqdm import tqdm
-from importlib import import_module
-from city import City
-from extractor import Extractor
-
-
+from classes.city.city import City
+from classes.extractor.extractor import Extractor
 
 log = logging.getLogger(__name__)
 
 
 class Extractor_tce(Extractor):
+    
+    
+    def get_last_update(self):
+        import datetime
+        return datetime.datetime.now()
+        
 
     def download(self):
         
@@ -25,31 +20,9 @@ class Extractor_tce(Extractor):
         
         for url in urls:
             file_name = url.split('/')[-1]
-            self.download_data(url, f'original_data/{file_name}')        
+            Extractor.download_file_from_url(url)     
         
         
-
-    def download_data(self, url: str, filename: str):
-        
-        log.info(f"Downloading {url}...")
-        
-        req = requests.get(url, stream=True)
-        total_size_bytes = int(req.headers.get('content-length', 0))
-        block_size = 1024
-        progress_bar = tqdm(total=total_size_bytes, unit='iB', unit_scale=True)
-        
-        with open(filename, 'wb') as f:
-            for chunk in req.iter_content(chunk_size=block_size):
-                progress_bar.update(len(chunk))            
-                f.write(chunk)
-        
-        progress_bar.close()
-        if total_size_bytes != 0 and progress_bar.n != total_size_bytes:
-            log.error("ERROR, something went wrong")
-        else:
-            log.info(f"Downloaded {filename} successfully")
-            
-
 
 def run():
     
@@ -63,5 +36,3 @@ def run():
     for city_name, city_code in cities.items():
         city = City(name=city_name, code=city_code)
         city.etl(data=data_tce)
-    
-    

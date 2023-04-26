@@ -3,13 +3,9 @@ import sys
 import pandas as pd
 import logging
 
-
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(f'{os.path.dirname(APP_DIR)}/classes/extractor')
-
 from lowercase import lowercase_text
 from undecode import undecode_text
-from extractor import Extractor
+from classes.extractor.extractor import Extractor
 
 log = logging.getLogger(__name__)
 
