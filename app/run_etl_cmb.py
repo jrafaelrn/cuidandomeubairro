@@ -3,11 +3,13 @@ import datetime
 import logging as log
 import timeit
 import sys
+import cProfile
 
 from tools.telegram import Telegram
 from tools.human_readable import convert_seconds_to_human_readable
 from config import configure_paths
 from importlib import import_module
+
 
 APP_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,7 +21,7 @@ def configure_logs():
         level=log.DEBUG,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
         filename=f'{APP_PATH}/data_temp/logs/run_etl_cmb.log',
-        filemode='a'
+        filemode='w'
     )
 
 
@@ -40,7 +42,8 @@ def execute_scripts():
 def execute(file):
     
     log.info(f'Running file: {file}')
-    module = import_module(file.replace('.py', ''))
+    file = file.replace('.py', '')
+    module = import_module(file)
     
     try:
         module.run()
@@ -73,13 +76,13 @@ if __name__ == '__main__':
     
     
     # Run every Python file in the scripts folder and measure the time
-    total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)
-    
+    #total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)
+    cProfile.run('execute_scripts()', sort='cumtime')
     
     # Convert seconds to hh:mm:ss
-    total_time_readable = convert_seconds_to_human_readable(total_time)
+    #total_time_readable = convert_seconds_to_human_readable(total_time)
     
     # Log end process and send Telegram    
-    message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
-    log.info(message.replace('\n', ' '))
-    telegram.sendMessage(message)
+    #message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
+    #log.info(message.replace('\n', ' '))
+    #telegram.sendMessage(message)

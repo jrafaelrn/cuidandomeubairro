@@ -19,8 +19,8 @@ class Extractor_tce(Extractor):
         urls = ['https://transparencia.tce.sp.gov.br/sites/default/files/conjunto-dados/despesas-2022.zip']
         
         for url in urls:
-            file_name = url.split('/')[-1]
-            Extractor.download_file_from_url(url)     
+            continue
+            #Extractor.download_file_from_url(Extractor, url)    
         
         
 

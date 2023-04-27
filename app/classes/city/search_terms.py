@@ -17,8 +17,7 @@ log = logging.getLogger(__name__)
 
 FOLDER_PATH = 'original_data/cidades'
 STATISTICS_PATH = 'statistics'
-TERMS_FILE = 'terms.txt'
-TERMS_CONTENT = None
+
 DESCRIPTION_COLUMN = 24
 CITY_COLUMN = 2
 CODE_CITY_COLUMN = 3
@@ -33,18 +32,7 @@ time_total_searchs = Value('d', 0)
 time_counters_searchs = Value('i', 0)
 total_success_searchs = Value('i', 0)
 
-############# 1 #############
 
-
-def load_terms(terms_file: str):
-
-    global TERMS_CONTENT
-
-    with open(terms_file, 'r') as f:
-        TERMS_CONTENT = f.read().splitlines()
-        TERMS_CONTENT = [term.lower() for term in TERMS_CONTENT]
-        TERMS_CONTENT = [unidecode(term) for term in TERMS_CONTENT]
-        log.debug(f'Loaded {len(TERMS_CONTENT)} terms: \n {TERMS_CONTENT}')
 
 
 ############# 2 #############
