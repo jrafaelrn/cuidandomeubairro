@@ -1,16 +1,16 @@
 import requests
 import logging
 
+# Progress bar
 from tqdm import tqdm
 
-
+# Logging configuration
 log = logging.getLogger(__name__)
 
 
-
-def download_file_from_url(self, url: str, filename: str):
+def download_file_from_url(url: str, filename: str):
     
-    log.info(f"Downloading {url}...")
+    log.info(f"Downloading [{url}] to [{filename}]")
     
     req = requests.get(url, stream=True)
     total_size_bytes = int(req.headers.get('content-length', 0))

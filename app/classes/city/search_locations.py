@@ -1,8 +1,10 @@
 import logging
+import pandas as pd
 
 from geopy.geocoders import Nominatim
 from undecode import undecode_text
 from lowercase import lowercase_text
+from search_terms import search_all_terms
 
 geolocator = Nominatim(domain='localhost:8088', scheme='http')
 #geolocator = Nominatim(user_agent="cmb3.0")
@@ -36,4 +38,17 @@ def search_local(location: str):
         return None
     
     return location
+
+
+
+
+
+def search_all_locations(data: pd.DataFrame):
     
+    # Loop over all rows
+    for row in data.itertuples():
+        
+        terms_finded = search_all_terms(row.text)
+        
+        for term in terms_finded:
+            

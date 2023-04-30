@@ -10,7 +10,7 @@ import logging
 
 from multiprocessing import Process, Lock, Value
 from app.classes.city.city import City
-from app.classes.city.search_location import search_local
+from app.classes.city.search_locations import search_local
 from tqdm import tqdm
 
 log = logging.getLogger(__name__)
@@ -112,7 +112,7 @@ def search_from_file(city: City, layout: str):
     if os.path.isfile(full_path):
         if layout == 'tcesp':
             layout_tcesp(city, full_path)
-            save_statistics(city)
+            
 
     log.debug(f'\n----- > Finished file {full_path}...')
 
@@ -126,39 +126,9 @@ def search_from_file(city: City, layout: str):
     log.debug(f'Average success searchs(%): {(total_success_searchs.value / time_counters_searchs.value) * 100}')
 
 
-############# 2.3 #############
-
-def layout_tcesp(city: City, full_path: str):
-
-    enc = 'ISO-8859-1'
-    global DESCRIPTION_COLUMN
-
-    with open(full_path, newline='', encoding=enc) as f:
-
-        total_lines = 0
-
-        # Ignore the header
-        reader = csv.reader(f, delimiter=';', quotechar='"')
-        next(reader)
-
-        # Loop through the file
-        for i, row in enumerate(reader):
-
-            regex_find = search_line(row[DESCRIPTION_COLUMN])
-
-            if regex_find:
-                update_statistics(city, regex_find)
-            
-            total_lines += 1
-            
-
-        # Update the global statistics
-        city.set_total_rows(total_lines)
-        total_lines = 0
 
 
-
-def search_line(line: str):
+def search_all_terms(line: str):
 
     global TERMS_CONTENT
     #console.debug(f'Searching line: {line}...')
@@ -224,76 +194,9 @@ def search_locations_variations(text: str, position: int):
         next_word += 1
 
 
-'''
-############# 3 #############
-    
-Save statistics in CSV and JSON by default
-Optional: parameter 'format=json' or 'format=csv'
-
-Args:
-    filename: The file to save the statistics to.
-    format: The format to save the statistics in. 
-
-Raises:
-    FileNotFoundError: If the output directory does not exist.
-
-'''
 
 
-def save_statistics(city: City, format: str = None):
 
-    if format == 'json':
-        save_statistics_json(city)
-        return
-
-    if format == 'csv':
-        save_statistics_csv(city)
-        return
-
-    # Default
-    save_statistics_json(city)
-    save_statistics_csv(city)
-
-
-def save_statistics_json(city: City):
-
-    statistics = city.terms_statistics_to_dict()
-    filename = city.get_file_name().replace('.csv', '')
-    log.debug(f'Saving statistics in JSON...: {filename}')
-
-    global STATISTICS_PATH
-    filename = f'{STATISTICS_PATH}/json/{filename}.json'
-
-    with open(filename, 'w', encoding='utf-8') as f:
-        data = json.dumps(statistics, indent=4, ensure_ascii=False)
-        f.write(data)
-
-
-def save_statistics_csv(city: City):
-
-    global STATISTICS_PATH
-    global locations_variation
-    statistics = city.terms_statistics_to_dict()
-    filename = f'{STATISTICS_PATH}/csv/{city.get_file_name()}.csv'
-    log.debug(f'Saving statistics in CSV...: {filename}')
-
-    with open(filename, 'w') as f:
-        header = 'cod_cidade;cidade;termo;frequencia\n'
-        f.write(header)
-        content = []
-
-        for term, quantity in statistics.items():
-            if term == 'cod_cidade':
-                continue
-            line = f'{city.code};{city.name};{term};{quantity}\n'
-            content.append(line)
-            
-        # Loop through the locations variation
-        for variation, quantity in locations_variation.items():
-            line = f'{city.code};{city.name};variation_{variation};{quantity}\n'
-            content.append(line)
-
-        f.writelines(content)
 
 
 if __name__ == '__main__':

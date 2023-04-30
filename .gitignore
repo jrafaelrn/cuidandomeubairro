@@ -8,7 +8,9 @@ app/tools/__pycache__/*
 app/scripts/__pycache__
 app/classes/city/__pycache__
 app/.env
-app/data_temp/logs/*
+app/data_temp/**
 
 .conda/*
 nominatim-data/*
+**/__pycache__/**
+

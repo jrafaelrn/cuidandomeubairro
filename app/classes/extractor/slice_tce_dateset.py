@@ -1,13 +1,16 @@
 import pandas as pd
 import csv
 import logging
+import datetime
+import os
+
+
 
 log = logging.getLogger(__name__)
 
 # Set pandas options para considerar '' como null
 pd.options.mode.use_inf_as_na = True
 
-FILE_PATH = './original_data/despesas-2022.csv'
 
 statistics = []
 total_rows = 0
@@ -19,7 +22,9 @@ NAME_CITY_COLUMN = 2
 
 
 
-def slice_tce_dataset(file_path: str):    
+def slice_tce_dataset(file_path: str, folder_path):
+    
+    log.debug(f'=> Starting slice file {file_path}')
     
     enc = 'ISO-8859-1'
     
@@ -45,7 +50,7 @@ def slice_tce_dataset(file_path: str):
             # Check if city is the same
             # If not, save the current chunk
             if city_code != row[CODE_CITY_COLUMN]:                
-                save_city(header, chunk, city_name)
+                save_city(header, chunk, city_name, folder_path)
                 
                 # Reset the variables
                 city_code = row[CODE_CITY_COLUMN]
@@ -58,8 +63,7 @@ def slice_tce_dataset(file_path: str):
         
         
 
-
-def save_city(header, data, cidade_name):
+def save_city(header, data, cidade_name, folder_path):
     
     global total_lines
     global total_cities
@@ -67,8 +71,11 @@ def save_city(header, data, cidade_name):
     total_cities += 1
     log.debug(f'=> => Salvando arquivo da cidade {total_cities}: {cidade_name} => Total linhas acumuladas: {total_lines}')
     
-    pandas_dataset = pd.DataFrame(data, columns=header)
-    pandas_dataset.to_csv(f'./original_data/cidades/{cidade_name}.csv', sep=';', encoding='ISO-8859-1', index=False)
+    cidade_name = f"{cidade_name}-{datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}"
+    file_path = f'{folder_path}/{cidade_name}.csv'
+    
+    pandas_dataset = pd.DataFrame(data, columns=header)    
+    pandas_dataset.to_csv(file_path, sep=';', encoding='ISO-8859-1', index=False)
 
 
 
@@ -117,7 +124,7 @@ def update_statistics(column_index, total_rows, empty_rows):
 def run():
     log.debug('Lendo o dataset...')
     
-    slice_tce_dataset(FILE_PATH)
+    
     log.debug(f'Estatística final = {statistics}')
     
     # Salva o resultado em um arquivo JSON

@@ -72,12 +72,12 @@ if __name__ == '__main__':
     # Log start process and send Telegram
     message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
     log.info(message)
-    #telegram.sendMessage(message)
+    telegram.sendMessage(message)
     
     
     # Run every Python file in the scripts folder and measure the time
     #total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)
-    cProfile.run('execute_scripts()', sort='cumtime')
+    profile = cProfile.run('execute_scripts()', sort='cumtime')
     
     # Convert seconds to hh:mm:ss
     #total_time_readable = convert_seconds_to_human_readable(total_time)
