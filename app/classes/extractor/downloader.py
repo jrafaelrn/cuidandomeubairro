@@ -1,5 +1,6 @@
 import requests
 import logging
+import os
 
 # Progress bar
 from tqdm import tqdm
@@ -11,6 +12,8 @@ log = logging.getLogger(__name__)
 def download_file_from_url(url: str, filename: str):
     
     log.info(f"Downloading [{url}] to [{filename}]")
+    
+    clean_files(os.path.dirname(filename))
     
     req = requests.get(url, stream=True)
     total_size_bytes = int(req.headers.get('content-length', 0))
@@ -27,3 +30,10 @@ def download_file_from_url(url: str, filename: str):
         log.error("ERROR, something went wrong")
     else:
         log.info(f"Downloaded {filename} successfully")
+        
+        
+
+def clean_files(folder_path: str):
+    for files in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, files)
+        os.remove(file_path)

@@ -1,6 +1,7 @@
 import logging
 import pandas as pd
 import datetime
+import os
 
 from classes.city.city import City
 from classes.extractor.extractor import Extractor
@@ -29,16 +30,18 @@ class Extractor_tce(Extractor):
             
             
     
-    def get_data(self, city_code: str) -> pd.DataFrame:
+    def get_data(self, file_path: str) -> pd.DataFrame:
         
         enc = 'ISO-8859-1'
         data_temp_path = super().get_data_temp_path()
-        file_path = f'{data_temp_path}/{city_code}.csv'
+        file_path = f'{data_temp_path}/{file_path}'
 
         # Open the file and convert to pandas dataframe
         data_frame = pd.read_csv(file_path, encoding=enc, sep=';', header=0, low_memory=False)
+        city_name = str(data_frame['ds_municipio'].iloc[0])
+        city_code = int(data_frame['codigo_municipio_ibge'].iloc[0])
         
-        return data_frame
+        return data_frame, city_name, city_code
             
             
 
@@ -51,13 +54,15 @@ class Extractor_tce(Extractor):
 def run():
     
     extractor = Extractor_tce()
-    extractor.download()
+    #extractor.download()
     
-    cities = {}
-    cities['Itapira'] = 3522604
-    cities['Araras'] = 3503307
+    cities_files = []
+    for file in os.listdir(extractor.get_data_temp_path(nivel=2)):
+        if file.endswith('.csv'):
+            cities_files.append(file)
+     
     
-    for city_name, city_code in cities.items():
-        data_tce = extractor.get_data(city_code)
+    for file in cities_files:
+        data_tce, city_name, city_code = extractor.get_data(file)
         city = City(name=city_name, code=city_code)
         city.etl(data=data_tce)

@@ -59,7 +59,7 @@ def slice_tce_dataset(file_path: str, folder_path):
             chunk.append(row)
             city_name = f'{city_code}-{row[NAME_CITY_COLUMN]}'
         
-        save_city(header, chunk, city_name)
+        save_city(header, chunk, city_name, folder_path)
         
         
 

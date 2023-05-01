@@ -32,16 +32,20 @@ class Extractor(ABC):
     
     # Get the name of the file that called this method
     # This is used to create a folder with the same name in the 'data_temp' folder
-    def get_file_name(self) -> str:
+    def get_file_name(self, nivel) -> str:
+        
         stack = inspect.stack()
-        stack_filename = stack[3].filename
+        full_stack_names = [s.filename for s in stack]  #Just for debugging
+        
+        stack_filename = stack[nivel].filename
         filename = stack_filename.split("/")[-1].replace(".py", "")
         return filename
     
     
+    
     # Full path to the temporary file    
-    def get_data_temp_path(self) -> str:
-        data_temp_path = f'{self.__DATA_TEMP_BASE}/{self.get_file_name()}'
+    def get_data_temp_path(self, nivel=3) -> str:
+        data_temp_path = f'{self.__DATA_TEMP_BASE}/{self.get_file_name(nivel)}'
         return data_temp_path
         
     
