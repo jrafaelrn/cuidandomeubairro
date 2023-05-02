@@ -3,128 +3,16 @@ import csv
 import re
 import json
 import datetime
-import multiprocessing as mp
 import timeit
 import time
 import logging
 
-from multiprocessing import Process, Lock, Value
 from app.classes.city.city import City
 from app.classes.city.search_locations import search_local
-from tqdm import tqdm
+
 
 log = logging.getLogger(__name__)
-
-FOLDER_PATH = 'original_data/cidades'
 STATISTICS_PATH = 'statistics'
-
-DESCRIPTION_COLUMN = 24
-CITY_COLUMN = 2
-CODE_CITY_COLUMN = 3
-
-# Multiprocessing variables
-total_files = Value('i', 0)
-total_files.value = 1
-cities = []
-
-
-time_total_searchs = Value('d', 0)
-time_counters_searchs = Value('i', 0)
-total_success_searchs = Value('i', 0)
-
-
-
-
-############# 2 #############
-
-def start_search():
-
-    global cities
-
-    ### 2.1 ###
-    get_cities()
-    num_files = len(cities)
-
-    # Variables for multiprocessing
-    cores = mp.cpu_count()
-    core_multiplier = 2
-    log.debug(f'Running in {cores} cores...')
-    processes = []
-    running = 0
-    completed = 0
-    
-    progress_bar = tqdm(total=num_files)
-
-    while completed < num_files:
-        while running <= (cores * core_multiplier) and len(cities) > 0:
-
-            city = cities.pop(0)
-
-            ### 2.2 ###
-            p = Process(target=search_from_file, args=(city, 'tcesp'))
-            processes.append(p)
-            p.start()
-            running += 1
-            time.sleep(0.5)
-
-        for process in processes:
-            if process.is_alive():
-                process.join()
-            else:
-                completed += 1
-                running -= 1
-                processes.remove(process)
-                progress_bar.update(1)
-
-    log.info(f'Finished all files!')
-    progress_bar.close()
-
-
-############# 2.1 #############
-
-def get_cities():
-
-    global cities
-    file_paths = [os.path.join(FOLDER_PATH, file) for file in os.listdir(FOLDER_PATH)]
-
-    # Temp filter
-    file_paths = file_paths[:10]
-
-    for file in file_paths:
-        file_name = os.path.basename(file).replace('.csv', '')
-        city_code = file_name.split('-')[0]
-        city_name = file_name.split('-')[1]
-
-        city = City(city_name, city_code)
-        city.set_file_path(file)
-        cities.append(city)
-
-
-############# 2.2 #############
-
-def search_from_file(city: City, layout: str):
-
-    global total_files
-    full_path = city.get_file_path()
-    log.debug(f'Opening file {total_files.value}: {full_path}...')
-    total_files.value = total_files.value + 1
-
-    if os.path.isfile(full_path):
-        if layout == 'tcesp':
-            layout_tcesp(city, full_path)
-            
-
-    log.debug(f'\n----- > Finished file {full_path}...')
-
-    global time_total_searchs
-    global time_counters_searchs
-    global total_success_searchs
-    log.debug(f'Total time (sec): {time_total_searchs.value}')
-    log.debug(f'Total searchs: {time_counters_searchs.value}')
-    log.debug(f'Average time (sec): {time_total_searchs.value / time_counters_searchs.value}')
-    log.debug(f'Total success searchs: {total_success_searchs.value}')
-    log.debug(f'Average success searchs(%): {(total_success_searchs.value / time_counters_searchs.value) * 100}')
-
 
 
 

@@ -3,11 +3,14 @@ import logging
 import datetime
 import json
 
+
 from lowercase import lowercase_text
 from undecode import undecode_text
 from classes.extractor.extractor import Extractor
 
+
 log = logging.getLogger(__name__)
+
 
 
 class City:
@@ -21,7 +24,7 @@ class City:
         self.save_statistics = save_statistics
         
     
-    def transform(self, data: pd.DataFrame):
+    def transform(self, data: pd.DataFrame, config_columns):
         
         text = ''
         text = lowercase_text(text)
@@ -127,21 +130,18 @@ class City:
         
         
     
-    def etl(self, extractor: Extractor = None, data: pd.DataFrame = None):
-        
-        try:
-        
-            if extractor:
-                data = extractor.download()
-        
-            self.transform(data)
-            self.load()
-        
-        except Exception as e:
-            log.error(f'Error in ETL: {e}')
-            
+    def etl(self, extractor: Extractor = None, data: pd.DataFrame = None, config_columns = None):        
+    
+        if extractor:
+            data = extractor.download()
+    
+        self.transform(data, config_columns)
+        self.load()
 
             
+  
+        
+        
         
         
     def update_term(self, term):
