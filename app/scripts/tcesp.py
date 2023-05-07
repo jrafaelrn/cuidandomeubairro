@@ -121,6 +121,9 @@ def run():
         "CITY_CODE": "codigo_municipio_ibge",
     }
     
+    # Filter cities
+    cities_files = cities_files[:1]
+    
     run_multiprocessing(cities_files, extractor, config)
      
     
