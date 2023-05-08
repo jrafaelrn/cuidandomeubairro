@@ -12,21 +12,28 @@ class Statistics:
         self.total_lines = 0
         self.total_unique_descriptions = 0
         self.terms = {}
+        self.total_terms = {}
+        self.total_search_variations = 0
     
     
     def add_term(self, term):
         values = {}
-        values['total_terms'] = 0
-        values['total_locations'] = 0
-        values['total_fake_locations'] = 0
-        values['total_money'] = 0
         self.terms[term] = values
         #log.debug(f'Added term {term}')
         return self.terms[term]  
     
     
-    def update_term(self, term: str, condition: str):
+    def add_total_term(self, term):
+        values = {}
+        values['total_term'] = 0
+        values['total_locations'] = 0
+        values['total_money'] = 0
+        self.total_terms[term] = values
+        return self.total_terms[term]
         
+    
+    
+    def update_location_term(self, term: str, condition: str):        
         term_target = self.terms.get(term, None)
         
         if term_target is None:
@@ -34,6 +41,17 @@ class Statistics:
                         
         term_target[condition] = term_target.get(condition, 0) + 1
         
+        self.update_total_term(term, 'total_locations')
+            
+    
+    
+    def update_total_term(self, term: str, condition: str):        
+        term_target = self.total_terms.get(term, None)
+        
+        if term_target is None:
+            term_target = self.add_total_term(term)
+                    
+        term_target[condition] = term_target.get(condition, 0) + 1
         
         
     '''        
@@ -104,19 +122,18 @@ class Statistics:
         log.debug(f'Saving statistics in CSV...: {filename}')
         
         with open(filename, 'w') as f:
-            header = 'cod_cidade;cidade;termo;frequencia\n'
+            header = f'city_code;term;{";".join(f"variation_{i}" for i in range(0, self.total_search_variations + 1))};\n'
             f.write(header)
             content = []
 
-            for term, quantity in statistics.items():
-                if term == 'cod_cidade':
-                    continue
-                line = f'{self.code};{self.name};{term};{quantity}\n'
-                content.append(line)
+            for term, values in self.terms.items():
                 
-            # Loop through the locations variation
-            for variation, quantity in locations_variation.items():
-                line = f'{self.code};{self.name};variation_{variation};{quantity}\n'
+                line = f'{file_name};{term};'
+                
+                for variation in range(0, self.total_search_variations + 1):
+                    line += f'{values.get(f"variation_{variation}", 0)};'
+                
+                line += '\n'
                 content.append(line)
 
             f.writelines(content)

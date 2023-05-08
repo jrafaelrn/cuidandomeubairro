@@ -64,25 +64,23 @@ def run_multiprocessing(files, extractor, config):
     progress_bar = tqdm(total=num_files)
 
     while completed < num_files:
+        
         while running <= (cores * core_multiplier) and len(files) > 0:
-
             file = files.pop(0)
-
-            ### 2.2 ###
             p = Process(target=run_city, args=(file, extractor, config))
             processes.append(p)
             p.start()
             running += 1
-            time.sleep(0.5)
-
+            
         for process in processes:
-            if process.is_alive():
-                process.join()
-            else:
+            if not process.is_alive():
                 completed += 1
                 running -= 1
                 processes.remove(process)
                 progress_bar.update(1)
+                
+        time.sleep(5)
+
 
     log.info(f'Finished all files!')
     progress_bar.close()
@@ -91,13 +89,15 @@ def run_multiprocessing(files, extractor, config):
     
 def run_city(file, extractor, config):
     
-    log.debug(f'----- > Opening file {file}...')
+    log.info(f'----- > Opening file {file}...')
+    #print(f'----- > Opening file {file}...')
     
     data_tce, city_name, city_code = extractor.get_data(file)
     city = City(name=city_name, code=city_code)
     city.etl(data=data_tce, config_columns=config)
     
-    log.debug(f'----- > Finished file {file}...')
+    log.info(f'----- > Finished file {file}...')
+    #print(f'----- > Finished file {file}...')
 
 
 
@@ -122,7 +122,7 @@ def run():
     }
     
     # Filter cities
-    cities_files = cities_files[:1]
+    #cities_files = cities_files[:100]
     
     run_multiprocessing(cities_files, extractor, config)
      

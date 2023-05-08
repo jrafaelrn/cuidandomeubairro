@@ -18,7 +18,7 @@ telegram = Telegram()
 
 def configure_logs():
     log.basicConfig(
-        level=log.DEBUG,
+        level=log.INFO,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
         filename=f'{APP_FOLDER_PATH}/data_temp/logs/run_etl_cmb.log',
         filemode='w'

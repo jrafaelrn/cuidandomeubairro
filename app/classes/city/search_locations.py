@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 FILE_PATH = os.path.abspath(__file__)
 FOLDER_PATH = os.path.dirname(FILE_PATH)
-
+TOTAL_SEARCH_VARIATION = 10
 
 
 def load_terms():
@@ -38,6 +38,7 @@ def load_terms():
 def search_all_locations(data: pd.DataFrame, column_name: str, statistics):    
     
     terms_content = load_terms()
+    statistics.total_search_variations = TOTAL_SEARCH_VARIATION
     
     for row in data[column_name]:
         
@@ -49,19 +50,7 @@ def search_all_locations(data: pd.DataFrame, column_name: str, statistics):
 
 
 
-def search_variations(text: str, terms_finded: list, statistics):
-    
-    # Searching for the all row
-    address_total_search = search_local(text)
-    
-    if address_total_search:        
-        fake_address = check_fake_location(address_total_search)
-        if fake_address:
-            statistics.update_term(term, 'total_fake_locations')
-        else:
-            statistics.update_term(term, 'total_locations')
-            statistics.update_term(term, 'location_0')
-        
+def search_variations(text: str, terms_finded: list, statistics):       
         
     # Searching for the first 10 words
     next_word = 3
@@ -71,27 +60,25 @@ def search_variations(text: str, terms_finded: list, statistics):
         term_text = term['term']
         term_position = term['position']
         
-        statistics.update_term(term_text, 'total_terms')
-    
-        text = text[term_position:]
-        words = text.split(' ')
-
-        while next_word <= len(words) and next_word <= 10:
+        # Accumulates the total of each term found in the city
+        statistics.update_total_term(term_text, 'total_term')
+        
+        text_to_search = text
+        next_word = 0
+        text_from_position = text[term_position:]
+        words = text_from_position.split(' ')                    
+        
+        while next_word <= len(words) and next_word <= TOTAL_SEARCH_VARIATION:
             
-            text_to_search = ' '.join(words[:next_word])
             search = search_local(text_to_search)
             
             if search:
                 fake_address = check_fake_location(search)
-                if fake_address:
-                    statistics.update_term(term_text, 'total_fake_locations')
-                    statistics.update_term(term_text, f'fake_location_{next_word}')
-                else:
-                    statistics.update_term(term_text, 'total_locations')
-                    statistics.update_term(term_text, f'location_{next_word}')
-                    
-            next_word += 1
-
+                if not fake_address:
+                    statistics.update_location_term(term_text, f'variation_{next_word}')
+    
+            next_word = 3 if next_word == 0 else next_word + 1
+            text_to_search = ' '.join(words[:next_word])
 
 
 
