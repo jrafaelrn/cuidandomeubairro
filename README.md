@@ -1,5 +1,5 @@
 # Cuidando do Meu Bairro 2.1
-Repositório para TCC - EACH - Cuidando do Meu Bairro 2.1
+Repositório para TCC - EACH-USP
 
 Este projeto adiciona os dados do Tribunal de Contas do Estado de São Paulo (TCE-SP) ao projeto Cuidando do Meu Bairro 20.
 

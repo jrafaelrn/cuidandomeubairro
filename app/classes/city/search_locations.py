@@ -84,12 +84,12 @@ def search_variations(text: str, terms_finded: list, statistics):
 
 def search_local(text: str):
     
-    attempts = 1
+    max_attempts = 10
     
-    while attempts < 10:
+    while max_attempts > 0:
 
         try:
-            location_geo = geolocator.geocode(text, timeout=600, attempts=attempts)
+            location_geo = geolocator.geocode(text, timeout=600)
 
             if location_geo:        
                 lat, lon = location_geo.latitude, location_geo.longitude
@@ -98,7 +98,7 @@ def search_local(text: str):
             
         except Exception as e:
             log.error(f'Error searching location: {e}')
-            max_attempts += 1
+            max_attempts -= 1
             
     return False
 
