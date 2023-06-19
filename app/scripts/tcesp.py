@@ -54,7 +54,7 @@ def run_multiprocessing(files, extractor, config):
             
     # Variables for multiprocessing
     cores = mp.cpu_count()
-    core_multiplier = 2
+    core_multiplier = 1
     log.debug(f'Running in {cores} cores...')
     processes = []
     running = 0

@@ -2,6 +2,7 @@ import datetime
 import inspect
 import os
 import logging
+import sys
 
 from abc import ABC, abstractmethod
 from downloader import download_file_from_url as file_from_url
@@ -51,6 +52,13 @@ class Extractor(ABC):
     
     def download_file_from_url(self, url: str):        
         self.download_file_path = f'{self.get_data_temp_path()}/original.zip'
+        
+        try:
+            os.mkdir(self.get_data_temp_path())
+        except Exception as e:
+            log.error(f'Error creating folder: {e}')
+            sys.exit(1)
+        
         file_from_url(url, self.download_file_path)
         
     

@@ -1,0 +1,6 @@
+geopy
+unidecode
+requests
+pandas
+python-dotenv
+tqdm

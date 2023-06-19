@@ -1,62 +1,178 @@
-(rua|r\.)?!em situação de
-(avenida|av\.|\sav\s)
-(jardim|jd\.)
-(travessa|trav\.)
-favela
-praca
-viela
-vila
-ponte
-parque
-escola(s)?\s
-bairro
-quadra
-corrego
-viaduto
-ladeira
-ginasio
-chacara
-estadio
-hospital
-distrito
-autodromo
-cemiterio
-instituto
-biblioteca
-maternidade
-Polo Cultural
-Centro Cultural
-Complexo Esportivo
-Conjunto Habitacional
-Conservatório Musical
-!UBS
-!CDC
-!EMEF
-!EMEI
-!CEI
-!CEU
-!APA
-#Cangaíba
-#Anhembi
-Guarapiranga
-Centro de Referência Especializado da Assistência Social
-Theatro Municipal
-Câmara Municipal
-Edifício Matarazzo
-Fábrica do Samba
-Unibes
-Elevado Costa e Silva
-Centro de Manejo da Fauna Silvestre
-creche\s
-crematorio
-AACD
-GRAAC
-A.C.S.E.S.M. Camisa Verde e Branco
-Real Parque
-A.C. Camargo Câncer Center
-Centro de Recreação e Desenvolvimento da Criança Especial
-Complexo Anhembi
-Paraisópolis
-Água Espraiada
-Faria Lima
-Água Branca
+(A[.]|Área|Area)
+(Ac[.]|Acesso)
+(Aca[.]|Acampamento)
+(Acl[.]|Acesso Local)
+(Ad[.]|Adro|Area Especial)
+(Ae[.]|Área Especial)
+(Aer[.]|Aeroporto)
+(Al[.]|Alameda)
+(Amd[.]|Avenida Marginal Direita)
+(Ame[.]|Avenida Marginal Esquerda)
+(An[.]|Anel Viário|Anel Viario)
+(Ant[.]|Antiga Estrada)
+(Art[.]|Artéria|Arteria)
+(At[.]|Alto)
+(Atl[.]|Atalho)
+(Av[.]|Área Verde|Area Verde)
+(Av[.]|Avenida)
+(Avc[.]|Avenida Contorno)
+(Avm[.]|Avenida Marginal)
+(Avv[.]|Avenida Velha)
+(Bal[.]|Balneário|Balneario)
+(Bc[.]|Beco)
+(Bco[.]|Buraco)
+(Bel[.]|Belvedere)
+(Bl[.]|Bloco)
+(Blo[.]|Balão|Balao)
+(Bls[.]|Blocos)
+(Blv[.]|Bulevar)
+(Bsq[.]|Bosque)
+(Bvd[.]|Boulevard)
+(Bx[.]|Baixa)
+(C[.]|Cais)
+(Cal[.]|Calçada)
+(Cam[.]|Caminho)
+(Can[.]|Canal)
+(Ch[.]|Chácara|Chacara)
+(Cha[.]|Chapadão|Chapadao)
+(Cic[.]|Ciclovia)
+(Cir[.]|Circular)
+(Cj[.]|Conjunto)
+(Cjm[.]|Conjunto Mutirão|Conjunto Mutirao)
+(Cmp[.]|Complexo Viário|Complexo Viario)
+(Col[.]|Colônia|Colonia)
+(Com[.]|Comunidade)
+(Con[.]|Condomínio)
+(Cor[.]|Corredor)
+(Cpo[.]|Campo)
+(Crg[.]|Córrego|Corrego)
+(Ctn[.]|Contorno)
+(Dsc[.]|Descida)
+(Dsv[.]|Desvio)
+(Dt[.]|Distrito)
+(Eb[.]|Entre Bloco)
+(Eim[.]|Estrada Intermunicipal)
+(Ens[.]|Enseada)
+(Ent[.]|Entrada Particular)
+(Eq[.]|Entre Quadra)
+(Esc[.]|Escada)
+(Esd[.]|Escadaria)
+(Ese[.]|Estrada Estadual)
+(Esi[.]|Estrada Vicinal)
+(Esl[.]|Estrada de Ligação|Estrada de Ligacao)
+(Esm[.]|Estrada Municipal)
+(Esp[.]|Esplanada)
+(Ess[.]|Estrada de Servidão|Estrada de Servidao)
+(Est[.]|Estrada)
+(Esv[.]|Estrada Velha)
+(Eta[.]|Estrada Antiga)
+(Etc[.]|Estação|Estacao)
+(Etd[.]|Estádio|Estadio)
+(Etn[.]|Estância|Estancia)
+(Etp[.]|Estrada Particular)
+(Ett[.]|Estacionamento)
+(Eva[.]|Evangélica|Evangelica)
+(Evd[.]|Elevada)
+(Ex[.]|Eixo Industrial)
+(Fav[.]|Favela)
+(Faz[.]|Fazenda)
+(Fer[.]|Ferrovia)
+(Fnt[.]|Fonte)
+(Fra[.]|Feira)
+(Fte[.]|Forte)
+(Gal[.]|Galeria)
+(Gja[.]|Granja)
+(Hab[.]|Núcleo Habitacional|Nucleo Habitacional)
+(Ia[.]|Ilha)
+(Ind[.]|Indeterminado)
+(Ioa[.]|Ilhota)
+(Jd[.]|Jardim)
+(Jde[.]|Jardinete)
+(Ld[.]|Ladeira)
+(Lga[.]|Lagoa)
+(Lgo[.]|Lago)
+(Lot[.]|Loteamento)
+(Lrg[.]|Largo)
+(Lt[.]|Lote)
+(Mer[.]|Mercado)
+(Mna[.]|Marina)
+(Mod[.]|Modulo)
+(Mrg[.]|Projeção|Projecao)
+(Mro[.]|Morro)
+(Mte[.]|Monte)
+(Nuc[.]|Núcleo|Nucleo)
+(Nur[.]|Núcleo Rural|Nucleo Rural)
+(Out[.]|Outeiro)
+(Par[.]|Paralela)
+(Pas[.]|Passeio)
+(Pat[.]|Pátio|Patio)
+(Pc[.]|Praça)
+(Pce[.]|Praça de Esportes)
+(Pda[.]|Parada)
+(Pdo[.]|Paradouro)
+(Pnt[.]|Ponta)
+(Pr[.]|Praia)
+(Prl[.]|Prolongamento)
+(Prm[.]|Parque Municipal)
+(Prq[.]|Parque)
+(Prr[.]|Parque Residencial)
+(Psa[.]|Passarela)
+(Psg[.]|Passagem)
+(Psp[.]|Passagem de Pedestre)
+(Pss[.]|Passagem Subterrânea|Passagem Subterranea)
+(Pte[.]|Ponte)
+(Pto[.]|Porto)
+(Q[.]|Quadra)
+(Qta[.]|Quinta)
+(Qts[.]|Quintas)
+(R[.]|Rua)
+(Ri[.]|Rua Integração|Rua Integracao)
+(Rl[.]|Rua de Ligação|Rua de Ligacao)
+(Rp[.]|Rua Particular)
+(Rv[.]|Rua Velha)
+(Ram[.]|Ramal)
+(Rcr[.]|Recreio)
+(Rec[.]|Recanto)
+(Rer[.]|Retiro)
+(Res[.]|Residencial)
+(Ret[.]|Reta)
+(Rla[.]|Ruela)
+(Rmp[.]|Rampa)
+(Roa[.]|Rodo Anel)
+(Rod[.]|Rodovia)
+(Rot[.]|Rotula)
+(Rpe[.]|Rua de Pedestre)
+(Rpr[.]|Margem)
+(Rtn[.]|Retorno)
+(Rtt[.]|Rotatória|Rotatoria)
+(Seg[.]|Segunda Avenida)
+(Sit[.]|Sitio)
+(Srv[.]|Servidão|Servidao)
+(St[.]|Setor)
+(Sub[.]|Subida)
+(Tch[.]|Trincheira)
+(Ter[.]|Terminal)
+(Tr[.]|Trecho)
+(Trv[.]|Trevo)
+(Tun[.]|Túnel|Tunel)
+(Tv[.]|Travessa)
+(Tvp[.]|Travessa Particular)
+(Tvv[.]|Travessa Velha)
+(Uni[.]|Unidade)
+(V[.]|Via)
+(Vc[.]|Via Coletora)
+(Vl[.]|Via Local)
+(Vac[.]|Via de Acesso)
+(Val[.]|Vala)
+(Vco[.]|Via Costeira)
+(Vd[.]|Viaduto)
+(V-e[.]|Via Expressa)
+(Ver[.]|Vereda)
+(Vev[.]|Via Elevado)
+(Vl[.]|Vila)
+(Vla[.]|Viela)
+(Vle[.]|Vale)
+(Vlt[.]|Via Litorânea|Via Litoranea)
+(Vpe[.]|Via de Pedestre)
+(Vrt[.]|Variante)
+(Zig[.]|Zigue-Zague)

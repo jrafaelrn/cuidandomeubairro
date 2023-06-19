@@ -17,8 +17,15 @@ telegram = Telegram()
 
 
 def configure_logs():
+    
+    try:
+        os.mkdir(f'{APP_FOLDER_PATH}/data_temp')
+        os.mkdir(f'{APP_FOLDER_PATH}/data_temp/logs')
+    except Exception as e:
+        print(f'Error creating logs folder: {e}')
+    
     log.basicConfig(
-        level=log.INFO,
+        level=log.DEBUG,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
         filename=f'{APP_FOLDER_PATH}/data_temp/logs/run_etl_cmb.log',
         filemode='w'

@@ -83,14 +83,23 @@ def search_variations(text: str, terms_finded: list, statistics):
 
 
 def search_local(text: str):
-
-    location_geo = geolocator.geocode(text, timeout=60)
-
-    if location_geo:        
-        lat, lon = location_geo.latitude, location_geo.longitude
-        #log.debug(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
-        return location_geo.address
     
+    attempts = 1
+    
+    while attempts < 10:
+
+        try:
+            location_geo = geolocator.geocode(text, timeout=600, attempts=attempts)
+
+            if location_geo:        
+                lat, lon = location_geo.latitude, location_geo.longitude
+                #log.debug(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
+                return location_geo.address
+            
+        except Exception as e:
+            log.error(f'Error searching location: {e}')
+            max_attempts += 1
+            
     return False
 
 
