@@ -95,6 +95,8 @@ def search_local(text: str):
                 lat, lon = location_geo.latitude, location_geo.longitude
                 #log.debug(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
                 return location_geo.address
+            else:
+                return False
             
         except Exception as e:
             log.error(f'Error searching location: {e}')

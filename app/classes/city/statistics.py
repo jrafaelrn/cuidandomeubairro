@@ -1,5 +1,6 @@
 import logging
 import os
+import json
 
 log = logging.getLogger(__name__)
 FILE_PATH = os.path.abspath(__file__)
@@ -14,6 +15,7 @@ class Statistics:
         self.terms = {}
         self.total_terms = {}
         self.total_search_variations = 0
+        self.check_folder(STATISTICS_PATH)
     
     
     def add_term(self, term):
@@ -105,9 +107,11 @@ class Statistics:
     def save_statistics_csv(self, file_name: str):
         
         FOLDER_CSV = f'{STATISTICS_PATH}/csv'
+        self.check_folder(FOLDER_CSV)
         
         # Save resume data
         FOLDER_RESUME = f'{FOLDER_CSV}/resume'
+        self.check_folder(FOLDER_RESUME)
         filename = f'{FOLDER_RESUME}/{file_name}.csv'
         log.debug(f'Saving statistics in CSV...: {filename}')
         
@@ -118,6 +122,7 @@ class Statistics:
         
         # Save detailed data about terms   
         FOLDER_DETAIL = f'{FOLDER_CSV}/detail'
+        self.check_folder(FOLDER_DETAIL)
         filename = f'{FOLDER_DETAIL}/{file_name}.csv'
         log.debug(f'Saving statistics in CSV...: {filename}')
         
@@ -139,4 +144,9 @@ class Statistics:
             f.writelines(content)
 
     
+    def check_folder(self, folder_path: str):
+        try:
+            os.mkdir(folder_path)
+        except Exception as e:
+            log.warning(f'Error creating folder: {e}')
     
