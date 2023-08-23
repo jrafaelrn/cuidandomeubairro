@@ -1,17 +1,47 @@
-tools/__pycache__
-tools/original_data/*
-tools/statistics
-tools/result.json
+src/backend/tools/__pycache__
+src/backend/tools/original_data/*
+src/backend/tools/statistics
+src/backend/tools/result.json
 
-app/tools/__pycache__
-app/tools/__pycache__/*
-app/scripts/__pycache__
-app/classes/city/__pycache__
-app/.env
-app/data_temp/**
+src/backend/tools/__pycache__
+src/backend/tools/__pycache__/*
+src/backend/scripts/__pycache__
+src/backend/classes/city/__pycache__
+src/backend/.env
+src/backend/data_temp/**
 
 .conda/*
 nominatim-data/*
 **/__pycache__/**
 
 .venv/*
+
+
+.DS_Store
+src/frontend/node_modules
+src/frontend/dist
+
+/tests/e2e/videos/
+/tests/e2e/screenshots/
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
+# Local Netlify folder
+.netlify
+

@@ -5,7 +5,7 @@ services:
   database:
     build: 
       context: ./
-      dockerfile: DockerfileDB
+      dockerfile: Dockerfile_db
     environment:
       - POSTGRES_USER=${POSTGRES_USER} 
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -68,8 +68,10 @@ services:
 
   
   # Aplicação principal
-  application:
-    build: .
+  backend:
+    build: 
+      context: ./
+      dockerfile: Dockerfile_back
     networks:
       - my-network
     ports:
@@ -89,9 +91,23 @@ services:
       - .:/app
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-      
-    #restart: always
 
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile_front
+    volumes: 
+      - .:/app
+    ports:
+      - 8080:8080
+    networks:
+      - my-network
+    depends_on:
+      - graphql 
+      - database
+      - nominatim
+    
 
 networks:
   my-network:
