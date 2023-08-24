@@ -45,3 +45,4 @@ yarn-error.log*
 # Local Netlify folder
 .netlify
 
+src/frontend/package-lock.json

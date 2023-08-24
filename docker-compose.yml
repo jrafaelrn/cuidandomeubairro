@@ -11,11 +11,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     networks:
-      - my-network
+      - cmb-network
     ports:
       - 5432:5432
     volumes:
-      - /db-data:/var/lib/postgresql/data
+      - ./data/db-data:/var/lib/postgresql/data
     restart: always
 
 
@@ -26,7 +26,7 @@ services:
     ports:
     - 8080:8080
     networks:
-      - my-network
+      - cmb-network
     depends_on:
     - database
     restart: always
@@ -56,14 +56,14 @@ services:
     ports:
       - "8088:8080"
     networks:
-      - my-network
+      - cmb-network
     environment:
       # see https://github.com/mediagis/nominatim-docker/tree/master/4.2#configuration for more options
       PBF_URL: https://download.geofabrik.de/south-america/brazil/sudeste-latest.osm.pbf
       REPLICATION_URL: https://download.geofabrik.de/south-america/brazil/sudeste-updates/
       NOMINATIM_PASSWORD: password
     volumes:
-      - ./nominatim-data:/var/lib/postgresql/14/main
+      - ./data/nominatim-data:/var/lib/postgresql/14/main
     shm_size: 1gb
 
   
@@ -73,7 +73,7 @@ services:
       context: ./
       dockerfile: Dockerfile_back
     networks:
-      - my-network
+      - cmb-network
     ports:
       - 3000:3000
       - 5678:5678
@@ -98,16 +98,14 @@ services:
       context: ./
       dockerfile: Dockerfile_front
     volumes: 
-      - .:/app
+      - ./src/frontend:/app
     ports:
-      - 8080:8080
+      - 8000:8080
     networks:
-      - my-network
+      - cmb-network
     depends_on:
       - graphql 
-      - database
-      - nominatim
     
 
 networks:
-  my-network:
+  cmb-network:
