@@ -24,7 +24,7 @@ services:
   graphql:
     image: hasura/graphql-engine
     ports:
-    - 8080:8080
+    - 8000:8080
     networks:
       - cmb-network
     depends_on:
@@ -49,48 +49,48 @@ services:
       ## uncomment next line to set an admin secret
       # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
 
-  nominatim:
-    container_name: nominatim
-    image: mediagis/nominatim:4.2
-    restart: always
-    ports:
-      - "8088:8080"
-    networks:
-      - cmb-network
-    environment:
-      # see https://github.com/mediagis/nominatim-docker/tree/master/4.2#configuration for more options
-      PBF_URL: https://download.geofabrik.de/south-america/brazil/sudeste-latest.osm.pbf
-      REPLICATION_URL: https://download.geofabrik.de/south-america/brazil/sudeste-updates/
-      NOMINATIM_PASSWORD: password
-    volumes:
-      - ./data/nominatim-data:/var/lib/postgresql/14/main
-    shm_size: 1gb
+  #nominatim:
+  #  container_name: nominatim
+  #  image: mediagis/nominatim:4.2
+  #  restart: always
+  #  ports:
+  #    - "8088:8080"
+  #  networks:
+  #    - cmb-network
+  #  environment:
+  #    # see https://github.com/mediagis/nominatim-docker/tree/master/4.2#configuration for more options
+  #    PBF_URL: https://download.geofabrik.de/south-america/brazil/sudeste-latest.osm.pbf
+  #    REPLICATION_URL: https://download.geofabrik.de/south-america/brazil/sudeste-updates/
+  #    NOMINATIM_PASSWORD: password
+  #  volumes:
+  #    - ./data/nominatim-data:/var/lib/postgresql/14/main
+  #  shm_size: 1gb
 
   
   # Aplicação principal
-  backend:
-    build: 
-      context: ./
-      dockerfile: Dockerfile_back
-    networks:
-      - cmb-network
-    ports:
-      - 3000:3000
-      - 5678:5678
-    depends_on:
-      - graphql 
-      - database
-      - nominatim
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER} 
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_HOST=database
-      - POSTGRES_PORT=5432
-    volumes:
-      - .:/app
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
+  #backend:
+  #  build: 
+  #    context: ./
+  #    dockerfile: Dockerfile_back
+  #  networks:
+  #    - cmb-network
+  #  ports:
+  #    - 3000:3000
+  #    - 5678:5678
+  #  depends_on:
+  #    - graphql 
+  #    - database
+  #    - nominatim
+  #  environment:
+  #    - POSTGRES_USER=${POSTGRES_USER} 
+  #    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #    - POSTGRES_DB=${POSTGRES_DB}
+  #    - POSTGRES_HOST=database
+  #    - POSTGRES_PORT=5432
+  #  volumes:
+  #    - .:/app
+  #  stdin_open: true # docker run -i
+  #  tty: true        # docker run -t
 
 
   frontend:
@@ -100,7 +100,8 @@ services:
     volumes: 
       - ./src/frontend:/app
     ports:
-      - 8000:8080
+      - 8080:8080
+      - 53350:53350 #To web-debug
     networks:
       - cmb-network
     depends_on:

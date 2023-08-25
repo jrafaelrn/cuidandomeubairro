@@ -44,6 +44,11 @@ npm install
 echo -e "\n...Iniciando o servidor...\n"
 echo -e "Versão do Node.js = $(node --version)"
 echo -e "Versão do NPM = $(npm --version)"
-npm run serve
 
-cp -r /root/.npm/_logs /app/
+# To debug
+while sleep 1000; do :; done
+
+# To run
+#npm run serve
+
+#cp -r /root/.npm/_logs /app/
