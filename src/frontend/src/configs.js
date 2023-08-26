@@ -7,8 +7,3 @@ export const baseUrls = {
   empenhos: 'https://gatewayapi.prodam.sp.gov.br:443/financas/orcamento/sof/v3.0.1'
 }
 
-module.exports = {
-  configureWebpack:{
-    devtool: 'source-map'
-  }
-};

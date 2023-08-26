@@ -16,7 +16,7 @@
           </button>
           <router-link to="/" id="home-button" class="navbar-brand">
             <img :src="$assets.logo" class="w-56" alt="Cuidando do Meu Bairro" />
-            <span class="beta-mark text-white uppercase text-sm font-bold align-top">São Paulo</span>
+            <span class="beta-mark text-white uppercase text-sm font-bold align-top">Estado de São Paulo</span>
           </router-link>
          
         </div>

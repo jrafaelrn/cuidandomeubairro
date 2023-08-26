@@ -1,6 +1,6 @@
 module.exports = {
   primary: {
-    base: "#07A3C6",
+    base: "#F44E16",
     dark: "#00667D",
   },
   secondary: {
