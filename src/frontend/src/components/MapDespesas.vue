@@ -19,7 +19,7 @@
       <div v-if="expanded" class="my-auto mx-auto h-full lg:flex flex-col justify-center max-w-md lg:absolute">
         <div class="bg-white lg:pb-10 lg:p-10 pt-10 pb-3 mb-5 lg:rounded-lg lg:shadow-lg">
           <div class="c-map__title mb-5">
-          <h1 class="text-neutral-base lg:text-3xl lg:text-left text-center text-xl font-bold">Acompanhe os gastos públicos da cidade de São Paulo em tempo real</h1>
+          <h1 class="text-neutral-base lg:text-3xl lg:text-left text-center text-xl font-bold">Acompanhe os gastos públicos de algumas cidades do Estado de São Paulo em tempo real</h1>
           <p class="text-neutral-light lg:text-base lg:text-left text-center text-sm mt-2">O projeto Cuidando do Meu Bairro propõe tornar mais inteligível a visualização dos dados das despesas públicas a partir da geolocalização dos gastos</p>
         </div>
         <div class="">
@@ -97,7 +97,7 @@
         <a
           target="_blank"
           href="https://orcamento.sf.prefeitura.sp.gov.br/orcamento/execucao.php"
-          >Secretaria de Finanças</a
+          >Tribunal de Contas do Estado de São Paulo</a
         >
       </div>
     </div>
@@ -148,8 +148,8 @@ export default {
   data() {
     var self = this;
     return {
-      center: L.latLng(-23.58098, -46.61293),
-      zoom: 12,
+      center: L.latLng(-21.8859505, -51.4036032),
+      zoom: 7,
       searchAddress: "",
       categories: ["planejado", "empenhado", "liquidado"],
       url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
