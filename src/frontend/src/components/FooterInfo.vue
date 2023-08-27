@@ -1,6 +1,6 @@
 <template>
   <footer
-    class="c-footer bottom-0 bg-gray-700"
+    class="c-footer bottom-0 bg-primary-base"
   >
     <div class="container flex items-center justify-between w-full h-20">
       <router-link to="/" id="home-button" class="navbar-brand">

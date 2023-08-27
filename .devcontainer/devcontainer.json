@@ -40,7 +40,8 @@
 				"ms-azuretools.vscode-docker",
 				"vue.volar",
 				"firefox-devtools.vscode-firefox-debug",
-				"ms-vscode.js-debug-nightly"
+				"ms-vscode.js-debug-nightly",
+				"octref.vetur"
 			]
 		}
 	}

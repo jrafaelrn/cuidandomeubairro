@@ -4,7 +4,7 @@ module.exports = {
     dark: "#00667D",
   },
   secondary: {
-    base: "#F44E16",
+    base: "#007892",
     light: "#F67146",
   },
   success: {

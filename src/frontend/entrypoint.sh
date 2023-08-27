@@ -46,9 +46,9 @@ echo -e "Versão do Node.js = $(node --version)"
 echo -e "Versão do NPM = $(npm --version)"
 
 # To debug
-while sleep 1000; do :; done
+#while sleep 1000; do :; done
 
 # To run
-#npm run serve
+npm run serve
 
 #cp -r /root/.npm/_logs /app/
