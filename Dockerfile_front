@@ -1,3 +1,5 @@
+# Será utilizado o Ubuntu 14.04 devido às limitações do mósulo node-sass 
+# https://github.com/sass/node-sass/releases/tag/v4.14.1
 FROM ubuntu:14.04
 
 WORKDIR /app
