@@ -15,6 +15,7 @@ nominatim-data/*
 **/__pycache__/**
 
 venv/*
+data/
 
 
 .DS_Store
