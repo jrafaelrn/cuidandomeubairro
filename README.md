@@ -21,7 +21,7 @@ O *front-end* foi adaptado a partir dos seguintes repositórios:
 Requisitos mínimos:
 - Docker e Docker Compose
 - 10 GB de espaço livre em disco
-- ~~Paciência...~~
+- ~~Tempo...~~
 
 
 ## ▶️ E para executar?
