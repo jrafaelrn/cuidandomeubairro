@@ -2,12 +2,8 @@
 # https://github.com/sass/node-sass/releases/tag/v4.14.1
 FROM ubuntu:14.04
 
-WORKDIR /app
-COPY src/frontend .
-
 # Atualiza as dependências
 RUN apt-get update && apt-get upgrade -y
-
 
 # Instala Python 2.7
 RUN apt-get install -y python2.7 
@@ -17,6 +13,9 @@ RUN apt-get install -y curl
 RUN apt-get install -y build-essential
 RUN apt-get install -y python-virtualenv
 
+
+WORKDIR /app
+COPY . .
 
 RUN chmod +x entrypoint.sh
 

@@ -68,8 +68,8 @@ services:
   # Aplicação principal
   backend:
     build: 
-      context: ./
-      dockerfile: Dockerfile_back
+      context: ./src/backend
+      dockerfile: Dockerfile
     networks:
       - cmb-network
     ports:
@@ -93,8 +93,8 @@ services:
 
   frontend:
     build:
-      context: ./
-      dockerfile: Dockerfile_front
+      context: ./src/frontend
+      dockerfile: Dockerfile
     volumes: 
       - ./src/frontend:/app
     ports:

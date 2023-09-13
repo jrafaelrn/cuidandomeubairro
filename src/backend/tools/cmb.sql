@@ -1,23 +1,23 @@
 
-CREATE TABLE d_programa (
+CREATE TABLE IF NOT EXISTS d_programa (
     cd_programa integer NOT NULL,
     ds_programa character varying(100) NOT NULL,
     PRIMARY KEY (cd_programa)
 );
 
-CREATE TABLE d_acao (
+CREATE TABLE IF NOT EXISTS d_acao (
     cd_acao integer NOT NULL,
     ds_acao character varying(100) NOT NULL,
     PRIMARY KEY (cd_acao)
 );
 
-CREATE TABLE d_municipio (
+CREATE TABLE IF NOT EXISTS d_municipio (
     cd_municipio integer NOT NULL,
     ds_municipio character varying(100) NOT NULL,
     PRIMARY KEY (cd_municipio)
 );
 
-CREATE TABLE d_calendario (
+CREATE TABLE IF NOT EXISTS d_calendario (
     data date NOT NULL,
     dia integer NOT NULL,
     mes integer NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE d_calendario (
     PRIMARY KEY (data)
 );
 
-CREATE TABLE f_despesa (
+CREATE TABLE IF NOT EXISTS f_despesa (
     cd_programa integer NOT NULL,
     cd_acao integer NOT NULL,
     cd_municipio integer NOT NULL,

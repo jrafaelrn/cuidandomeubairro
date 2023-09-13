@@ -2,8 +2,6 @@ import os
 import datetime
 import logging as log
 import timeit
-import sys
-import cProfile
 
 from tools.telegram import Telegram
 from tools.human_readable import convert_seconds_to_human_readable
@@ -72,8 +70,6 @@ def execute(file):
 
 if __name__ == '__main__':
     
-    start_time = datetime.datetime.now()
-    
     # Configure environment
     configure_paths(APP_FOLDER_PATH)
     configure_logs()
@@ -83,14 +79,13 @@ if __name__ == '__main__':
     log.info(message)
     #telegram.sendMessage(message)
     
-    
+
     # Run every Python file in the scripts folder and measure the time
-    #total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)
-    cProfile.run('execute_scripts()', sort='cumtime')
+    total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)    
+    
     
     # Convert seconds to hh:mm:ss
-    end_time = datetime.datetime.now()
-    total_time_readable = convert_seconds_to_human_readable((end_time - start_time).total_seconds())
+    total_time_readable = convert_seconds_to_human_readable(total_time.total_seconds())
     
     # Log end process and send Telegram    
     message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
