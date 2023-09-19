@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS d_programa (
     cd_programa integer NOT NULL,
     ds_programa character varying(100) NOT NULL,
