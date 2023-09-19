@@ -54,3 +54,11 @@ CREATE TABLE IF NOT EXISTS f_despesa (
         FOREIGN KEY (cd_municipio)
         REFERENCES d_municipio (cd_municipio)
 );
+
+
+CREATE TABLE IF NOT EXISTS f_ibge (
+    cd_municipio integer NOT NULL,
+    nome_municipio character varying(100) NOT NULL,
+    populacao integer NOT NULL,
+    PRIMARY KEY (cd_municipio)
+);

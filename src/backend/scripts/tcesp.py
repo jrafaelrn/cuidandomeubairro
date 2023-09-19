@@ -25,7 +25,7 @@ class Extractor_tce(Extractor):
 
     def download(self):
         
-        urls = ['https://transparencia.tce.sp.gov.br/sites/default/files/conjunto-dados/despesas-2022.zip']
+        urls = ['https://transparencia.tce.sp.gov.br/sites/default/files/conjunto-dados/despesas-2023.zip']
         
         for url in urls:
             super().download_file_from_url(url)
@@ -90,14 +90,14 @@ def run_multiprocessing(files, extractor, config):
 def run_city(file, extractor, config):
     
     log.info(f'----- > Opening file {file}...')
-    #print(f'----- > Opening file {file}...')
+    print(f'----- > Opening file {file}...')
     
     data_tce, city_name, city_code = extractor.get_data(file)
     city = City(name=city_name, code=city_code)
     city.etl(data=data_tce, config_columns=config)
     
     log.info(f'----- > Finished file {file}...')
-    #print(f'----- > Finished file {file}...')
+    print(f'----- > Finished file {file}...')
 
 
 
@@ -107,7 +107,7 @@ def run_city(file, extractor, config):
 def run():
     
     extractor = Extractor_tce()
-    #extractor.download()
+    extractor.download()
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):

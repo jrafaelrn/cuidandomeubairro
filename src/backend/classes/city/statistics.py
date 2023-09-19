@@ -146,7 +146,7 @@ class Statistics:
     
     def check_folder(self, folder_path: str):
         try:
-            os.mkdir(folder_path)
+            os.makedirs(folder_path, exist_ok=True)
         except Exception as e:
             log.warning(f'Error creating folder: {e}')
     

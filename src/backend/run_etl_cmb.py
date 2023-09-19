@@ -15,17 +15,24 @@ telegram = Telegram()
 
 
 def configure_logs():
+
+    DATA_TEMP_PATH = os.path.join(APP_FOLDER_PATH, "data_temp")
+    LOG_PATH = os.path.join(DATA_TEMP_PATH, "logs")
     
     try:
-        os.mkdir(f'{APP_FOLDER_PATH}/data_temp')
-        os.mkdir(f'{APP_FOLDER_PATH}/data_temp/logs')
+        os.makedirs(DATA_TEMP_PATH, exist_ok=True)
     except Exception as e:
-        print(f'Error creating logs folder: {e}')
+        print(f'Error creating DATA_TEMP folder [{DATA_TEMP_PATH}]: {e}')
+
+    try:
+        os.makedirs(LOG_PATH, exist_ok=True)
+    except Exception as e:
+        print(f'Error creating LOG folder[{LOG_PATH}]: {e}')
     
     log.basicConfig(
         level=log.INFO,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
-        filename=f'{APP_FOLDER_PATH}/data_temp/logs/run_etl_cmb.log',
+        filename=os.path.join(LOG_PATH, "run_etl_cmb.log"),
         filemode='w'
     )
 
@@ -34,7 +41,7 @@ def configure_logs():
 
 def execute_scripts():
     
-    scripts_folder = f'{APP_FOLDER_PATH}/scripts'
+    scripts_folder = os.path.join(APP_FOLDER_PATH, "scripts")
     
     # Loop through the files and run Python files
     for file in os.listdir(scripts_folder):
