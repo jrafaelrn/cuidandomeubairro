@@ -1,6 +1,8 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
-CREATE TABLE IF NOT EXISTS f_despesa (
+CREATE SCHEMA IF NOT EXISTS cmb;
+
+CREATE TABLE IF NOT EXISTS cmb.f_despesa (
     mes integer NOT NULL,
     mes_extenso character varying(20) NOT NULL,
     ano integer NOT NULL,
@@ -30,7 +32,7 @@ CREATE TABLE IF NOT EXISTS f_despesa (
 );
 
 
-CREATE TABLE IF NOT EXISTS f_ibge (
+CREATE TABLE IF NOT EXISTS cmb.f_ibge (
     cd_municipio integer NOT NULL,
     nome_municipio character varying(100) NOT NULL,
     populacao integer NOT NULL,

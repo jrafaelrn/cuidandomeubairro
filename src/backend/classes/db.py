@@ -20,12 +20,12 @@ class DB:
 
     
 
-    def insert(self, table_name: str, columns_name: list, columns_value: list): 
+    def insert(self, table_name: str, columns_name: list, columns_value: list, schema: str = 'cmb'): 
         
         columns_name = self.convert_list_to_string(columns_name)
         text_value = 'VALUES (' + (f'%s, ' * len(columns_value))[:-2] + ')'
            
-        command = f'INSERT INTO {table_name} ({columns_name}) {text_value}'
+        command = f'INSERT INTO {schema}.{table_name} ({columns_name}) {text_value} ON CONFLICT DO NOTHING'
         self.executar_comando(command, columns_value)
 
 

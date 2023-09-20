@@ -139,6 +139,10 @@ class City:
             columns_name = list(columns.values())
             columns_value = self.get_values_from_row(row, columns)
 
+            # Adiciona a localizacao, se existir
+            self.get_location_from_row(row, columns_name, columns_value)
+
+
             self.database.insert(table_name, columns_name, columns_value)
 
 
@@ -166,10 +170,26 @@ class City:
             except:
                 pass
             
-
             values.append(value)
 
         return values
+
+
+    def get_location_from_row(self, row, columns_name, columns_value):
+
+        try:
+            # Get the location from the row
+            location = self.ids_locations[row[self.column_name_id]]
+
+            # Add the location to the columns
+            if location:
+                
+                columns_name.append('localizacao')
+
+                value = f'POINT({location.longitude} {location.latitude})'
+                columns_value.append(value)
+        except:
+            print(f'Location not found for id: {row[self.column_name_id]}')    
 
 
     def load_metadata(self):
