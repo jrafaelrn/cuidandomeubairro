@@ -47,7 +47,7 @@ class City:
         # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
 
             # Get just 500 first rows (TEMP - remove before production and uncomment the next line)
-        self.data_transformed = data = data[:500]
+        self.data_transformed = data = data[:250]
         #self.data_transformed = data.drop_duplicates(subset=[self.column_name])
         self.data_transformed = self.lowercase_text(self.data_transformed, self.column_name_description)
         self.data_transformed = self.undecode_text(self.data_transformed, self.column_name_description)
@@ -89,9 +89,95 @@ class City:
     #################################################
     
     def load(self):
-        DB.send_to_db(self.data_transformed)
-        DB.update_metadata()
 
+        log.info('Starting load...')
+        print('Starting load...')
+        
+        self.database = DB()
+        self.load_data()
+        self.load_metadata()
+
+        log.info('LOAD -- SUCCESSFULLY FINISHED')
+        print('LOAD -- SUCCESSFULLY FINISHED')
+
+
+
+    def load_data(self):
+
+        # Isolar essa regra futuramente para permitir multiplas cidades
+        for index, row in self.data.iterrows():
+
+            table_name = "f_despesa"
+
+            # Formato nomeColunaCSV: nomeColunaDB
+            columns = {}
+            columns['cd_programa'] = 'cd_programa'
+            columns['ds_programa'] = 'ds_programa'
+            columns['cd_acao'] = 'cd_acao'
+            columns['ds_acao'] = 'ds_acao'
+            columns['codigo_municipio_ibge'] = 'cd_municipio'
+            columns['id_despesa_detalhe'] = 'id_despesa_detalhe'           
+            columns['ds_orgao'] = 'ds_orgao'
+            columns['tp_despesa'] = 'tp_despesa'
+            columns['nr_empenho'] = 'nr_empenho'
+            columns['tp_identificador_despesa'] = 'tp_identificador_despesa'
+            columns['nr_identificador_despesa'] = 'nr_identificador_despesa'
+            columns['ds_despesa'] = 'ds_despesa'
+            columns['dt_emissao_despesa'] = 'dt_emissao_despesa'
+            columns['vl_despesa'] = 'vl_despesa'
+            columns['ds_funcao_governo'] = 'ds_funcao_governo'
+            columns['ds_subfuncao_governo'] = 'ds_subfuncao_governo'
+            columns['ds_fonte_recurso'] = 'ds_fonte_recurso'
+            columns['ds_cd_aplicacao_fixo'] = 'ds_cd_aplicacao_fixo'
+            columns['ds_modalidade_lic'] = 'ds_modalidade_lic'
+            columns['ds_elemento'] = 'ds_elemento'
+            columns['historico_despesa'] = 'historico_despesa'
+            columns['mes_referencia'] = 'mes'
+            columns['ano_exercicio'] = 'ano'
+            columns['mes_ref_extenso'] = 'mes_extenso'
+            
+            columns_name = list(columns.values())
+            columns_value = self.get_values_from_row(row, columns)
+
+            self.database.insert(table_name, columns_name, columns_value)
+
+
+
+    def get_values_from_row(self, row, columns: dict) -> list:
+
+        values = []
+        
+        for column in columns.keys():
+            
+            value = row[column]
+            
+            try:                
+                
+                try:
+                    # Try to convert to date
+                    new_value = datetime.datetime.strptime(value, '%d/%m/%Y')
+                    value = datetime.datetime.strftime(new_value, '%Y/%m/%d')
+                except:
+                    # Try to convert to float
+                    new_value = value.replace(',', '.')
+                    new_value = float(new_value)
+                    value = new_value
+
+            except:
+                pass
+            
+
+            values.append(value)
+
+        return values
+
+
+    def load_metadata(self):
+        self.database.update_metadata()
+
+
+
+    #################################################
         
         
     # File Path
