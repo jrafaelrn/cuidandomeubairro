@@ -33,14 +33,14 @@ class Extractor_tce(Extractor):
             super().slice_data()
             
             
-    
+    # Get data from the file and return a Pandas Dataframe
     def get_data(self, file_path: str) -> pd.DataFrame:
         
         enc = 'ISO-8859-1'
         data_temp_path = super().get_data_temp_path()
-        file_path = f'{data_temp_path}/{file_path}'
+        file_path = os.path.join(data_temp_path, file_path)
 
-        # Open the file and convert to pandas dataframe
+        # Open the file and convert to Pandas Dataframe
         data_frame = pd.read_csv(file_path, encoding=enc, sep=';', header=0, low_memory=False)
         city_name = str(data_frame['ds_municipio'].iloc[0])
         city_code = int(data_frame['codigo_municipio_ibge'].iloc[0])
@@ -90,14 +90,13 @@ def run_multiprocessing(files, extractor, config):
 def run_city(file, extractor, config):
     
     log.info(f'----- > Opening file {file}...')
-    print(f'----- > Opening file {file}...')
     
+    # Get data from Extractor
     data_tce, city_name, city_code = extractor.get_data(file)
     city = City(name=city_name, code=city_code)
     city.etl(data=data_tce, config_columns=config)
     
     log.info(f'----- > Finished file {file}...')
-    print(f'----- > Finished file {file}...')
 
 
 
@@ -107,7 +106,7 @@ def run_city(file, extractor, config):
 def run():
     
     extractor = Extractor_tce()
-    extractor.download()
+    #extractor.download()
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):
@@ -122,7 +121,7 @@ def run():
     }
     
     # Filter cities
-    cities_files = cities_files[:10]
+    cities_files = cities_files[:1]
     
     run_multiprocessing(cities_files, extractor, config)
      

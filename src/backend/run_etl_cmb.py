@@ -21,11 +21,13 @@ def configure_logs():
     
     try:
         os.makedirs(DATA_TEMP_PATH, exist_ok=True)
+        log.debug(f'Created DATA_TEMP folder [{DATA_TEMP_PATH}]')
     except Exception as e:
         print(f'Error creating DATA_TEMP folder [{DATA_TEMP_PATH}]: {e}')
 
     try:
         os.makedirs(LOG_PATH, exist_ok=True)
+        log.debug(f'Created LOG folder [{LOG_PATH}]')
     except Exception as e:
         print(f'Error creating LOG folder[{LOG_PATH}]: {e}')
     
@@ -92,7 +94,7 @@ if __name__ == '__main__':
     
     
     # Convert seconds to hh:mm:ss
-    total_time_readable = convert_seconds_to_human_readable(total_time.total_seconds())
+    total_time_readable = convert_seconds_to_human_readable(total_time)
     
     # Log end process and send Telegram    
     message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'

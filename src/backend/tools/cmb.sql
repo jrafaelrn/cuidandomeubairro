@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS f_despesa (
     ds_modalidade_lic character varying(50) NOT NULL,
     ds_elemento character varying(50) NOT NULL,
     historico_despesa character varying(500) NOT NULL,
+    localizacao geography(Point,4326),
     PRIMARY KEY (id_despesa_detalhe, cd_municipio),
     CONSTRAINT cd_programa_fkey 
         FOREIGN KEY (cd_programa)

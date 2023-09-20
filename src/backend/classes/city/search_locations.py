@@ -16,12 +16,12 @@ log = logging.getLogger(__name__)
 
 FILE_PATH = os.path.abspath(__file__)
 FOLDER_PATH = os.path.dirname(FILE_PATH)
-TOTAL_SEARCH_VARIATION = 10
+TOTAL_SEARCH_VARIATION = 3
 
 
 def load_terms():
 
-    terms_file = f'{FOLDER_PATH}/terms.txt'
+    terms_file = os.path.join(FOLDER_PATH, "terms.txt")
     terms_content = None
 
     with open(terms_file, 'r') as f:

@@ -72,7 +72,7 @@ def save_city(header, data, cidade_name, folder_path):
     log.debug(f'=> => Salvando arquivo da cidade {total_cities}: {cidade_name} => Total linhas acumuladas: {total_lines}')
     
     cidade_name = f"{cidade_name}-{datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}"
-    file_path = f'{folder_path}/{cidade_name}.csv'
+    file_path = os.path.join(folder_path, f"{cidade_name}.csv")
     
     pandas_dataset = pd.DataFrame(data, columns=header)    
     pandas_dataset.to_csv(file_path, sep=';', encoding='ISO-8859-1', index=False)

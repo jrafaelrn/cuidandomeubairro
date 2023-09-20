@@ -7,6 +7,7 @@ from undecode import undecode_text
 from search_locations import search_all_locations
 from .statistics import Statistics
 from classes.extractor.extractor import Extractor
+from classes.db import DB
 
 
 log = logging.getLogger(__name__)
@@ -28,6 +29,7 @@ class City:
             data = extractor.download()
     
         self.transform(data, config_columns)
+        
         self.load()
     
 
@@ -37,31 +39,17 @@ class City:
         self.data = data
         self.column_name = config_columns['DESCRIPTION']
         
+        # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
         self.data_transformed = data.drop_duplicates(subset=[self.column_name])
-        self.data_transformed = lowercase_text(self.data_transformed, self.column_name)
+        self.data_transformed = lowercase_text(self.data, self.column_name)
         self.data_transformed = undecode_text(self.data_transformed, self.column_name)
         self.data_transformed = search_all_locations(self.data_transformed, self.column_name, self.statistics)
         
     
     
     def load(self):
-        self.send_to_db()
-        self.update_metadata()
-    
-    
-    
-    def send_to_db(self):
-        pass
-        
-    
-    
-    def update_metadata(self):
-        
-        last_update = datetime.datetime.now()
-        self.statistics.total_lines = len(self.data)
-        self.statistics.total_unique_descriptions = len(self.data[self.column_name].unique())
-        self.statistics.save_statistics(self.code)    
-    
+        DB.send_to_db(self.data_transformed)
+        DB.update_metadata()
 
         
         
