@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS cmb.f_despesa (
     ds_elemento character varying(150) NOT NULL,
     historico_despesa character varying(1000) NOT NULL,
     localizacao geography(Point,4326),
+    latitude character varying(50),
+    longitude character varying(50),
     PRIMARY KEY (id_despesa_detalhe, cd_municipio)
 );
 

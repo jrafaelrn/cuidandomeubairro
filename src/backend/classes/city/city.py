@@ -46,9 +46,10 @@ class City:
         
         # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
 
-            # Get just 500 first rows (TEMP - remove before production and uncomment the next line)
-        self.data_transformed = data = data[:250]
-        #self.data_transformed = data.drop_duplicates(subset=[self.column_name])
+        # Get just 500 first rows (TEMP - remove before production and uncomment the next line)
+        self.data_transformed = data = data[:500]
+
+        #self.data_transformed = data.drop_duplicates(subset=[self.column_name_description])
         self.data_transformed = self.lowercase_text(self.data_transformed, self.column_name_description)
         self.data_transformed = self.undecode_text(self.data_transformed, self.column_name_description)
         
@@ -106,6 +107,9 @@ class City:
 
         # Isolar essa regra futuramente para permitir multiplas cidades
         for index, row in self.data.iterrows():
+
+            if index % 100 == 0:
+                print(f'Loading row {index} / {len(self.data)}')
 
             table_name = "f_despesa"
 
@@ -185,11 +189,16 @@ class City:
             if location:
                 
                 columns_name.append('localizacao')
+                columns_name.append('latitude')
+                columns_name.append('longitude')
 
                 value = f'POINT({location.longitude} {location.latitude})'
                 columns_value.append(value)
+                columns_value.append(location.latitude)
+                columns_value.append(location.longitude)
         except:
-            print(f'Location not found for id: {row[self.column_name_id]}')    
+            #print(f'Location not found for id: {row[self.column_name_id]}')    
+            pass
 
 
     def load_metadata(self):

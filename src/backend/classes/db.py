@@ -14,7 +14,7 @@ class DB:
     def connect(self):
         conexao_formato = f'dbname={self.dbname} user={self.user} host={self.host} password={self.password} port={self.port}'
         self.conexao = psycopg2.connect(conexao_formato)
-        print(f"Conexão estabelecida com BD - {self.conexao}")
+        #print(f"Conexão estabelecida com BD - {self.conexao}")
 
         self.bd_cursor = self.conexao.cursor()
 
@@ -42,7 +42,7 @@ class DB:
 
     def executar_comando(self, command, values):
         
-        print(f'SQL COMANDO=|{command}|VALUES=|{values}|')
+        #print(f'SQL COMANDO=|{command}|VALUES=|{values}|')
 
         self.connect()
         return_bd = None
@@ -52,9 +52,10 @@ class DB:
         try:
             return_bd = self.bd_cursor.fetchall()
         except Exception as err:
-            print(f'Erro = {err}')
+            #print(f'Erro = {err}')
+            pass
         
-        print(f'Retorno Banco Dados = {return_bd}')
+        #print(f'Retorno Banco Dados = {return_bd}')
         self.save()
 
         return return_bd
