@@ -32,7 +32,7 @@ def configure_logs():
         print(f'Error creating LOG folder[{LOG_PATH}]: {e}')
     
     log.basicConfig(
-        level=log.INFO,
+        level=log.DEBUG,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
         filename=os.path.join(LOG_PATH, "run_etl_cmb.log"),
         filemode='w'
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     # Log start process and send Telegram
     message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
     log.info(message)
-    #telegram.sendMessage(message)
+    telegram.sendMessage(message)
     
 
     # Run every Python file in the scripts folder and measure the time
@@ -99,4 +99,4 @@ if __name__ == '__main__':
     # Log end process and send Telegram    
     message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
     log.info(message.replace('\n', ' '))
-    #telegram.sendMessage(message)
+    telegram.sendMessage(message)

@@ -118,6 +118,7 @@ def run():
         "DESCRIPTION": "historico_despesa",
         "CITY_NAME": "ds_municipio",
         "CITY_CODE": "codigo_municipio_ibge",
+        "ID": "id_despesa_detalhe",
     }
     
     # Filter cities

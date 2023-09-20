@@ -1,12 +1,10 @@
 import logging
 import pandas as pd
 import os
+import re
 
 from geopy.geocoders import Nominatim
 from unidecode import unidecode
-from undecode import undecode_text
-from lowercase import lowercase_text
-from search_terms import search_all_terms
 
 geolocator = Nominatim(domain='localhost:8088', scheme='http')
 #geolocator = Nominatim(user_agent="cmb3.0")
@@ -24,7 +22,7 @@ def load_terms():
     terms_file = os.path.join(FOLDER_PATH, "terms.txt")
     terms_content = None
 
-    with open(terms_file, 'r') as f:
+    with open(terms_file, 'r', encoding="utf-8") as f:
         terms_content = f.read().splitlines()
         terms_content = [term.lower() for term in terms_content]
         terms_content = [unidecode(term) for term in terms_content]
@@ -35,22 +33,54 @@ def load_terms():
 
 
 
-def search_all_locations(data: pd.DataFrame, column_name: str, statistics):    
+def search_all_locations(data: pd.DataFrame, column_id:str, column_description: str, statistics):    
     
     terms_content = load_terms()
     statistics.total_search_variations = TOTAL_SEARCH_VARIATION
+    locations = {}
+    total = 1
     
-    for row in data[column_name]:
+    for index, row in data.iterrows():
+
+        description = row[column_description]
+        id = row[column_id]
+
+        # Primeiro verifica se existe algum termo "avenida, escola, etc" na linha
+        terms_finded = search_all_terms(terms_content, description)
+        print(f'Searching row number {total}/{len(data)}')
+        total += 1
         
-        terms_finded = search_all_terms(terms_content, row)
-        
+        # Se existir, procura pelas localizações
         if len(terms_finded) > 0:
-            search_variations(row, terms_finded, statistics)
+            search_variations(description, terms_finded, statistics, locations, id)
+
+    return locations
+
+
+
+
+def search_all_terms(TERMS_CONTENT, line: str):
+
+    #console.debug(f'Searching line: {line}...')
+    results = []
+
+    for regex in TERMS_CONTENT:
+        
+        position = re.search(regex, line, re.IGNORECASE)
+        
+        if position:
+            result = {}
+            result['term'] = regex
+            result['position'] = position.start()
+            results.append(result)
+    
+    
+    return results
             
 
 
 
-def search_variations(text: str, terms_finded: list, statistics):       
+def search_variations(text: str, terms_finded: list, statistics, locations: dict, column_id: str):       
         
     # Searching for the first 10 words
     next_word = 3
@@ -73,9 +103,11 @@ def search_variations(text: str, terms_finded: list, statistics):
             search = search_local(text_to_search)
             
             if search:
-                fake_address = check_fake_location(search)
+                fake_address = check_fake_location(search.address)
                 if not fake_address:
                     statistics.update_location_term(term_text, f'variation_{next_word}')
+                    locations[column_id] = search
+                    return
     
             next_word = 3 if next_word == 0 else next_word + 1
             text_to_search = ' '.join(words[:next_word])
@@ -92,14 +124,14 @@ def search_local(text: str):
             location_geo = geolocator.geocode(text, timeout=600)
 
             if location_geo:        
-                lat, lon = location_geo.latitude, location_geo.longitude
                 #log.debug(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
-                return location_geo.address
+                return location_geo
             else:
                 return False
             
         except Exception as e:
             log.error(f'Error searching location: {e}')
+            print(f'Error searching location: {e}')
             max_attempts -= 1
             
     return False

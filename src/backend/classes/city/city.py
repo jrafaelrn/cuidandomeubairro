@@ -2,8 +2,7 @@ import pandas as pd
 import logging
 import datetime
 
-from lowercase import lowercase_text
-from undecode import undecode_text
+from unidecode import unidecode
 from search_locations import search_all_locations
 from .statistics import Statistics
 from classes.extractor.extractor import Extractor
@@ -31,21 +30,63 @@ class City:
         self.transform(data, config_columns)
         
         self.load()
+
+        log.info('ETL -- SUCCESSFULLY FINISHED')
     
 
+    #################################################
+    #                   TRANSFORM                   #
+    #################################################
 
     def transform(self, data: pd.DataFrame, config_columns):
         
         self.data = data
-        self.column_name = config_columns['DESCRIPTION']
+        self.column_name_description = config_columns['DESCRIPTION']
+        self.column_name_id = config_columns['ID']
         
         # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
-        self.data_transformed = data.drop_duplicates(subset=[self.column_name])
-        self.data_transformed = lowercase_text(self.data, self.column_name)
-        self.data_transformed = undecode_text(self.data_transformed, self.column_name)
-        self.data_transformed = search_all_locations(self.data_transformed, self.column_name, self.statistics)
+
+            # Get just 500 first rows (TEMP - remove before production and uncomment the next line)
+        self.data_transformed = data = data[:500]
+        #self.data_transformed = data.drop_duplicates(subset=[self.column_name])
+        self.data_transformed = self.lowercase_text(self.data_transformed, self.column_name_description)
+        self.data_transformed = self.undecode_text(self.data_transformed, self.column_name_description)
         
+        self.ids_locations = search_all_locations(self.data_transformed, self.column_name_id, self.column_name_description, self.statistics)
+        
+        log.info('TRANSFORM -- SUCCESSFULLY FINISHED')
     
+
+
+
+    def lowercase_text(self, dataFrame: pd.DataFrame, column: str):
+
+        print("Starting lowercase text...")
+    
+        for index, row in dataFrame.iterrows():
+            dataFrame.loc[index, column] = row[column].lower()
+        
+        print("...Lowercase finished successfully !!")
+        return dataFrame
+
+    
+
+    def undecode_text(self, dataFrame: pd.DataFrame, column: str) -> pd.DataFrame:
+
+        print("Starting undecode text...")
+    
+        for index, row in dataFrame.iterrows():
+            dataFrame.loc[index, column] = unidecode(row[column])
+        
+        print("...Undecode finished successfully !!")
+        return dataFrame
+
+
+
+
+    #################################################
+    #                     LOAD                      #
+    #################################################
     
     def load(self):
         DB.send_to_db(self.data_transformed)
