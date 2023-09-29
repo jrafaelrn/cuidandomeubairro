@@ -3,7 +3,7 @@ import logging
 import datetime
 
 from unidecode import unidecode
-from search_locations import search_all_locations
+from backend.classes.city.locations import search_all_locations
 from .statistics import Statistics
 from classes.extractor.extractor import Extractor
 from classes.db import DB
@@ -49,7 +49,7 @@ class City:
         # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
 
         # Get just 500 first rows (TEMP - remove before production and uncomment the next line)
-        self.data_transformed = data[:500]
+        self.data_transformed = data[:2500]
 
         #self.data_transformed = data.drop_duplicates(subset=[self.column_name_description])
         self.data_transformed = self.lowercase_text(self.data_transformed, self.column_name_description)

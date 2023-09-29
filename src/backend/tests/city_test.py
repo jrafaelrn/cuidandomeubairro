@@ -1,7 +1,15 @@
 import pandas as pd
 import unittest
+import os
+import sys
 
-from classes.city import lowercase_text
+path = os.path.join(os.path.dirname(os.path.dirname(__file__)))
+path = os.path.join(path, 'classes')
+path = os.path.join(path, 'city')
+
+sys.path.insert(0, path)
+
+from city import lowercase_text
 
 
 class TestCity(unittest.TestCase):
