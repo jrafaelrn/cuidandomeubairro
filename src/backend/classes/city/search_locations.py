@@ -33,12 +33,12 @@ def load_terms():
 
 
 
-def search_all_locations(data: pd.DataFrame, column_id:str, column_description: str, statistics):    
+def search_all_locations(data: pd.DataFrame, column_id:str, column_description: str, statistics, city_name: str):
     
     terms_content = load_terms()
     statistics.total_search_variations = TOTAL_SEARCH_VARIATION
     locations = {}
-    total = 1
+    counter = 1
     
     for index, row in data.iterrows():
 
@@ -47,12 +47,15 @@ def search_all_locations(data: pd.DataFrame, column_id:str, column_description: 
 
         # Primeiro verifica se existe algum termo "avenida, escola, etc" na linha
         terms_finded = search_all_terms(terms_content, description)
-        print(f'Searching row number {total}/{len(data)}')
-        total += 1
+
+        # Debug
+        if counter % round((len(data) / 10), 0) == 0:
+            print(f'Progress: {round(counter / len(data) * 100, 0)}%')
+        counter += 1   
         
         # Se existir, procura pelas localizações
         if len(terms_finded) > 0:
-            search_variations(description, terms_finded, statistics, locations, id)
+            search_variations(description, terms_finded, statistics, locations, id, city_name)
 
     return locations
 
@@ -80,7 +83,7 @@ def search_all_terms(TERMS_CONTENT, line: str):
 
 
 
-def search_variations(text: str, terms_finded: list, statistics, locations: dict, column_id: str):       
+def search_variations(text: str, terms_finded: list, statistics, locations: dict, column_id: str, city_name: str):       
         
     # Searching for the first 10 words
     next_word = 3
@@ -103,7 +106,7 @@ def search_variations(text: str, terms_finded: list, statistics, locations: dict
             search = search_local(text_to_search)
             
             if search:
-                fake_address = check_fake_location(search.address)
+                fake_address = check_fake_location(search.address, city_name)
                 if not fake_address:
                     statistics.update_location_term(term_text, f'variation_{next_word}')
                     locations[column_id] = search
@@ -138,9 +141,14 @@ def search_local(text: str):
 
 
 
-def check_fake_location(address: str):
+def check_fake_location(address: str, city_name: str):
 
-    if 'São Paulo' in address:
+    address = address.lower()
+    address = unidecode(address)
+    city_name = city_name.lower()
+    city_name = unidecode(city_name)
+
+    if 'São Paulo' in address and city_name not in address:
         return False
     
     return True

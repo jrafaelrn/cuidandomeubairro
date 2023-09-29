@@ -42,18 +42,20 @@ class City:
         
         self.data = data
         self.column_name_description = config_columns['DESCRIPTION']
+        self.city_name = config_columns['CITY_NAME']
+        self.city_code = config_columns['CITY_CODE']
         self.column_name_id = config_columns['ID']
         
         # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
 
         # Get just 500 first rows (TEMP - remove before production and uncomment the next line)
-        self.data_transformed = data = data[:500]
+        self.data_transformed = data[:500]
 
         #self.data_transformed = data.drop_duplicates(subset=[self.column_name_description])
         self.data_transformed = self.lowercase_text(self.data_transformed, self.column_name_description)
         self.data_transformed = self.undecode_text(self.data_transformed, self.column_name_description)
         
-        self.ids_locations = search_all_locations(self.data_transformed, self.column_name_id, self.column_name_description, self.statistics)
+        self.ids_locations = search_all_locations(self.data_transformed, self.column_name_id, self.column_name_description, self.statistics, self.city_name)
         
         log.info('TRANSFORM -- SUCCESSFULLY FINISHED')
     
