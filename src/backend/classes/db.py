@@ -9,6 +9,7 @@ class DB:
         self.dbname='cmb' 
         self.user='usuario' 
         self.password='senha' 
+        self.connect()
 
 
     def connect(self):
@@ -44,10 +45,11 @@ class DB:
         
         #print(f'SQL COMANDO=|{command}|VALUES=|{values}|')
 
-        self.connect()
+        #self.connect()
         return_bd = None
         
         self.bd_cursor.execute(f'{command}', values)
+        self.conexao.commit()
 
         try:
             return_bd = self.bd_cursor.fetchall()
@@ -56,7 +58,7 @@ class DB:
             pass
         
         #print(f'Retorno Banco Dados = {return_bd}')
-        self.save()
+        #self.save()
 
         return return_bd
 
@@ -64,13 +66,13 @@ class DB:
 
     def save(self):
     
-        self.conexao.commit()
+        #self.conexao.commit()
         self.bd_cursor.close()
         self.conexao.close()
 
 
 
-    def update_metadata(total_lines, total_unique_descriptions):
+    def update_metadata(self):
         
         last_update = datetime.datetime.now()
  

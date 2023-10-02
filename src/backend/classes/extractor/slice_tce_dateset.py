@@ -9,7 +9,7 @@ import os
 log = logging.getLogger(__name__)
 
 # Set pandas options para considerar '' como null
-pd.options.mode.use_inf_as_na = True
+#pd.options.mode.use_inf_as_na = True
 
 
 statistics = []

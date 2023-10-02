@@ -61,7 +61,7 @@ def run_multiprocessing(files, extractor, config):
     completed = 0
     num_files = len(files)
     
-    progress_bar = tqdm(total=num_files)
+    progress_bar = tqdm(total=num_files, position=0)
 
     while completed < num_files:
         
@@ -122,7 +122,7 @@ def run():
     }
     
     # Filter cities
-    cities_files = cities_files[:1]
+    cities_files = cities_files[:3]
     
     run_multiprocessing(cities_files, extractor, config)
      

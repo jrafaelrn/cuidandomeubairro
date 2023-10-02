@@ -3,15 +3,17 @@ import pandas as pd
 import os
 import re
 
+from .terms import *
 from geopy.geocoders import Nominatim
 from unidecode import unidecode
+from tqdm import tqdm
 
 log = logging.getLogger(__name__)
 
 
 
 
-class Localizer:
+class Locator:
 
     def __init__(self):
         self.geolocator = Nominatim(domain='localhost:8088', scheme='http')
@@ -20,10 +22,10 @@ class Localizer:
 
     def search_all_locations(self, data: pd.DataFrame, column_id:str, column_description: str, statistics, city_name: str):
         
-        terms_content = load_terms()
+        progress_bar = tqdm(total=len(data), desc=f'{city_name} - Searching all locations...', position=1, leave=False, mininterval=5)
+        terms_content = Terms().load_terms()
         statistics.total_search_variations = self.TOTAL_SEARCH_VARIATION
         locations = {}
-        counter = 1
         
         for index, row in data.iterrows():
 
@@ -31,16 +33,15 @@ class Localizer:
             id = row[column_id]
 
             # Primeiro verifica se existe algum termo "avenida, escola, etc" na linha
-            terms_finded = search_all_terms(terms_content, description)
-
-            # Debug
-            if counter % round((len(data) / 10), 0) == 0:
-                print(f'Searching all locations - Progress: {round(counter / len(data) * 100, 0)}%')
-            counter += 1   
+            terms_finded = self.search_all_terms(terms_content, description)
             
             # Se existir, procura pelas localizações
             if len(terms_finded) > 0:
                 self.search_variations(description, terms_finded, statistics, locations, id, city_name)
+
+            progress_bar.update(1)            
+        
+        progress_bar.close()
 
         return locations
 
@@ -88,10 +89,10 @@ class Localizer:
             
             while next_word <= len(words) and next_word <= self.TOTAL_SEARCH_VARIATION:
                 
-                search = search_local(text_to_search)
+                search = self.search_local(text_to_search)
                 
                 if search:
-                    fake_address = check_fake_location(search.address, city_name)
+                    fake_address = self.check_fake_location(search.address, city_name)
                     if not fake_address:
                         statistics.update_location_term(term_text, f'variation_{next_word}')
                         locations[column_id] = search
