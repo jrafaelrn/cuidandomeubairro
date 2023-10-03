@@ -2,6 +2,15 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE SCHEMA IF NOT EXISTS cmb;
 
+
+CREATE TABLE IF NOT EXISTS cmb.f_ibge (
+    cd_municipio character varying(10) NOT NULL,
+    nome_municipio character varying(100) NOT NULL,
+    populacao integer NOT NULL,
+    PRIMARY KEY (cd_municipio)
+);
+
+
 CREATE TABLE IF NOT EXISTS cmb.f_despesa (
     mes integer NOT NULL,
     mes_extenso character varying(20) NOT NULL,
@@ -10,7 +19,6 @@ CREATE TABLE IF NOT EXISTS cmb.f_despesa (
     ds_programa character varying(100) NOT NULL,
     cd_acao character NOT NULL,
     ds_acao character varying(100) NOT NULL,
-    cd_municipio character NOT NULL,
     id_despesa_detalhe character NOT NULL,
     ds_orgao character varying(100) NOT NULL,
     tp_despesa character varying(30) NOT NULL,
@@ -27,16 +35,14 @@ CREATE TABLE IF NOT EXISTS cmb.f_despesa (
     ds_modalidade_lic character varying(50) NOT NULL,
     ds_elemento character varying(150) NOT NULL,
     historico_despesa character varying(1000) NOT NULL,
-    localizacao geography(Point,4326),
     latitude character varying(50),
     longitude character varying(50),
+    cd_municipio character varying(10) NOT NULL,
+    CONSTRAINT fk_municipio
+        FOREIGN KEY (cd_municipio)
+            REFERENCES cmb.f_ibge (cd_municipio)
+            ON UPDATE CASCADE,
     PRIMARY KEY (id_despesa_detalhe, cd_municipio)
 );
 
 
-CREATE TABLE IF NOT EXISTS cmb.f_ibge (
-    cd_municipio integer NOT NULL,
-    nome_municipio character varying(100) NOT NULL,
-    populacao integer NOT NULL,
-    PRIMARY KEY (cd_municipio)
-);

@@ -17,9 +17,9 @@ class Transformer:
         # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
 
         # Get just 500 first rows (TEMP - remove before production and uncomment the next line)
-        #data_transformed = city.data[:500]
+        data_transformed = city.data[:1500]
 
-        data_transformed = city.data.drop_duplicates(subset=[column_name_description])
+        #data_transformed = city.data.drop_duplicates(subset=[column_name_description])
         data_transformed = self.lowercase_text(data_transformed, column_name_description)
         data_transformed = self.undecode_text(data_transformed, column_name_description)
         

@@ -114,15 +114,12 @@ class Loader:
 
             # Add the location to the columns
             if location:
-                
-                columns_name.append('localizacao')
                 columns_name.append('latitude')
                 columns_name.append('longitude')
 
-                value = f'POINT({location.longitude} {location.latitude})'
-                columns_value.append(value)
                 columns_value.append(location.latitude)
                 columns_value.append(location.longitude)
+                
         except:
             #print(f'WARN - Location not found for id: {row[self.column_name_id]}')    
             pass
