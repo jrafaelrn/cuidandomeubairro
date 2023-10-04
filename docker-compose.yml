@@ -104,6 +104,8 @@ services:
       - ./src/frontend:/app
     networks:
       - cmb-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - graphql 
     

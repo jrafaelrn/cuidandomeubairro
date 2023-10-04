@@ -1,11 +1,12 @@
 import os
 import sys
+import json
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
 
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS, cross_origin
 from orm import ORM
 
@@ -40,12 +41,26 @@ def despesas(ano):
 
 
 
-@app.route('/info', methods=['GET'], defaults={'year': None})
-@app.route('/info/<year>', methods=['GET'])
-@cross_origin(origins=['http://localhost:8080'])
+@app.route('/info', defaults={'year': None})
+@app.route('/info/<year>')
+@cross_origin()
 def info(year):
+    
+    print(f'Response for year {year}')
+
+    if request.method == "OPTIONS": # CORS preflight
+        return _build_cors_preflight_response()
+
     return jsonify({'data': {'years': [2023]}})
 
+
+
+def _build_cors_preflight_response():
+    response = make_response()
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "*")
+    response.headers.add('Access-Control-Allow-Methods', "*")
+    return response
 
 
 
