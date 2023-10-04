@@ -29,9 +29,15 @@ class Locator:
         progress_bar = tqdm(total=len(city.despesas), desc=f'{city.name} - Searching all locations...', position=1, leave=False, mininterval=5)
         terms_content = Terms().load_terms()
         city.statistics.total_search_variations = self.TOTAL_SEARCH_VARIATION
-        locations = {}
+        despesas = []
+        for desp in city.despesas:
+            if desp not in despesas:
+                despesas.append(desp)
+                progress_bar.update(1)            
+
+        progress_bar.reset(total=len(despesas))
         
-        for despesa in city.despesas:
+        for despesa in despesas:
 
             description = unidecode(despesa.historico_despesa.lower())
             id = despesa.id_despesa_detalhe
@@ -74,7 +80,7 @@ class Locator:
     def search_variations(self, despesa, terms_finded, city):       
             
         # Searching for the first 10 words
-        next_word = 3
+        next_word = 10
         
         for term in terms_finded:
             

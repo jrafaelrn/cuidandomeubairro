@@ -32,3 +32,9 @@ class Despesa:
     mes_extenso: str = field(init=False, default="")
     latitude: str = field(init=False, default="")
     longitude: str = field(init=False, default="")
+
+    def __hash__(self):
+        return hash(self.historico_despesa)
+    
+    def __eq__(self, __value: object) -> bool:
+        return self.historico_despesa == __value.historico_despesa

@@ -87,6 +87,7 @@ if __name__ == '__main__':
     # Log start process and send Telegram
     message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
     log.info(message)
+    print(message)
     #telegram.sendMessage(message)
     
     # Create IBGE tables
@@ -102,4 +103,5 @@ if __name__ == '__main__':
     # Log end process and send Telegram    
     message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
     log.info(message.replace('\n', ' '))
+    print(message)
     #telegram.sendMessage(message)

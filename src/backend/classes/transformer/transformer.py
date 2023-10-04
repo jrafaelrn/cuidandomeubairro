@@ -16,8 +16,8 @@ class Transformer:
         # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
 
         # Get just 1000 first rows (TEMP - remove before production and uncomment the next line)
-        city.data_transformed = city.data[:1000]
-        #city.data_transformed = city.data.drop_duplicates(subset=[config_columns[historico_despesa]])
+        #city.data_transformed = city.data[:1000]
+        city.data_transformed = city.data.drop_duplicates(subset=[config_columns['historico_despesa']])
 
         self.create_despesas(city, config_columns)        
         Locator().search_all_locations(city)
@@ -32,7 +32,7 @@ class Transformer:
 
         log.debug(f'Creating Despesas for {city.name}...')
 
-        for index, row in city.data_transformed.iterrows():
+        for index, row in city.data.iterrows():
             
             despesa = Despesa()
 
