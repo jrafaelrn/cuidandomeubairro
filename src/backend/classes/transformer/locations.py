@@ -29,6 +29,8 @@ class Locator:
         progress_bar = tqdm(total=len(city.despesas), desc=f'{city.name} - Searching all locations...', position=1, leave=False, mininterval=5)
         terms_content = Terms().load_terms()
         city.statistics.total_search_variations = self.TOTAL_SEARCH_VARIATION
+        
+        # Remove duplicates
         despesas = []
         for desp in city.despesas:
             if desp not in despesas:
