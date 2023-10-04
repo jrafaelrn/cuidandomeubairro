@@ -7,13 +7,14 @@ sys.path.append(SCRIPT_PATH)
 from models import Despesa, Ibge
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import DeclarativeBase, Session
-from sqlalchemy import create_engine, func, select
+from sqlalchemy import create_engine, func, select, MetaData
 
 
 class ORM():
 
     def __init__(self):
         self.Base = DeclarativeBase()
+        
 
     #########################################
     # Create a session to connect to the DB #
@@ -81,8 +82,6 @@ class ORM():
     def getDespesas_ano(self, ano):
 
         session = self.createConnection("localhost")
-        #metadata = db.MetaData(schema=os.environ.get('POSTGRES_SCHEMA'))
-        #table_despesas = db.Table('f_despesa', metadata)
         despesas = []
 
         try:
