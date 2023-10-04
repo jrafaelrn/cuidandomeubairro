@@ -96,8 +96,6 @@ services:
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
-    volumes: 
-      - ./src/frontend:/app
     ports:
       - 8080:8080
       - 53350:53350 #To web-debug

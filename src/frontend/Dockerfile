@@ -12,11 +12,16 @@ RUN apt-get install -y python-setuptools
 RUN apt-get install -y curl
 RUN apt-get install -y build-essential
 RUN apt-get install -y python-virtualenv
+RUN apt-get install -y dos2unix
 
 
 WORKDIR /app
 COPY . .
 
-RUN chmod +x entrypoint.sh
+RUN cat entrypoint.sh
+
+RUN dos2unix entrypoint.sh
+
+RUN chmod +x entrypoint.sh && cat entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
