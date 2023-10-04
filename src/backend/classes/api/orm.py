@@ -1,20 +1,19 @@
 import sys
 import os
-import sqlalchemy as db
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
 
 from models import Despesa, Ibge
 from sqlalchemy.engine import URL
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy.sql import extract
+from sqlalchemy.orm import DeclarativeBase, Session
+from sqlalchemy import create_engine, func, select
 
 
 class ORM():
 
     def __init__(self):
-        self.Base = declarative_base()
+        self.Base = DeclarativeBase()
 
     #########################################
     # Create a session to connect to the DB #
@@ -46,12 +45,8 @@ class ORM():
             database=os.environ.get('POSTGRES_DB')
         )
 
-        engine = db.create_engine(url, echo=True)
-
-        Session = sessionmaker(bind=engine)
-        session = Session()
-
-        self.Base.metadata.create_all(bind=engine, checkfirst=True)
+        engine = create_engine(url, echo=True)
+        session = Session(engine)
         
         return session
 
@@ -88,18 +83,25 @@ class ORM():
         session = self.createConnection("localhost")
         #metadata = db.MetaData(schema=os.environ.get('POSTGRES_SCHEMA'))
         #table_despesas = db.Table('f_despesa', metadata)
+        despesas = []
 
         try:
 
-            despesas = session.query(
-                Despesa.latitude,
-                Despesa.longitude,
-                Despesa.vl_despesa,
-                Despesa.historico_despesa,
-                Despesa.id_despesa_detalhe
-            ).filter(
-                Despesa.ano == ano
-            ).all()
+            stmt = (
+                select(
+                    Despesa.latitude,
+                    Despesa.longitude,
+                    Despesa.valor_despesa,
+                    Despesa.historico_despesa,
+                    Despesa.id_despesa_detalhe
+                ).filter(
+                    Despesa.ano == ano,
+                    Despesa.latitude != '',
+                )
+            )
+
+            for row in session.execute(stmt):
+                despesas.append(row)
 
         except Exception as e:
             print(f'Error getting despesas: {e}')
@@ -109,16 +111,9 @@ class ORM():
     
 
 
-    # Get tables
-    def get_tables(self):
-        return self.metadata.tables.keys()
-
-
 
 if __name__ == '__main__':
 
     orm = ORM()
     despesas = orm.getDespesas_ano(2023)
     print(despesas)
-
-    print(f'Tables: {orm.get_tables()}')

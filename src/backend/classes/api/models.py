@@ -1,44 +1,45 @@
 import os
 
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Double
-from sqlalchemy.orm import declarative_base, relationship
-
-Base = declarative_base()
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
+class Base(DeclarativeBase):
+    pass
 
 class Despesa(Base):
     
     __tablename__ = 'f_despesa'
     __table_args__ = {'schema': os.environ.get('POSTGRES_SCHEMA')}
     
-    cd_municipio = Column(String, ForeignKey("f_ibge.cd_municipio"), nullable=False)
-    id_despesa_detalhe = Column("id_despesa_detalhe", Integer, nullable=False, primary_key=True)
+    cd_municipio: Mapped[str] = mapped_column("cd_municipio", String(), nullable=False, primary_key=True)
+    id_despesa_detalhe: Mapped[str] = mapped_column("id_despesa_detalhe", String(), nullable=False, primary_key=True)
     
-    mes = Column("mes", Integer, nullable=False)
-    mes_extenso = Column("mes_extenso", String, nullable=False)
-    ano = Column("ano", Integer, nullable=False)
-    cd_programa = Column("cd_programa", Integer, nullable=False)
-    ds_programa = Column("ds_programa", String, nullable=False)
-    cd_acao = Column("cd_acao", Integer, nullable=False)
-    ds_acao = Column("ds_acao", String, nullable=False)
-    ds_orgao = Column("ds_orgao", String, nullable=False)
-    tp_despesa = Column(String, nullable=False)
-    nr_empenho = Column(String, nullable=False)
-    tp_identificador_despesa = Column(String, nullable=False)
-    nr_identificador_despesa = Column(String, nullable=False)
-    ds_despesa = Column(String, nullable=False)
-    dt_emissao_despesa = Column(DateTime, nullable=False)
-    vl_despesa = Column("vl_despesa", Double, nullable=False)
-    ds_funcao_governo = Column(String, nullable=False)
-    ds_subfuncao_governo = Column(String, nullable=False)
-    ds_fonte_recurso = Column(String, nullable=False)
-    ds_cd_aplicacao_fixo = Column(String, nullable=False)
-    ds_modalidade_lic = Column(String, nullable=False)
-    ds_elemento = Column(String, nullable=False)
-    historico_despesa = Column(String, nullable=False)
-    latitude = Column("latitude", String, nullable=True)
-    longitude = Column("longitude", String, nullable=True)
+    mes: Mapped[int] = mapped_column("mes", Integer(), nullable=False)
+    mes_extenso: Mapped[str] = mapped_column("mes_extenso", String(), nullable=False)
+    ano: Mapped[int] = mapped_column("ano", Integer(), nullable=False)
+    cd_programa: Mapped[str] = mapped_column("cd_programa", String())
+    ds_programa: Mapped[str] = mapped_column("ds_programa", String())
+    cd_acao: Mapped[str] = mapped_column("cd_acao", String())
+    ds_acao: Mapped[str] = mapped_column("ds_acao", String())
+    ds_orgao: Mapped[str] = mapped_column("ds_orgao", String())
+    tp_despesa: Mapped[str] = mapped_column("tp_despesa", String())
+    nr_empenho: Mapped[str] = mapped_column("nr_empenho", String())
+    tp_identificador_despesa: Mapped[str] = mapped_column("tp_identificador_despesa", String(), nullable=True)
+    nr_identificador_despesa: Mapped[str] = mapped_column("nr_identificador_despesa", String(), nullable=True)
+    ds_despesa: Mapped[str] = mapped_column("ds_despesa", String(), nullable=True)
+    dt_emissao_despesa: Mapped[datetime] = mapped_column("dt_emissao_despesa", DateTime(), nullable=False)
+    valor_despesa: Mapped[float] = mapped_column("valor_despesa", Double(), nullable=False)
+    ds_funcao_governo: Mapped[str] = mapped_column("ds_funcao_governo", String(), nullable=True)
+    ds_subfuncao_governo: Mapped[str] = mapped_column("ds_subfuncao_governo", String(), nullable=True)
+    ds_fonte_recurso: Mapped[str] = mapped_column("ds_fonte_recurso", String(), nullable=True)
+    ds_cd_aplicacao_fixo: Mapped[str] = mapped_column("ds_cd_aplicacao_fixo", String(), nullable=True)
+    ds_modalidade_lic: Mapped[str] = mapped_column("ds_modalidade_lic", String(), nullable=True)
+    ds_elemento: Mapped[str] = mapped_column("ds_elemento", String(), nullable=True)
+    historico_despesa: Mapped[str] = mapped_column("historico_despesa", String(), nullable=False)
+    latitude: Mapped[str] = mapped_column("latitude", String(), nullable=True)
+    longitude: Mapped[str] = mapped_column("longitude", String(), nullable=True)
 
 
 
@@ -52,8 +53,8 @@ class Ibge(Base):
     __tablename__ = 'f_ibge'
     __table_args__ = {'schema': os.environ.get('POSTGRES_SCHEMA')}
 
-    cd_municipio = Column("cd_municipio", String, nullable=False, primary_key=True)
-    nome_municipio = Column("nome_municipio", String, nullable=False)
-    populacao = Column("populacao", Integer, nullable=False)
+    cd_municipio: Mapped[str] = mapped_column("cd_municipio", String, nullable=False, primary_key=True)
+    nome_municipio: Mapped[str] = mapped_column("nome_municipio", String, nullable=False)
+    populacao: Mapped[int] = mapped_column("populacao", Integer, nullable=False)
 
-    despesa = relationship('Despesa', primaryjoin="Ibge.cd_municipio==Despesa.cd_municipio", backref='Ibge')
+    #despesa = relationship('Despesa', primaryjoin="Ibge.cd_municipio==Despesa.cd_municipio", backref='Ibge')
