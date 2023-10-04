@@ -94,11 +94,13 @@ services:
 
   frontend:
     build:
-      context: ./src/frontend
-      dockerfile: Dockerfile
+      context: ./src
+      dockerfile: Dockerfile-front
     ports:
       - 8080:8080
       - 53350:53350 #To web-debug
+    volumes:
+      - ./src/frontend:/app
     networks:
       - cmb-network
     depends_on:

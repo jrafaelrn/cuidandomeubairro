@@ -13,7 +13,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/despesas/<ano>', methods=['GET'])
+@app.route('/year/<ano>', methods=['GET'])
 @cross_origin(origins=['http://localhost:8080'])
 def despesas(ano):
     
@@ -36,6 +36,14 @@ def despesas(ano):
         })
     
     return jsonify({'type': 'FeatureCollection', 'features': json_despesas})
+
+
+
+
+@app.route('/info', methods=['GET'])
+@cross_origin(origins=['http://localhost:8080'])
+def info(year):
+    return jsonify({'data': {'years': [2023]}})
 
 
 if __name__ == '__main__':

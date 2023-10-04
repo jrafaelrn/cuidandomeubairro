@@ -5,7 +5,7 @@ import { http } from '@/utils'
 // Gastos Abertos
 export default new Vapi({
   axios: http,
-  baseURL: baseUrls.money,
+  baseURL: baseUrls.despesa,
   state: {
     yearPoints: {},
     years: [],

@@ -13,11 +13,11 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      redirect: `/2022/1`
+      redirect: `/2023`
     },
     {
-      path: '/despesa/:year/:code',
-      name: 'despesa',
+      path: '/despesas/:year',
+      name: 'despesas',
       components: {
         default: Despesa,
         map: MapDespesas
