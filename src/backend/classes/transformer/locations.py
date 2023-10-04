@@ -1,9 +1,13 @@
 import logging
 import pandas as pd
 import os
+import sys
 import re
 
-from .terms import *
+SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(SCRIPT_PATH)
+
+from terms import *
 from geopy.geocoders import Nominatim
 from unidecode import unidecode
 from tqdm import tqdm

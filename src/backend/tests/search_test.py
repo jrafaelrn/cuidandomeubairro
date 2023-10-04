@@ -4,16 +4,16 @@ import sys
 
 path = os.path.join(os.path.dirname(os.path.dirname(__file__)))
 path = os.path.join(path, 'classes')
-path = os.path.join(path, 'city')
+path = os.path.join(path, 'transformer')
 
 sys.path.insert(0, path)
 
-from locations import Localizer
+from locations import Locator
 
 
 class TestSearchLocations(unittest.TestCase):
 
-    locator = Localizer()
+    locator = Locator()
 
     def test_fake_location(self):
         
