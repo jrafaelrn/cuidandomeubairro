@@ -40,10 +40,14 @@ def despesas(ano):
 
 
 
-@app.route('/info', methods=['GET'])
+@app.route('/info', methods=['GET'], defaults={'year': None})
+@app.route('/info/<year>', methods=['GET'])
 @cross_origin(origins=['http://localhost:8080'])
 def info(year):
     return jsonify({'data': {'years': [2023]}})
+
+
+
 
 
 if __name__ == '__main__':

@@ -98,6 +98,7 @@ services:
       dockerfile: Dockerfile-front
     ports:
       - 8080:8080
+      - 5000:5000 #To flaks API
       - 53350:53350 #To web-debug
     volumes:
       - ./src/frontend:/app

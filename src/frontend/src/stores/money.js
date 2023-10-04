@@ -5,7 +5,7 @@ import { http } from '@/utils'
 // Gastos Abertos
 export default new Vapi({
   axios: http,
-  baseURL: baseUrls.despesa,
+  baseURL: baseUrls.despesas,
   state: {
     yearPoints: {},
     years: [],
@@ -37,6 +37,7 @@ export default new Vapi({
   path: `/info`,
   onSuccess: (state, payload, axios) => {
     state.years = payload.data.data.years.reverse()
+    console.log('Years retrieved: ', state.years)
   }
 }).get({
   action: 'getYearInfo',

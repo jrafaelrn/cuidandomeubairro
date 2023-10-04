@@ -13,11 +13,11 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      redirect: `/2023`
+      redirect: `/2023/1`
     },
     {
-      path: '/despesas/:year',
-      name: 'despesas',
+      path: '/despesa/:year/:code',  // Rota para visualizar uma despesa específica
+      name: 'despesa',
       components: {
         default: Despesa,
         map: MapDespesas
@@ -49,7 +49,7 @@ let router = new Router({
       component: () => import(/* webpackChunkName: "analises" */ '@/views/Analises.vue')
     },
     {
-      path: '/:year/:page?',
+      path: '/:year/:page?', // Rota para visualizar a página principal de uma ano específico
       name: 'home',
       components: {
         default: Home,
