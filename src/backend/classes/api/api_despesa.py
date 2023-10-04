@@ -34,14 +34,14 @@ def despesas(ano):
                 'type': 'Point',
             },
             'properties': {
-                'cap_cor': 'capital',
+                'cap_cor': '1',
                 'state': 'atualizado',
                 'uid': despesa[4],
             }
         })
     
     json_response = {
-        "FeatureCollection": json_despesas
+        "FeatureColletion": json_despesas
     }
 
     return jsonify(json_response)

@@ -177,6 +177,7 @@ export default {
       return this.routeName === "home";
     },
     geoJsons() {
+      console.log('Return from GeoJsons' + [this.yearPoints])
       return [this.yearPoints];
     },
     ...mapState({

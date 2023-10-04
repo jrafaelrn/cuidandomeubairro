@@ -25,13 +25,10 @@ export default new Vapi({
         (payload.data.FeatureColletion[0].properties.uid !==
          state.yearPoints.features[0].properties.uid)
     ) {
-      state.yearPoints = {
-        type: 'FeatureCollection',
-        features: payload.data.FeatureColletion
+      state.yearPoints = payload.data.FeatureColletion
       }
-      console.log('Year points retrieved: ', state.yearPoints)
+      console.log('Year points retrieved from /minlist: ', state.yearPoints)
     }
-  }
 }).get({
   action: 'getYears',
   property: 'years',
