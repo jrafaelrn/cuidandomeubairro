@@ -20,30 +20,28 @@ class Locator:
         self.TOTAL_SEARCH_VARIATION = 3
 
 
-    def search_all_locations(self, data: pd.DataFrame, column_id:str, column_description: str, statistics, city_name: str):
+    def search_all_locations(self, city):
         
-        progress_bar = tqdm(total=len(data), desc=f'{city_name} - Searching all locations...', position=1, leave=False, mininterval=5)
+        progress_bar = tqdm(total=len(city.despesas), desc=f'{city.name} - Searching all locations...', position=1, leave=False, mininterval=5)
         terms_content = Terms().load_terms()
-        statistics.total_search_variations = self.TOTAL_SEARCH_VARIATION
+        city.statistics.total_search_variations = self.TOTAL_SEARCH_VARIATION
         locations = {}
         
-        for index, row in data.iterrows():
+        for despesa in city.despesas:
 
-            description = row[column_description]
-            id = row[column_id]
+            description = unidecode(despesa.historico_despesa.lower())
+            id = despesa.id_despesa_detalhe
 
             # Primeiro verifica se existe algum termo "avenida, escola, etc" na linha
             terms_finded = self.search_all_terms(terms_content, description)
             
             # Se existir, procura pelas localizações
             if len(terms_finded) > 0:
-                self.search_variations(description, terms_finded, statistics, locations, id, city_name)
+                self.search_variations(despesa, terms_finded, city)
 
             progress_bar.update(1)            
         
         progress_bar.close()
-
-        return locations
 
 
 
@@ -69,7 +67,7 @@ class Locator:
 
 
 
-    def search_variations(self, text: str, terms_finded: list, statistics, locations: dict, column_id: str, city_name: str):       
+    def search_variations(self, despesa, terms_finded, city):       
             
         # Searching for the first 10 words
         next_word = 3
@@ -80,11 +78,11 @@ class Locator:
             term_position = term['position']
             
             # Accumulates the total of each term found in the city
-            statistics.update_total_term(term_text, 'total_term')
+            city.statistics.update_total_term(term_text, 'total_term')
             
-            text_to_search = text
+            text_to_search = despesa.historico_despesa
             next_word = 0
-            text_from_position = text[term_position:]
+            text_from_position = despesa.historico_despesa[term_position:]
             words = text_from_position.split(' ')                    
             
             while next_word <= len(words) and next_word <= self.TOTAL_SEARCH_VARIATION:
@@ -92,10 +90,11 @@ class Locator:
                 search = self.search_local(text_to_search)
                 
                 if search:
-                    fake_address = self.check_fake_location(search.address, city_name)
+                    fake_address = self.check_fake_location(search.address, city.name)
                     if not fake_address:
-                        statistics.update_location_term(term_text, f'variation_{next_word}')
-                        locations[column_id] = search
+                        city.statistics.update_location_term(term_text, f'variation_{next_word}')
+                        despesa.latitude = search.latitude
+                        despesa.longitude = search.longitude
                         return
         
                 next_word = 3 if next_word == 0 else next_word + 1

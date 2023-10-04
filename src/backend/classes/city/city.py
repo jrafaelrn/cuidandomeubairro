@@ -4,7 +4,6 @@ import logging
 from unidecode import unidecode
 from .statistics import Statistics
 from classes.extractor.extractor import Extractor
-
 from classes.transformer.transformer import Transformer
 from classes.loader.loader import Loader
 
@@ -17,6 +16,7 @@ class City:
     def __init__(self, name: str, code: str, save_statistics: bool = False):
         self.name = name
         self.code = code
+        self.despesas = []
         self.save_statistics = save_statistics
         self.statistics = Statistics()
         

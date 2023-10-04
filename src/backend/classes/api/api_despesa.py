@@ -6,8 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/dados/<ano>', methods=['GET'])
+@app.route('/despesas/<ano>', methods=['GET'])
 @cross_origin(origins=['http://localhost:8080'])
 def dados(ano):
-    
     

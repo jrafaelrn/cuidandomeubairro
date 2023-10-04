@@ -114,16 +114,40 @@ def run():
             cities_files.append(file)
             
     
+    
+    # Configura as tabelas obrigatórias no banco de dados
+    # A chave primária é a combinação das colunas 'id_despesa_detalhe' e 'cd_municipio'
+    # São obrigatórias as primeiras colunas, até 'cd_municipio'
+    # Esquema: { "NOME_DA_COLUNA_BANCO_DADOS": "NOME_DA_COLUNA_ARQUIVO_ORIGINAL" }
+
     config = {
-        "DESCRIPTION": "historico_despesa",
-        "CITY_NAME": "ds_municipio",
-        "CITY_CODE": "codigo_municipio_ibge",
-        "ID": "id_despesa_detalhe",
+        "mes": "mes_referencia",
+        "mes_extenso": "mes_ref_extenso",
+        "ano": "ano_exercicio",
+        "id_despesa_detalhe": "id_despesa_detalhe",
+        "nr_empenho": "nr_empenho",
+        "dt_emissao_despesa": "dt_emissao_despesa",
+        "valor_despesa": "vl_despesa",
+        "historico_despesa": "historico_despesa",
+        "cd_municipio": "codigo_municipio_ibge",
+        "cd_programa": "cd_programa",
+        "ds_programa": "ds_programa",
+        "cd_acao": "cd_acao",
+        "ds_acao": "ds_acao",
+        "ds_orgao": "ds_orgao",
+        "tp_despesa": "tp_despesa",
+        "tp_identificador_despesa": "tp_identificador_despesa",
+        "nr_identificador_despesa": "nr_identificador_despesa",
+        "ds_despesa": "ds_despesa",
+        "ds_funcao_governo": "ds_funcao_governo",
+        "ds_subfuncao_governo": "ds_subfuncao_governo",
+        "ds_fonte_recurso": "ds_fonte_recurso",
+        "ds_cd_aplicacao_fixo": "ds_cd_aplicacao_fixo",
+        "ds_modalidade_lic": "ds_modalidade_lic",
+        "ds_elemento": "ds_elemento"
     }
     
     # Filter cities
     cities_files = cities_files[:1]
     
     run_multiprocessing(cities_files, extractor, config)
-     
-    

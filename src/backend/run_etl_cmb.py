@@ -4,6 +4,7 @@ import logging as log
 import timeit
 
 from tools.telegram import Telegram
+from tools.db_tables import insert_ibge_csv
 from tools.human_readable import convert_seconds_to_human_readable
 from config import configure_paths
 from importlib import import_module
@@ -86,8 +87,10 @@ if __name__ == '__main__':
     # Log start process and send Telegram
     message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
     log.info(message)
-    telegram.sendMessage(message)
+    #telegram.sendMessage(message)
     
+    # Create IBGE tables
+    insert_ibge_csv()
 
     # Run every Python file in the scripts folder and measure the time
     total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)    
@@ -99,4 +102,4 @@ if __name__ == '__main__':
     # Log end process and send Telegram    
     message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
     log.info(message.replace('\n', ' '))
-    telegram.sendMessage(message)
+    #telegram.sendMessage(message)

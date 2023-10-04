@@ -61,6 +61,8 @@ class ORM():
     #        Insert data into the database          #
     #################################################
 
+    # Need to be fixed
+
     def insert_ibge(self, cd_municipio, nome_municipio, populacao):
         
             session = self.createConnection("localhost")            
