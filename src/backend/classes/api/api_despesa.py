@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import geojson
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
@@ -14,9 +15,12 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/year/<ano>', methods=['GET'])
-@cross_origin(origins=['http://localhost:8080'])
+@app.route('/minlist/<ano>', methods=['GET'])
+@cross_origin()
 def despesas(ano):
+
+    if request.method == "OPTIONS": # CORS preflight
+        return _build_cors_preflight_response()
     
     despesas = ORM().getDespesas_ano(ano)
     json_despesas = []
@@ -24,19 +28,23 @@ def despesas(ano):
     for despesa in despesas:
 
         json_despesas.append({
-            'type': 'Feature',
+            "type": "Feature",
             'geometry': {
+                'coordinates': [float(despesa[1]), float(despesa[0])],
                 'type': 'Point',
-                'coordinates': [despesa[1], despesa[0]]
             },
             'properties': {
-                'cap_cor': '1',
-                'state': 'Liquidado',
+                'cap_cor': 'capital',
+                'state': 'atualizado',
                 'uid': despesa[4],
             }
         })
     
-    return jsonify({'type': 'FeatureCollection', 'features': json_despesas})
+    json_response = {
+        "FeatureCollection": json_despesas
+    }
+
+    return jsonify(json_response)
 
 
 

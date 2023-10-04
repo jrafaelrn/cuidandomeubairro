@@ -23,6 +23,7 @@ virtualenv -p $(which python2.7) venv
 echo -e "\n...Ativando ambiente virtual...\n"
 cd venv && source bin/activate && echo -e "\n...Ambiente virtual ativado!!!\n"
 cd ..
+pip install geojson
 
 # Instala e configura a versão do Node.js
 echo -e "\n...Instalando o NVM...\n"

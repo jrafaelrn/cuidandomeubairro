@@ -29,6 +29,7 @@ export default new Vapi({
         type: 'FeatureCollection',
         features: payload.data.FeatureColletion
       }
+      console.log('Year points retrieved: ', state.yearPoints)
     }
   }
 }).get({
