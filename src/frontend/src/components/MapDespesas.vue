@@ -78,8 +78,8 @@
         <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
         <v-marker-cluster :options="markerClusterOptions">
           <l-geo-json
-            v-if="geoJson.features"
-            :key="geoJson.features[0].properties.uid"
+            v-if="geoJson"
+            :key="geoJson[0].properties.uid"
             v-for="geoJson in geoJsons"
             :geojson="geoJson"
             :options="geoJsonOptions"
@@ -177,7 +177,7 @@ export default {
       return this.routeName === "home";
     },
     geoJsons() {
-      console.log('Return from GeoJsons' + [this.yearPoints])
+      console.log('Return from GeoJsons >>>> ' + [this.yearPoints])
       return [this.yearPoints];
     },
     ...mapState({

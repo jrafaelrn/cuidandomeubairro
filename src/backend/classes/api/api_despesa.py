@@ -39,12 +39,8 @@ def despesas(ano):
                 'uid': despesa[4],
             }
         })
-    
-    json_response = {
-        "FeatureColletion": json_despesas
-    }
 
-    return jsonify(json_response)
+    return jsonify({"type": "FeatureColletion", "features": json_despesas})
 
 
 
