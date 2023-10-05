@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import sys
 import re
+import threading
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
@@ -26,7 +27,8 @@ class Locator:
 
     def search_all_locations(self, city):
         
-        progress_bar = tqdm(total=len(city.despesas), desc=f'{city.name} - Searching all locations...', position=1, leave=False, mininterval=5)
+        number_threads = threading.active_count()
+        progress_bar = tqdm(total=len(city.despesas), desc=f'{city.name} - Searching all locations...', position=city.level_bar, leave=False, mininterval=5)
         terms_content = Terms().load_terms()
         city.statistics.total_search_variations = self.TOTAL_SEARCH_VARIATION
         

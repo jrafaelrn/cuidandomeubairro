@@ -19,6 +19,7 @@ class City:
         self.despesas = []
         self.save_statistics = save_statistics
         self.statistics = Statistics()
+        self.level_bar = 1
         
     
 

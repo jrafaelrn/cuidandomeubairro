@@ -11,7 +11,7 @@ from multiprocessing import Process
 from tqdm import tqdm
 
 log = logging.getLogger(__name__)
-
+level_bar_counter = 1
 
 class Extractor_tce(Extractor):
     
@@ -52,6 +52,8 @@ class Extractor_tce(Extractor):
 
 def run_multiprocessing(files, extractor, config):
             
+    global level_bar_counter
+
     # Variables for multiprocessing
     cores = mp.cpu_count()
     core_multiplier = 1
@@ -67,8 +69,9 @@ def run_multiprocessing(files, extractor, config):
         
         while running <= (cores * core_multiplier) and len(files) > 0:
             file = files.pop(0)
-            p = Process(target=run_city, args=(file, extractor, config))
+            p = Process(target=run_city, args=(file, extractor, config, level_bar_counter))
             processes.append(p)
+            level_bar_counter += 1
             p.start()
             running += 1
             
@@ -76,6 +79,7 @@ def run_multiprocessing(files, extractor, config):
             if not process.is_alive():
                 completed += 1
                 running -= 1
+                level_bar_counter -= 1
                 processes.remove(process)
                 progress_bar.update(1)
                 
@@ -87,13 +91,14 @@ def run_multiprocessing(files, extractor, config):
     
     
     
-def run_city(file, extractor, config):
+def run_city(file, extractor, config, level_bar):
     
     log.info(f'----- > Opening file {file}...')
     
     # Get data from Extractor
     data_tce, city_name, city_code = extractor.get_data(file)
     city = City(name=city_name, code=city_code)
+    city.level_bar = level_bar
     city.etl(data=data_tce, config_columns=config)
     
     log.info(f'----- > Finished file {file}...')
@@ -148,6 +153,6 @@ def run():
     }
     
     # Filter cities
-    cities_files = cities_files[:3]
+    cities_files = cities_files[:50]
     
     run_multiprocessing(cities_files, extractor, config)
