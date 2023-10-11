@@ -54,8 +54,70 @@ def info(year):
 
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
+    
+    if year:
+        return info_year(year)
 
     return jsonify({'data': {'years': [2023]}})
+
+
+def info_year(year):
+
+    orm = ORM()
+
+    total = orm.get_total_rows()
+    locations = orm.get_locations_rows()
+
+    json_return = json.dumps({
+            "data": {
+                "rows": {
+                    "total": total,
+                    "mapped": locations,
+                    "region": locations
+                },
+                "values": [
+                    {
+                        "name": "orcado",
+                        "total": 82758515690.0,
+                        "mapped": 881918948.0,
+                        "region": 881918948.0
+                    },
+                    {
+                        "name": "atualizado",
+                        "total": "null",
+                        "mapped": 0,
+                        "region": 0
+                    },
+                    {
+                        "name": "empenhado",
+                        "total": 45647704515.66,
+                        "mapped": 314230942.48,
+                        "region": 314230942.48
+                    },
+                    {
+                        "name": "liquidado",
+                        "total": 25537700363.32,
+                        "mapped": 159850578.52,
+                        "region": 159850578.52
+                    }
+                ],
+                "last_update": "2022-06-30"
+            }
+        })
+    
+    return json_return
+
+
+
+
+@app.route('/list')
+@cross_origin()
+def list():
+
+    code = request.args.get('code')
+    return ""
+
+
 
 
 
