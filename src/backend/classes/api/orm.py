@@ -4,7 +4,7 @@ import os
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
 
-from models import Despesa, Ibge
+from models import Despesa, Ibge, TableInfo
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import DeclarativeBase, Session
 from sqlalchemy import create_engine, func, select, MetaData
@@ -14,6 +14,7 @@ class ORM():
 
     def __init__(self):
         self.Base = DeclarativeBase()
+        self.engine = None
         
 
     #########################################
@@ -46,8 +47,8 @@ class ORM():
             database=os.environ.get('POSTGRES_DB')
         )
 
-        engine = create_engine(url, echo=True)
-        session = Session(engine)
+        self.engine = create_engine(url, echo=True)
+        session = Session(self.engine)
         
         return session
 
@@ -219,8 +220,28 @@ class ORM():
 
         session = self.createConnection("localhost")
 
-        rows = session.query(func.count(Despesa.id_despesa_detalhe)).filter(Despesa.latitude != '').scalar()
+        rows = session.query(
+            func.count(Despesa.id_despesa_detalhe)
+            ).filter(Despesa.latitude != '').scalar()
+        
         return rows
+
+
+    
+    # Seleciona a tabela de informação que agrupa
+    # as despesas por função de governo
+
+    def get_table_info(self):
+
+        session = self.createConnection("localhost")
+
+        data = []
+        table_info = session.query(TableInfo).all()
+
+        for row in table_info:
+            data
+
+        return data
 
 
 if __name__ == '__main__':

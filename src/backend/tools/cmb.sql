@@ -46,3 +46,15 @@ CREATE TABLE IF NOT EXISTS cmb.f_despesa (
 );
 
 
+CREATE MATERIALIZED VIEW IF NOT EXISTS tabela_info AS
+	SELECT 	DESP.ds_funcao_governo, 
+			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Valor Pago') as planejado,
+			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Empenhado') as empenhado,
+			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Valor Liquidado') as liquidado,
+			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Anulação') as anulado,
+			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Reforço') as reforco
+	FROM f_despesa AS DESP
+	GROUP BY DESP.ds_funcao_governo
+
+
+REFRESH MATERIALIZED VIEW tabela_info;

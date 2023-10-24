@@ -1,9 +1,8 @@
 import os
 
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Double
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Double, Table, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-
 
 class Base(DeclarativeBase):
     pass
@@ -58,3 +57,28 @@ class Ibge(Base):
     populacao: Mapped[int] = mapped_column("populacao", Integer, nullable=False)
 
     #despesa = relationship('Despesa', primaryjoin="Ibge.cd_municipio==Despesa.cd_municipio", backref='Ibge')
+
+
+class TableInfo(Base):
+
+    def __init__(self, engine):
+        Base.metadata.reflect(bind=engine, views=True)
+
+    __tablename__ = 'tabela_info'
+    __table_args__ = {'schema': os.environ.get('POSTGRES_SCHEMA')}
+    #__table__ = Table('tabela_info', Base.metadata,
+    #                Column('ds_funcao_governo', String(), primary_key=True),
+    #                Column('planejado', Double()),
+    #                Column('empenhado', Double()),
+    #                Column('liquidado', Double()),
+    #                Column('anulado', Double()),
+    #                Column('reforco', Double()),
+    #                extend_existing=True
+    #                )
+
+    ds_funcao_governo: Mapped[str] = mapped_column("ds_funcao_governo", String(), nullable=False, primary_key=True)
+    planejado: Mapped[float] = mapped_column("planejado", Double(), nullable=True)
+    empenhado: Mapped[float] = mapped_column("empenhado", Double(), nullable=True)
+    liquidado: Mapped[float] = mapped_column("liquidado", Double(), nullable=True)
+    anulado: Mapped[float] = mapped_column("anulado", Double(), nullable=True)
+    reforco: Mapped[float] = mapped_column("reforco", Double(), nullable=True)
