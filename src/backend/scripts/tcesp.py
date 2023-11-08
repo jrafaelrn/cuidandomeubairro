@@ -42,6 +42,8 @@ class Extractor_tce(Extractor):
 
         # Open the file and convert to Pandas Dataframe
         data_frame = pd.read_csv(file_path, encoding=enc, sep=';', header=0, low_memory=False)
+
+        # !! Necessita generalizar para outros arquivos através do parâmetro 'config' !!
         city_name = str(data_frame['ds_municipio'].iloc[0])
         city_code = int(data_frame['codigo_municipio_ibge'].iloc[0])
         
@@ -99,16 +101,25 @@ def run_multiprocessing(files, extractor, config):
     log.info(f'Finished all files!')
     progress_bar.close()
     
-    
-    
+
+
+# Esse método cria uma instância da classe City e executa o método 'etl'
+
 def run_city(file, extractor, config, level_bar):
     
     log.info(f'----- > Opening file {file}...')
     
-    # Get data from Extractor
+    # Obtém os dados do 'Extractor'
+    # A variável 'data_tce' é um Pandas Dataframe
+
     data_tce, city_name, city_code = extractor.get_data(file)
+
     city = City(name=city_name, code=city_code)
+    
+    # Nível da barra de progresso
     city.level_bar = level_bar
+    
+    # Executa os processos de Extract, Transform e Load
     city.etl(data=data_tce, config_columns=config)
     
     log.info(f'----- > Finished file {file}...')
@@ -124,9 +135,6 @@ def run_city(file, extractor, config, level_bar):
     Esta função faz o download dos dados do TCE-SP, processa-os e armazena-os em um banco de dados.
     A função utiliza a classe Extractor_tce para fazer o download dos dados e
     a configuração das tabelas obrigatórias no banco de dados é feita através do dicionário 'config'.
-
-    Returns:
-        None
 """
 def run():
 
@@ -140,11 +148,13 @@ def run():
             cities_files.append(file)
             
     
-    
-    # Configura as tabelas obrigatórias no banco de dados
-    # A chave primária é a combinação das colunas 'id_despesa_detalhe' e 'cd_municipio'
-    # São obrigatórias as primeiras colunas, até 'cd_municipio'
-    # Esquema: { "NOME_DA_COLUNA_BANCO_DADOS": "NOME_DA_COLUNA_ARQUIVO_ORIGINAL" }
+    """
+        Configura as tabelas obrigatórias no banco de dados
+        A chave primária é a combinação das colunas 'id_despesa_detalhe' e 'cd_municipio'
+        São obrigatórias as primeiras colunas, até 'cd_municipio'
+        
+        Esquema: { "NOME_DA_COLUNA_BANCO_DADOS": "NOME_DA_COLUNA_ARQUIVO_ORIGINAL" }
+    """
 
     config = {
         "mes": "mes_referencia",

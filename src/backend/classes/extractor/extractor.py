@@ -3,6 +3,7 @@ import inspect
 import os
 import logging
 import sys
+import pandas as pd
 
 from abc import ABC, abstractmethod
 from downloader import download_file_from_url as file_from_url
@@ -28,6 +29,10 @@ class Extractor(ABC):
     
     @abstractmethod
     def download(self):
+        pass
+
+    @abstractmethod
+    def get_data(self, file_path: str) -> pd.DataFrame:
         pass
     
     
