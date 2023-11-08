@@ -54,11 +54,11 @@ class Locator:
             if len(terms_finded) > 0:
                 self.search_variations(despesa, terms_finded, city)
             
-            else:
+            # Teste - Caso não localize pelo endereço
+            #else:
             
-                # Teste - Caso não localize pelo endereço
                 # será usada a coluna 'ds_orgao' para localizar
-                self.check_default_location(despesa, city)
+                #self.check_default_location(despesa, city)
 
 
             progress_bar.update(1)            

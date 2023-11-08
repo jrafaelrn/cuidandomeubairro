@@ -49,6 +49,12 @@ class Extractor_tce(Extractor):
             
             
 
+# Este método é responsável pelo processamento
+# de todas as cidades em paralelo
+
+# O parâmetro CORE_MULTIPLIER é usado para forçar o uso de 100% da CPU
+# pois em testes realizados, se o número de processos for igual ao número de cores,
+# o uso da CPU fica relativamente baixo, o que atrasa o processamento como um todo.
 
 def run_multiprocessing(files, extractor, config):
             
@@ -56,7 +62,7 @@ def run_multiprocessing(files, extractor, config):
 
     # Variables for multiprocessing
     cores = mp.cpu_count()
-    core_multiplier = 1
+    CORE_MULTIPLIER = 1.5
     log.debug(f'Running in {cores} cores...')
     processes = []
     running = 0
@@ -67,14 +73,18 @@ def run_multiprocessing(files, extractor, config):
 
     while completed < num_files:
         
-        while running <= (cores * core_multiplier) and len(files) > 0:
+        while running <= (cores * CORE_MULTIPLIER) and len(files) > 0:
             file = files.pop(0)
+
+            # Executa o método 'run_city' em um processo separado, passando o arquivo da cidade
             p = Process(target=run_city, args=(file, extractor, config, level_bar_counter))
+
             processes.append(p)
             level_bar_counter += 1
             p.start()
             running += 1
-            
+        
+        # Organiza a lista de processos, removendo os que já terminaram
         for process in processes:
             if not process.is_alive():
                 completed += 1
@@ -108,7 +118,18 @@ def run_city(file, extractor, config, level_bar):
 
 
 
+
+"""
+    Executa a extração e processamento de dados do TCE-SP.
+    Esta função faz o download dos dados do TCE-SP, processa-os e armazena-os em um banco de dados.
+    A função utiliza a classe Extractor_tce para fazer o download dos dados e
+    a configuração das tabelas obrigatórias no banco de dados é feita através do dicionário 'config'.
+
+    Returns:
+        None
+"""
 def run():
+
     
     extractor = Extractor_tce()
     #extractor.download()

@@ -240,7 +240,7 @@ class ORM():
 
         for row in table_info:
             data.append({
-                'ds_projeto_atividade': row.ds_funcao_governo,
+                'ds_orgao': row.ds_funcao_governo,
                 'vl_orcado_ano': row.planejado,
                 'vl_empenhadoliquido': row.empenhado,
                 'vl_liquidado': row.liquidado
