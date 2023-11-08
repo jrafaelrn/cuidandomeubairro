@@ -110,9 +110,10 @@ def info_year(year):
 
 
 # Retorna os dados para a tabela de informações
-@app.route('/list')
+@app.route('/list', defaults={'year': None})
+@app.route('/list/<year>')
 @cross_origin()
-def list():
+def list(year):
 
     orm = ORM()
     table_info = orm.get_table_info()

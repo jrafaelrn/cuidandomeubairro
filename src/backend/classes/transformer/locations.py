@@ -32,7 +32,8 @@ class Locator:
         terms_content = Terms().load_terms()
         city.statistics.total_search_variations = self.TOTAL_SEARCH_VARIATION
         
-        # Remove duplicates
+        # Remove duplicatas considerando o hash do objeto
+        # baseado na coluna 'historico_despesa'
         despesas = []
         for desp in city.despesas:
             if desp not in despesas:
@@ -52,6 +53,13 @@ class Locator:
             # Se existir, procura pelas localizações
             if len(terms_finded) > 0:
                 self.search_variations(despesa, terms_finded, city)
+            
+            else:
+            
+                # Teste - Caso não localize pelo endereço
+                # será usada a coluna 'ds_orgao' para localizar
+                self.check_default_location(despesa, city)
+
 
             progress_bar.update(1)            
         
@@ -101,19 +109,29 @@ class Locator:
             
             while next_word <= len(words) and next_word <= self.TOTAL_SEARCH_VARIATION:
                 
-                search = self.search_local(text_to_search)
-                
-                if search:
-                    fake_address = self.check_fake_location(search.address, city.name)
-                    if not fake_address:
-                        city.statistics.update_location_term(term_text, f'variation_{next_word}')
-                        despesa.latitude = search.latitude
-                        despesa.longitude = search.longitude
-                        return
+                finded = self.search_local_from_text(text_to_search, despesa, city)
+                if finded:
+                    return
         
+                city.statistics.update_location_term(term_text, f'variation_{next_word}')
                 next_word = 3 if next_word == 0 else next_word + 1
                 text_to_search = ' '.join(words[:next_word])
 
+
+    
+    def search_local_from_text(self, text_to_search: str, despesa, city):
+        
+        search = self.search_local(text_to_search)
+        
+        if search:
+            fake_address = self.check_fake_location(search.address, city.name)
+            if not fake_address:
+                despesa.latitude = search.latitude
+                despesa.longitude = search.longitude
+                return True
+            
+        return False
+                
 
 
     def search_local(self, text: str):
@@ -152,3 +170,35 @@ class Locator:
         
         return True
 
+
+
+    # Modelo das localizacoes
+    # {
+    #     'PREFEITURA MUNICIPAL DE CABREUVA': {        
+    #         'latitude': -23.305,
+    #         'longitude': -47.136
+    #     },
+    #     'CAMARA MUNICIPAL DE CABREUVA': {
+    #         'latitude': -23.305,
+    #         'longitude': -47.136
+    #     }
+    # }
+
+    def check_default_location(self, despesa, city):
+        
+        default_location = city.default_locations.get(despesa.ds_orgao)
+        
+        if default_location:
+            despesa.latitude = default_location['latitude']
+            despesa.longitude = default_location['longitude']
+        
+        else:
+            # Se não encontrar o endereço, tenta buscar pelo nome do órgão
+            text_to_search = despesa.ds_orgao
+            finded = self.search_local_from_text(text_to_search, despesa, city)
+
+            if finded:
+                city.default_locations[despesa.ds_orgao] = {
+                    'latitude': despesa.latitude,
+                    'longitude': despesa.longitude
+                }

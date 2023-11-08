@@ -80,5 +80,3 @@ class TableInfo(Base):
     planejado: Mapped[float] = mapped_column("planejado", Double(), nullable=True)
     empenhado: Mapped[float] = mapped_column("empenhado", Double(), nullable=True)
     liquidado: Mapped[float] = mapped_column("liquidado", Double(), nullable=True)
-    anulado: Mapped[float] = mapped_column("anulado", Double(), nullable=True)
-    reforco: Mapped[float] = mapped_column("reforco", Double(), nullable=True)

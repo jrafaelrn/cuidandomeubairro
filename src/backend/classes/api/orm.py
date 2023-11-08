@@ -239,7 +239,12 @@ class ORM():
         table_info = session.query(TableInfo).all()
 
         for row in table_info:
-            data
+            data.append({
+                'ds_projeto_atividade': row.ds_funcao_governo,
+                'vl_orcado_ano': row.planejado,
+                'vl_empenhadoliquido': row.empenhado,
+                'vl_liquidado': row.liquidado
+            })
 
         return data
 

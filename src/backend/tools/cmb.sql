@@ -50,11 +50,27 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS tabela_info AS
 	SELECT 	DESP.ds_funcao_governo, 
 			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Valor Pago') as planejado,
 			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Empenhado') as empenhado,
-			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Valor Liquidado') as liquidado,
-			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Anulação') as anulado,
-			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Reforço') as reforco
+			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Valor Liquidado') as liquidado
 	FROM f_despesa AS DESP
 	GROUP BY DESP.ds_funcao_governo
 
 
 REFRESH MATERIALIZED VIEW tabela_info;
+
+
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS tabela_localizacoes AS
+	select 	distinct on (DESP.historico_despesa)
+			*
+	from (
+        SELECT DESP.historico_despesa,
+			DESP.nr_empenho,
+			DESP.tp_despesa,
+			DESP.latitude,
+			DESP.longitude,
+            DESP.id_despesa_detalhe, 
+            MAX(dt_emissao_despesa)
+        FROM f_despesa
+     ) AS DESP
+	where (DESP.latitude =  '') is not true AND DESP.id_
+	order by DESP.historico_despesa

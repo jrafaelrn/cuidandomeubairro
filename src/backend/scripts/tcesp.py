@@ -153,6 +153,6 @@ def run():
     }
     
     # Filter cities
-    cities_files = cities_files[:50]
+    cities_files = cities_files[:10]
     
     run_multiprocessing(cities_files, extractor, config)
