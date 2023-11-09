@@ -88,7 +88,7 @@ if __name__ == '__main__':
     message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
     log.info(message)
     print(message)
-    #telegram.sendMessage(message)
+    telegram.sendMessage(message)
     
     # Create IBGE tables
     insert_ibge_csv()
@@ -104,4 +104,4 @@ if __name__ == '__main__':
     message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
     log.info(message.replace('\n', ' '))
     print(message)
-    #telegram.sendMessage(message)
+    telegram.sendMessage(message)

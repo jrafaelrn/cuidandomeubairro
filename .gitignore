@@ -49,3 +49,4 @@ yarn-error.log*
 
 src/frontend/package-lock.json
 src/frontend/venv/
+.env

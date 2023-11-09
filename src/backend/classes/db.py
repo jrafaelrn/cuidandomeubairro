@@ -13,11 +13,19 @@ class DB:
 
 
     def connect(self):
-        conexao_formato = f'dbname={self.dbname} user={self.user} host={self.host} password={self.password} port={self.port}'
-        self.conexao = psycopg2.connect(conexao_formato)
-        #print(f"Conexão estabelecida com BD - {self.conexao}")
 
+        try:
+            self.connect_now(self.host)
+        except Exception as err:
+            self.connect_now('database')
+        
+        #print(f"Conexão estabelecida com BD - {self.conexao}")
         self.bd_cursor = self.conexao.cursor()
+
+
+    def connect_now(self, host):
+        conexao_formato = f'dbname={self.dbname} user={self.user} host={host} password={self.password} port={self.port}'
+        self.conexao = psycopg2.connect(conexao_formato)
 
     
 

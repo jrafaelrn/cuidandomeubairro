@@ -26,7 +26,9 @@ services:
     networks:
       - cmb-network
     depends_on:
-    - database
+      database:
+        condition: service_completed_successfully
+        restart: true
     restart: always
     environment:
       ## postgres database to store Hasura metadata
@@ -63,6 +65,8 @@ services:
     volumes:
       - ./data/nominatim-data:/var/lib/postgresql/14/main
     shm_size: 1gb
+    depends_on:
+      - database
 
   
   # Aplicação principal
@@ -86,6 +90,8 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
       - POSTGRES_SCHEMA=${POSTGRES_SCHEMA}
+      - TELEGRAM_API_KEY=${TELEGRAM_API_KEY}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     #volumes:
       #- ./src/backend:/app
     stdin_open: true # docker run -i
@@ -107,7 +113,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      - graphql 
+      - backend 
     
 
 networks:

@@ -15,6 +15,8 @@ app = Flask(__name__)
 CORS(app)
 
 
+# Endpoint 
+
 @app.route('/minlist/<ano>', methods=['GET'])
 @cross_origin()
 def despesas(ano):
@@ -44,6 +46,8 @@ def despesas(ano):
 
 
 
+# Endpoint que retorna uma lista de anos disponíveis,
+# para ser usado no seletor da página principal
 
 @app.route('/info', defaults={'year': None})
 @app.route('/info/<year>')
@@ -60,6 +64,9 @@ def info(year):
 
     return jsonify({'data': {'years': [2023]}})
 
+
+# Endpoint que retorna os totais mapeados e gastos
+# para ser utilizado no gráfico de pizza na página principal
 
 def info_year(year):
 
@@ -108,8 +115,18 @@ def info_year(year):
     return json_return
 
 
+"""
+    Retorna os dados para a tabela de informações
+    que agrupa os gastos por Função Governo ou
+    para a consulta de uma despesa específica quando o usuário clicar no ponto do mapa
 
-# Retorna os dados para a tabela de informações
+    1) Caso seja passado o parâmetro 'year', retorna os dados da tabela
+    
+    2) Caso seja passado o parâmetro 'code', retorna os dados da despesa específica,
+    com base na coluna 'historico_despesa'
+
+"""
+
 @app.route('/list', defaults={'year': None})
 @app.route('/list/<year>')
 @cross_origin()
@@ -126,9 +143,7 @@ def list(year):
    
 
     
-
-
-
+# Método para liberar o CORS a cada requisição
 
 def _build_cors_preflight_response():
     response = make_response()
