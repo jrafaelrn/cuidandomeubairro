@@ -118,6 +118,7 @@ class ORM():
 
         session = self.createConnection("localhost")
         despesa = []
+        totais_financeiros = {}
 
         try:
             
@@ -126,24 +127,35 @@ class ORM():
                     Despesa.latitude,
                     Despesa.longitude,
                     Despesa.valor_despesa,
+                    Despesa.dt_emissao_despesa,
+                    Despesa.ano,
                     Despesa.historico_despesa,
                     Despesa.id_despesa_detalhe,
                     Despesa.cd_programa,
-                    Despesa.ds_programa
+                    Despesa.ds_programa,
+                    Despesa.ds_fonte_recurso,
+                    Despesa.ds_orgao,
+                    Despesa.ds_funcao_governo,
+                    Despesa.ds_subfuncao_governo,
+                    Despesa.ds_elemento,
+                    Despesa.nr_empenho,
+                    Despesa.tp_despesa
                 ).filter(
                     Despesa.historico_despesa == code,
-                    Despesa.latitude != '',
                 )
             )
 
             for row in session.execute(stmt):
                 despesa.append(row)
 
+                if row.tp_despesa not in totais_financeiros:
+                    totais_financeiros[row.tp_despesa] = row.valor_despesa
+
         except Exception as e:
             print(f'Error getting despesas: {e}')
             despesa = []
 
-        return despesa
+        return despesa, totais_financeiros
 
 
     def get_total_rows(self):

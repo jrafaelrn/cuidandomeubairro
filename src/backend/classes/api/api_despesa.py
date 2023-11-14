@@ -38,7 +38,7 @@ def despesas(ano):
             'properties': {
                 'cap_cor': '1',
                 'state': 'atualizado',
-                'uid': despesa[4],
+                'uid': despesa[3], # coluna 'historico_despesa' conforme ordem do retorno da função
             }
         })
 
@@ -149,8 +149,8 @@ def list():
     code = request.args.get('code', None)
     
     if code is not None:        
-        despesa = orm.getDetailsFromCode(code)
-        despesa_return = generate_details(despesa[0])
+        despesa, totais_financeiros = orm.getDetailsFromCode(code)
+        despesa_return = generate_details(despesa[0], totais_financeiros)
 
         json_return = json.dumps({
                 "data": [despesa_return]
@@ -160,11 +160,14 @@ def list():
 
 
 
-def generate_details(despesa):
+def generate_details(despesa, totais_financeiros):
 
-    return json.dumps(
-        {
-            "code": "2022.70.10.15.451.3022.44903900.90.39.0.1020.9426",
+    pago = totais_financeiros.get("Valor Pago", 0.0)
+    liquidado = totais_financeiros.get("Valor Liquidado", 0.0)
+    empenhado = totais_financeiros.get("Empenhado", 0.0)
+
+    return {
+            "code": despesa.id_despesa_detalhe,
             "notification_id": "",
             "notification_author": "cuidando-gastosabertos",
             "geometry": {
@@ -176,53 +179,53 @@ def generate_details(despesa):
             },
             "pa": "Projetos",
             "papa": "Projetos",
-            "vl_pago": 0.0,
+            "vl_pago": pago,
             "cd_fonte": 0,
-            "cd_orgao": 70,
-            "ds_fonte": "Tesouro Municipal",
-            "ds_grupo": "INVESTIMENTOS",
-            "ds_orgao": "Subprefeitura S\u00e3o Mateus",
-            "cd_funcao": 15,
-            "datafinal": "2022-06-30",
-            "ds_funcao": "Urbanismo",
-            "cd_despesa": 44903900,
-            "cd_unidade": 10,
-            "disponivel": 0,
-            "ds_despesa": "Outros Servi\u00e7os de Terceiros - Pessoa Jur\u00eddica",
-            "ds_unidade": "Administra\u00e7\u00e3o da Subprefeitura",
-            "cd_elemento": 39,
+            "cd_orgao": 0,
+            "ds_fonte": despesa.ds_fonte_recurso,
+            "ds_grupo": "",
+            "ds_orgao": despesa.ds_orgao,
+            "cd_funcao": 0,
+            "datafinal": despesa.dt_emissao_despesa.strftime("%d-%m-%Y"),
+            "ds_funcao": despesa.ds_funcao_governo,
+            "cd_despesa": despesa.nr_empenho,
+            "cd_unidade": 0,
+            "disponivel": 111,
+            "ds_despesa": "",
+            "ds_unidade": "",
+            "cd_elemento": despesa.ds_elemento.split("-")[0],
             "cd_programa": despesa.cd_programa,
-            "datainicial": "2022-01-01",
+            "datainicial": despesa.dt_emissao_despesa.strftime("%d-%m-%Y"),
             "ds_programa": despesa.ds_programa,
-            "sigla_orgao": "SUB-SM",
-            "vl_reduzido": 0.0,
-            "cd_exercicio": 2022,
-            "cd_subfuncao": 451,
-            "dataextracao": "2022-06-01 02:32:12",
-            "ds_categoria": "Despesas de Capital",
-            "ds_subfuncao": "Infra-Estrutura Urbana",
-            "vl_congelado": 40000.0,
-            "vl_liquidado": 0.0,
-            "administracao": "Direta",
-            "cd_modalidade": 90,
-            "ds_modalidade": "Aplica\u00e7\u00f5es Diretas",
-            "grupo_despesa": 4,
-            "vl_orcado_ano": 40000.0,
-            "cd_anoexecucao": 2022,
-            "vl_descongelado": 0.0,
-            "vl_suplementado": 0.0,
-            "projetoatividade": 9426,
-            "categoria_despesa": 4,
-            "vl_congeladoliquido": 40000.0,
-            "vl_empenhadoliquido": 0.0,
-            "vl_reservadoliquido": 0.0,
-            "ds_projeto_atividade": "Revitaliza\u00e7\u00e3o e Aquisi\u00e7\u00e3o de Equipamentos na Pra\u00e7a n\u00e3o Denominada na Altura do N\u00ba 132 da Travessa Malva Pav\u00e3o, em S\u00e3o Raphael.",
-            "vl_orcado_atualizado": 40000.0,
-            "cd_nro_emenda_dotacao": 1020.0,
-            "vl_suplementadoliquido": 0.0,
-            "vl_reduzidoemtramitacao": 0.0,
-            "vl_suplementadoemtramitacao": 0.0
-    })
+            "sigla_orgao": "",
+            "vl_reduzido": 222,
+            "cd_exercicio": despesa.ano,
+            "cd_subfuncao": 0,
+            "dataextracao": "",
+            "ds_categoria": "",
+            "ds_subfuncao": despesa.ds_subfuncao_governo,
+            "vl_congelado": empenhado,
+            "vl_liquidado": liquidado,
+            "administracao": "",
+            "cd_modalidade": 0,
+            "ds_modalidade": "",
+            "grupo_despesa": 0,
+            "vl_orcado_ano": empenhado,
+            "cd_anoexecucao": despesa.ano,
+            "vl_descongelado": 333,
+            "vl_suplementado": 444,
+            "projetoatividade": 0,
+            "categoria_despesa": 0,
+            "vl_congeladoliquido": empenhado,
+            "vl_empenhadoliquido": empenhado,
+            "vl_reservadoliquido": 555,
+            "ds_projeto_atividade": despesa.historico_despesa,
+            "vl_orcado_atualizado": totais_financeiros.get("Empenhado", 0.0),
+            "cd_nro_emenda_dotacao": 0,
+            "vl_suplementadoliquido": 666,
+            "vl_reduzidoemtramitacao": 777,
+            "vl_suplementadoemtramitacao": 888
+    }
 
     
 # Método para liberar o CORS a cada requisição

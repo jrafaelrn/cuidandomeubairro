@@ -190,6 +190,7 @@ export default {
   methods: {
     pointClicked(event) {
       let code = event.target.feature.properties.uid;
+      console.log('Point clicked >>>> ' + code)
       this.$refs.map.mapObject.panTo(event.latlng);
       this.$router.push({ name: "despesa", params: { code } });
     },
