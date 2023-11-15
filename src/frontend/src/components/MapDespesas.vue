@@ -96,7 +96,7 @@
         {{ $t("source") }}:
         <a
           target="_blank"
-          href="https://orcamento.sf.prefeitura.sp.gov.br/orcamento/execucao.php"
+          href="https://transparencia.tce.sp.gov.br/conjunto-de-dados"
           >Tribunal de Contas do Estado de São Paulo</a
         >
       </div>
@@ -149,7 +149,9 @@ export default {
     var self = this;
     return {
       center: L.latLng(-21.8859505, -51.4036032),
+      location_click: null,
       zoom: 7,
+      zoom_click: 13,
       searchAddress: "",
       categories: ["planejado", "empenhado", "liquidado"],
       url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -190,15 +192,20 @@ export default {
   methods: {
     pointClicked(event) {
       let code = event.target.feature.properties.uid;
-      console.log('Point clicked >>>> ' + code)
-      this.$refs.map.mapObject.panTo(event.latlng);
+      console.log('1 - Point clicked >>>> ' + code);
+      console.log('1 - Latitude/Longitude >>>> ' + event.latlng);
+      this.location_click = event.latlng;
+      this.$refs.map.mapObject.flyTo(event.latlng, this.zoom_click);
       this.$router.push({ name: "despesa", params: { code } });
     },
     zoomToPointInfo(pointInfo) {
+      console.log('2 - Zoom to point info (Geometry.Coordinates) >>>> ' + pointInfo)
       if (pointInfo && pointInfo.geometry) {
         let c = pointInfo.geometry.coordinates;
-        let l = L.latLng([c[1], c[0]]);
-        this.$refs.map.mapObject.flyTo(l, 18);
+        //let l = L.latLng([c[1], c[0]]);
+        let l = this.location_click;
+        console.log('2 - Zoom to point info (L) >>>> ' + l)
+        this.$refs.map.mapObject.flyTo(l, this.zoom_click);
       }
     },
     async locateAddress() {
@@ -217,12 +224,20 @@ export default {
   },
   watch: {
     pointInfo(newValue) {
-      this.zoomToPointInfo(newValue);
+      console.log('3 - Point info (New Value) >>>> ' + newValue)
+      this.zoomToPointInfo(this.location_click);
     },
     routeName(newValue) {
-      if (newValue === "home")
+      if (newValue === "home"){
+        console.log('4 - New Value == Home !')
         this.$refs.map.mapObject.flyTo(this.center, this.zoom);
-      else if (newValue === "despesa") this.zoomToPointInfo(this.pointInfo);
+      }
+      else{ 
+        if (newValue === "despesa"){
+          console.log('4 - New Value == Despesa !')
+          this.zoomToPointInfo(this.location_click);
+        }
+      }
     },
   },
 };

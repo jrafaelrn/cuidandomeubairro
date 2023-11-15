@@ -85,9 +85,9 @@ def info_year(year):
                 "values": [
                     {
                         "name": "orcado",
-                        "total": 82758515690.0,
-                        "mapped": 881918948.0,
-                        "region": 881918948.0
+                        "total": 0,
+                        "mapped": 0,
+                        "region": 0
                     },
                     {
                         "name": "atualizado",
@@ -97,18 +97,18 @@ def info_year(year):
                     },
                     {
                         "name": "empenhado",
-                        "total": 45647704515.66,
-                        "mapped": 314230942.48,
-                        "region": 314230942.48
+                        "total": 0,
+                        "mapped": 0,
+                        "region": 0
                     },
                     {
                         "name": "liquidado",
-                        "total": 25537700363.32,
-                        "mapped": 159850578.52,
-                        "region": 159850578.52
+                        "total": 0,
+                        "mapped": 0,
+                        "region": 0
                     }
                 ],
-                "last_update": "2022-06-30"
+                "last_update": "2023-11-15"
             }
         })
     
@@ -128,8 +128,6 @@ def info_year(year):
 """
 
 @app.route('/list')
-#@app.route('/list/<year>')
-#@app.route('/list/<code>')
 @cross_origin()
 def list():
 
@@ -190,7 +188,7 @@ def generate_details(despesa, totais_financeiros):
             "ds_funcao": despesa.ds_funcao_governo,
             "cd_despesa": despesa.nr_empenho,
             "cd_unidade": 0,
-            "disponivel": 111,
+            "disponivel": 0,
             "ds_despesa": "",
             "ds_unidade": "",
             "cd_elemento": despesa.ds_elemento.split("-")[0],
@@ -198,7 +196,7 @@ def generate_details(despesa, totais_financeiros):
             "datainicial": despesa.dt_emissao_despesa.strftime("%d-%m-%Y"),
             "ds_programa": despesa.ds_programa,
             "sigla_orgao": "",
-            "vl_reduzido": 222,
+            "vl_reduzido": 0,
             "cd_exercicio": despesa.ano,
             "cd_subfuncao": 0,
             "dataextracao": "",
@@ -212,19 +210,19 @@ def generate_details(despesa, totais_financeiros):
             "grupo_despesa": 0,
             "vl_orcado_ano": empenhado,
             "cd_anoexecucao": despesa.ano,
-            "vl_descongelado": 333,
-            "vl_suplementado": 444,
+            "vl_descongelado": 0,
+            "vl_suplementado": 0,
             "projetoatividade": 0,
             "categoria_despesa": 0,
             "vl_congeladoliquido": empenhado,
             "vl_empenhadoliquido": empenhado,
-            "vl_reservadoliquido": 555,
+            "vl_reservadoliquido": 0,
             "ds_projeto_atividade": despesa.historico_despesa,
-            "vl_orcado_atualizado": totais_financeiros.get("Empenhado", 0.0),
+            "vl_orcado_atualizado": empenhado,
             "cd_nro_emenda_dotacao": 0,
-            "vl_suplementadoliquido": 666,
-            "vl_reduzidoemtramitacao": 777,
-            "vl_suplementadoemtramitacao": 888
+            "vl_suplementadoliquido": 0,
+            "vl_reduzidoemtramitacao": 0,
+            "vl_suplementadoemtramitacao": 0
     }
 
     

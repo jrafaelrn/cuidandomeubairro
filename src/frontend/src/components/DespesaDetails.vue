@@ -17,6 +17,11 @@
         </li>
     </ul>
 
+    <!--  CAIXAS COM LINKS PARA PESQUISAR MAIS INFORMAÇÕES 
+          SOBRE LICITAÇÕES E CONTRATOS
+    -->
+
+    <!-- # COMMENT TCC 2023 #
     <div class="c-despesa-details__infos">
         <p class="text-neutral-base font-semibold">Licitações</p>
         <p class="text-neutral-light mb-3">Quer saber mais sobre o processo de licitações desta despesa?</p>
@@ -27,11 +32,13 @@
         <a class="text-secondary-base underline" href="http://transparencia.prefeitura.sp.gov.br/contratos-convenios-e-compras-publicas/#tipo" target="_blank">Pesquise contratos</a>
         
     </div>
-    <div class="c-despesa-details__code-information my-10">
+    # -->
+
+    <div class="c-despesa-details__code-information my-10 mb-16">
       <h3 class="text-neutral-base font-semibold text-xl">Mais informações</h3>
       <p class="text-neutral-light mb-3">Aqui estão todas as informações mapeadas sobre essa despesa em formato JSON</p>
       <button v-if="!showAllInfo"
-          class="bg-secondary-light text-white py-2 px-3 rounded font-light hover:bg-secondary-base"
+          class="bg-secondary-light text-white py-2 px-3 rounded font-light hover:bg-secondary-base mb-10"
           @click="showAllInfo = true">
           Mais informações
       </button>

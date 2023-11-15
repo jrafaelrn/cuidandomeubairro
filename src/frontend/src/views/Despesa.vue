@@ -16,6 +16,7 @@
               <despesa-main/>
             </div>
 
+            <!-- # COMMENT TCC 2023 #
             <div class="lg:flex justify-between border-t-2 border-gray-200 pt-10">
               <div class="c-acompanhar-despesa">
                 <p class="text-neutral-base font-semibold text-xl">Acompanhe a despesa</p>
@@ -42,14 +43,20 @@
                 <a class="bg-secondary-light text-white rounded font-light hover:bg-secondary-base py-3 px-4" :href="'https://www.instantstreetview.com/@' + pointInfo.geometry.coordinates[1] + ',' + pointInfo.geometry.coordinates[0] + ',0h,0p,1z'" target="_blank">Visão da rua</a>            
               </div>
             </div>
+            # -->
+
             <despesa-details/>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- # COMMENT TCC 2023 #
     <div class="pg-despesa__questions bg-white pb-16">
       <perg-com-tabs/>
     </div>
+    # -->
+
   </div>
   
 </template>
