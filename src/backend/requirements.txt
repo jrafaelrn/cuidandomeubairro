@@ -12,3 +12,12 @@ markupsafe==2.0.1
 debugpy
 geopy
 python-dotenv
+geopy
+unidecode
+requests
+pandas
+tqdm
+psycopg2-binary
+Flask
+flask-cors
+sqlalchemy

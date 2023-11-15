@@ -5,7 +5,7 @@ import json
 log = logging.getLogger(__name__)
 FILE_PATH = os.path.abspath(__file__)
 FOLDER_PATH = os.path.dirname(FILE_PATH)
-STATISTICS_PATH = f'{os.path.dirname(os.path.dirname(FOLDER_PATH))}/data_temp/statistics'
+STATISTICS_PATH = os.path.join(os.path.dirname(os.path.dirname(FOLDER_PATH)), "data_temp", "statistics")
 
 class Statistics:
     
@@ -96,7 +96,7 @@ class Statistics:
         filename = self.get_file_name().replace('.csv', '')
         log.debug(f'Saving statistics in JSON...: {filename}')
 
-        filename = f'{STATISTICS_PATH}/json/{filename}.json'
+        filename = os.path.join(STATISTICS_PATH, "json", f"{filename}.json")
 
         with open(filename, 'w', encoding='utf-8') as f:
             data = json.dumps(statistics, indent=4, ensure_ascii=False)
@@ -106,13 +106,13 @@ class Statistics:
 
     def save_statistics_csv(self, file_name: str):
         
-        FOLDER_CSV = f'{STATISTICS_PATH}/csv'
+        FOLDER_CSV = os.path.join(STATISTICS_PATH, "csv")
         self.check_folder(FOLDER_CSV)
         
         # Save resume data
-        FOLDER_RESUME = f'{FOLDER_CSV}/resume'
+        FOLDER_RESUME = os.path.join(FOLDER_CSV, "resume")
         self.check_folder(FOLDER_RESUME)
-        filename = f'{FOLDER_RESUME}/{file_name}.csv'
+        filename = os.path.join(FOLDER_RESUME, f'{file_name}.csv')
         log.debug(f'Saving statistics in CSV...: {filename}')
         
         with open(filename, 'w') as f:
@@ -121,9 +121,9 @@ class Statistics:
         
         
         # Save detailed data about terms   
-        FOLDER_DETAIL = f'{FOLDER_CSV}/detail'
+        FOLDER_DETAIL = os.path.join(FOLDER_CSV, "detail")
         self.check_folder(FOLDER_DETAIL)
-        filename = f'{FOLDER_DETAIL}/{file_name}.csv'
+        filename = os.path.join(FOLDER_DETAIL, f'{file_name}.csv')
         log.debug(f'Saving statistics in CSV...: {filename}')
         
         with open(filename, 'w') as f:
@@ -146,7 +146,7 @@ class Statistics:
     
     def check_folder(self, folder_path: str):
         try:
-            os.mkdir(folder_path)
+            os.makedirs(folder_path, exist_ok=True)
         except Exception as e:
             log.warning(f'Error creating folder: {e}')
     

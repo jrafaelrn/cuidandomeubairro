@@ -19,7 +19,7 @@
       <div v-if="expanded" class="my-auto mx-auto h-full lg:flex flex-col justify-center max-w-md lg:absolute">
         <div class="bg-white lg:pb-10 lg:p-10 pt-10 pb-3 mb-5 lg:rounded-lg lg:shadow-lg">
           <div class="c-map__title mb-5">
-          <h1 class="text-neutral-base lg:text-3xl lg:text-left text-center text-xl font-bold">Acompanhe os gastos públicos da cidade de São Paulo em tempo real</h1>
+          <h1 class="text-neutral-base lg:text-3xl lg:text-left text-center text-xl font-bold">Acompanhe os gastos públicos de algumas cidades do Estado de São Paulo em tempo real</h1>
           <p class="text-neutral-light lg:text-base lg:text-left text-center text-sm mt-2">O projeto Cuidando do Meu Bairro propõe tornar mais inteligível a visualização dos dados das despesas públicas a partir da geolocalização dos gastos</p>
         </div>
         <div class="">
@@ -78,8 +78,8 @@
         <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
         <v-marker-cluster :options="markerClusterOptions">
           <l-geo-json
-            v-if="geoJson.features"
-            :key="geoJson.features[0].properties.uid"
+            v-if="geoJson"
+            :key="geoJson[0].properties.uid"
             v-for="geoJson in geoJsons"
             :geojson="geoJson"
             :options="geoJsonOptions"
@@ -96,8 +96,8 @@
         {{ $t("source") }}:
         <a
           target="_blank"
-          href="https://orcamento.sf.prefeitura.sp.gov.br/orcamento/execucao.php"
-          >Secretaria de Finanças</a
+          href="https://transparencia.tce.sp.gov.br/conjunto-de-dados"
+          >Tribunal de Contas do Estado de São Paulo</a
         >
       </div>
     </div>
@@ -148,8 +148,10 @@ export default {
   data() {
     var self = this;
     return {
-      center: L.latLng(-23.58098, -46.61293),
-      zoom: 12,
+      center: L.latLng(-21.8859505, -51.4036032),
+      location_click: null,
+      zoom: 7,
+      zoom_click: 18,
       searchAddress: "",
       categories: ["planejado", "empenhado", "liquidado"],
       url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -177,6 +179,7 @@ export default {
       return this.routeName === "home";
     },
     geoJsons() {
+      console.log('Return from GeoJsons >>>> ' + [this.yearPoints])
       return [this.yearPoints];
     },
     ...mapState({
@@ -189,20 +192,26 @@ export default {
   methods: {
     pointClicked(event) {
       let code = event.target.feature.properties.uid;
-      this.$refs.map.mapObject.panTo(event.latlng);
+      console.log('1 - Point clicked >>>> ' + code);
+      console.log('1 - Latitude/Longitude >>>> ' + event.latlng);
+      this.location_click = event.latlng;
+      this.$refs.map.mapObject.flyTo(event.latlng, this.zoom_click);
       this.$router.push({ name: "despesa", params: { code } });
     },
     zoomToPointInfo(pointInfo) {
+      console.log('2 - Zoom to point info (Geometry.Coordinates) >>>> ' + pointInfo)
       if (pointInfo && pointInfo.geometry) {
         let c = pointInfo.geometry.coordinates;
-        let l = L.latLng([c[1], c[0]]);
-        this.$refs.map.mapObject.flyTo(l, 18);
+        //let l = L.latLng([c[1], c[0]]);
+        let l = this.location_click;
+        console.log('2 - Zoom to point info (L) >>>> ' + l)
+        this.$refs.map.mapObject.flyTo(l, this.zoom_click);
       }
     },
     async locateAddress() {
-      let base = "https://nominatim.openstreetmap.org/search/";
+      let base = "http://localhost:8088/search/";
       let query =
-        "?format=json&limit=1&countrycodes=br&viewbox=-47.16,-23.36,-45.97,-23.98&bounded=1";
+        "?format=json&limit=1&countrycodes=br&bounded=1";
       let url = base + this.searchAddress + query;
       let json = (await axios.get(url)).data;
       if (json) {
@@ -215,12 +224,20 @@ export default {
   },
   watch: {
     pointInfo(newValue) {
-      this.zoomToPointInfo(newValue);
+      console.log('3 - Point info (New Value) >>>> ' + newValue)
+      this.zoomToPointInfo(this.location_click);
     },
     routeName(newValue) {
-      if (newValue === "home")
+      if (newValue === "home"){
+        console.log('4 - New Value == Home !')
         this.$refs.map.mapObject.flyTo(this.center, this.zoom);
-      else if (newValue === "despesa") this.zoomToPointInfo(this.pointInfo);
+      }
+      else{ 
+        if (newValue === "despesa"){
+          console.log('4 - New Value == Despesa !')
+          this.zoomToPointInfo(this.location_click);
+        }
+      }
     },
   },
 };

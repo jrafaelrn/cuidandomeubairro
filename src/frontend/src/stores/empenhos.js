@@ -29,10 +29,10 @@ export default new Vapi({
       codCategoria: 'categoria_despesa',
       codGrupo: 'grupo_despesa'
     }
-    return 'consultaEmpenhos?mesEmpenho=12&' +
-      Object.keys(filters).map(k => k + '=' + pointInfo[filters[k]]).join('&')
+    //return 'consultaEmpenhos?mesEmpenho=12&' + Object.keys(filters).map(k => k + '=' + pointInfo[filters[k]]).join('&')
+    return ""
   },
   onSuccess: (state, payload, axios) => {
-    state.empenhos = payload.data.lstEmpenhos
+    //state.empenhos = payload.data.lstEmpenhos
   }
 }).getStore()

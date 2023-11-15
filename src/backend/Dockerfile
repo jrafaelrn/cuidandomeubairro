@@ -1,0 +1,25 @@
+FROM ubuntu:22.04
+
+# Update Linux environment and install packages
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN apt-get -y install python3
+RUN apt-get -y install python3-pip
+RUN apt-get -y install git
+RUN apt-get -y install postgresql-client
+RUN apt-get -y install libpq5
+RUN apt install -qq --assume-yes mesa-utils libgl1-mesa-glx libxcursor1 libxrandr2 libxxf86vm1 x11-xserver-utils xfonts-base xserver-common dos2unix
+
+# Set the working directory and copy files
+WORKDIR /app
+COPY . .
+
+# Install Python dependencies
+RUN pip install -r requirements.txt
+
+# Convert entrypoint.sh from Windows to Unix format
+RUN dos2unix ./entrypoint.sh
+
+
+# Run the application
+ENTRYPOINT ["/bin/bash", "entrypoint.sh"]

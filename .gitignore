@@ -14,7 +14,8 @@ src/backend/data_temp/**
 nominatim-data/*
 **/__pycache__/**
 
-.venv/*
+venv/*
+data/
 
 
 .DS_Store
@@ -27,6 +28,7 @@ src/frontend/dist
 # local env files
 .env.local
 .env.*.local
+.env
 
 # Log files
 npm-debug.log*
@@ -46,3 +48,5 @@ yarn-error.log*
 .netlify
 
 src/frontend/package-lock.json
+src/frontend/venv/
+.env

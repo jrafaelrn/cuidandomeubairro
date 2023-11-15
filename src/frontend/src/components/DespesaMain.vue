@@ -100,8 +100,8 @@ export default {
       return undefined
     },
     ...mapState({
-      pointInfo: state => state.money.pointInfo
-      // empenhos: state => state.empenhos.empenhos
+      pointInfo: state => state.money.pointInfo,
+      empenhos: state => state.empenhos.empenhos
     })
   },
   methods: {

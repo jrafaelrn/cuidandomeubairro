@@ -23,6 +23,7 @@ virtualenv -p $(which python2.7) venv
 echo -e "\n...Ativando ambiente virtual...\n"
 cd venv && source bin/activate && echo -e "\n...Ambiente virtual ativado!!!\n"
 cd ..
+pip install geojson
 
 # Instala e configura a versão do Node.js
 echo -e "\n...Instalando o NVM...\n"
@@ -44,6 +45,11 @@ npm install
 echo -e "\n...Iniciando o servidor...\n"
 echo -e "Versão do Node.js = $(node --version)"
 echo -e "Versão do NPM = $(npm --version)"
+
+# To debug
+#while sleep 1000; do :; done
+
+# To run
 npm run serve
 
-cp -r /root/.npm/_logs /app/
+#cp -r /root/.npm/_logs /app/

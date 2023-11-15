@@ -8,7 +8,7 @@
                 <table class="min-w-full">
                   <thead class="bg-white border-b">
                     <tr>
-                      <th class="text-left text-neutral-base px-6 py-4">{{ $t('description') }}</th>
+                      <th class="text-left text-neutral-base px-6 py-4">{{ $t('body') }}</th>
                       <th scope="col" class="text-sm font-medium text-neutral-base px-6 py-4 text-left">
                         {{ $t('planned') }}
                       </th>
@@ -18,18 +18,30 @@
                       <th scope="col" class="text-sm font-medium text-neutral-base px-6 py-4 text-left">
                         {{ $t('finished') }}
                       </th>
+
+                      <!-- # COMMENT TCC 2023 #
                       <th scope="col" class="text-sm font-medium text-neutral-base px-6 py-4 text-left">
                         {{ $t('body') }}
                       </th>
+                      # -->
+                      
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(row, i) in pageData.data" :key="i" class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
+                      
+                       <!-- # COMMENT TCC 2023 #
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-secondary-base underline">
                         <router-link :to="{ name: 'despesa', params: { code: row.code } }">
                           {{ row.ds_projeto_atividade }}
                         </router-link>
                       </td>
+                      # -->
+
+                      <td class="text-sm text-neutral-base font-light px-6 py-4 whitespace-nowrap">
+                        {{ row.ds_orgao }}
+                      </td>
+
                       <td class="text-sm text-neutral-base font-light px-6 py-4 whitespace-nowrap">
                         {{ formatCur(calcPlanejado((row.sld_orcado_ano ? row.sld_orcado_ano : row.vl_orcado_ano), row.vl_atualizado)) }}
                       </td>
@@ -38,9 +50,6 @@
                       </td>
                       <td class="text-sm text-neutral-base font-light px-6 py-4 whitespace-nowrap">
                         {{ formatCur(row.vl_liquidado) }}
-                      </td>
-                      <td class="text-sm text-neutral-base font-light px-6 py-4 whitespace-nowrap">
-                        {{ row.ds_orgao }}
                       </td>
                     </tr>
                   </tbody>

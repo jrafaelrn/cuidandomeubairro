@@ -2,10 +2,9 @@ import os
 import datetime
 import logging as log
 import timeit
-import sys
-import cProfile
 
 from tools.telegram import Telegram
+from tools.db_tables import insert_ibge_csv
 from tools.human_readable import convert_seconds_to_human_readable
 from config import configure_paths
 from importlib import import_module
@@ -17,17 +16,26 @@ telegram = Telegram()
 
 
 def configure_logs():
+
+    DATA_TEMP_PATH = os.path.join(APP_FOLDER_PATH, "data_temp")
+    LOG_PATH = os.path.join(DATA_TEMP_PATH, "logs")
     
     try:
-        os.mkdir(f'{APP_FOLDER_PATH}/data_temp')
-        os.mkdir(f'{APP_FOLDER_PATH}/data_temp/logs')
+        os.makedirs(DATA_TEMP_PATH, exist_ok=True)
+        log.debug(f'Created DATA_TEMP folder [{DATA_TEMP_PATH}]')
     except Exception as e:
-        print(f'Error creating logs folder: {e}')
+        print(f'Error creating DATA_TEMP folder [{DATA_TEMP_PATH}]: {e}')
+
+    try:
+        os.makedirs(LOG_PATH, exist_ok=True)
+        log.debug(f'Created LOG folder [{LOG_PATH}]')
+    except Exception as e:
+        print(f'Error creating LOG folder[{LOG_PATH}]: {e}')
     
     log.basicConfig(
-        level=log.INFO,
+        level=log.DEBUG,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
-        filename=f'{APP_FOLDER_PATH}/data_temp/logs/run_etl_cmb.log',
+        filename=os.path.join(LOG_PATH, "run_etl_cmb.log"),
         filemode='w'
     )
 
@@ -36,7 +44,7 @@ def configure_logs():
 
 def execute_scripts():
     
-    scripts_folder = f'{APP_FOLDER_PATH}/scripts'
+    scripts_folder = os.path.join(APP_FOLDER_PATH, "scripts")
     
     # Loop through the files and run Python files
     for file in os.listdir(scripts_folder):
@@ -72,8 +80,6 @@ def execute(file):
 
 if __name__ == '__main__':
     
-    start_time = datetime.datetime.now()
-    
     # Configure environment
     configure_paths(APP_FOLDER_PATH)
     configure_logs()
@@ -81,18 +87,21 @@ if __name__ == '__main__':
     # Log start process and send Telegram
     message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
     log.info(message)
-    #telegram.sendMessage(message)
+    print(message)
+    telegram.sendMessage(message)
     
-    
+    # Create IBGE tables
+    insert_ibge_csv()
+
     # Run every Python file in the scripts folder and measure the time
-    #total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)
-    cProfile.run('execute_scripts()', sort='cumtime')
+    total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)    
+    
     
     # Convert seconds to hh:mm:ss
-    end_time = datetime.datetime.now()
-    total_time_readable = convert_seconds_to_human_readable((end_time - start_time).total_seconds())
+    total_time_readable = convert_seconds_to_human_readable(total_time)
     
     # Log end process and send Telegram    
     message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
     log.info(message.replace('\n', ' '))
-    #telegram.sendMessage(message)
+    print(message)
+    telegram.sendMessage(message)

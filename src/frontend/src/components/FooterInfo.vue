@@ -1,8 +1,8 @@
 <template>
   <footer
-    class="c-footer bottom-0 bg-gray-700"
+    class="c-footer bottom-0 bg-primary-base"
   >
-    <div class="container flex items-center justify-between w-full h-20">
+    <div class="container flex items-center justify-between w-full h-20 mt-16">
       <router-link to="/" id="home-button" class="navbar-brand">
         <img :src="$assets.logo" class="w-56" alt="Cuidando do Meu Bairro" />
       </router-link>
@@ -12,7 +12,10 @@
             Termos de Uso
           </router-link>
           <a class="mr-5 underline text-white text-xs hover:text-secondary-light hover:bg-opacity-80 hover:rounded" href="https://gitlab.com/cuidandodomeubairro">
-            Gitlab
+            Gitlab - Cidade de São Paulo
+          </a>
+          <a class="mr-5 underline text-white text-xs hover:text-secondary-light hover:bg-opacity-80 hover:rounded" href="https://github.com/jrafaelrn/cuidandomeubairro">
+            GitHub - Estado de São Paulo
           </a>
           <a class="mr-5 underline text-white text-xs hover:text-secondary-light hover:bg-opacity-80 hover:rounded" href="mailto:ola@cuidando.vc">
             E-mail

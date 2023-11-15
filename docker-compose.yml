@@ -3,9 +3,7 @@ services:
 
   # Serviço de Banco de Dados
   database:
-    build: 
-      context: ./
-      dockerfile: Dockerfile_db
+    image: postgis/postgis:15-3.4
     environment:
       - POSTGRES_USER=${POSTGRES_USER} 
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -24,11 +22,13 @@ services:
   graphql:
     image: hasura/graphql-engine
     ports:
-    - 8080:8080
+    - 8000:8080
     networks:
       - cmb-network
     depends_on:
-    - database
+      database:
+        condition: service_completed_successfully
+        restart: true
     restart: always
     environment:
       ## postgres database to store Hasura metadata
@@ -65,13 +65,15 @@ services:
     volumes:
       - ./data/nominatim-data:/var/lib/postgresql/14/main
     shm_size: 1gb
+    depends_on:
+      - database
 
   
   # Aplicação principal
   backend:
     build: 
-      context: ./
-      dockerfile: Dockerfile_back
+      context: ./src/backend
+      dockerfile: Dockerfile
     networks:
       - cmb-network
     ports:
@@ -85,26 +87,33 @@ services:
       - POSTGRES_USER=${POSTGRES_USER} 
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_HOST=database
-      - POSTGRES_PORT=5432
-    volumes:
-      - .:/app
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_SCHEMA=${POSTGRES_SCHEMA}
+      - TELEGRAM_API_KEY=${TELEGRAM_API_KEY}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+    #volumes:
+      #- ./src/backend:/app
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
 
   frontend:
     build:
-      context: ./
-      dockerfile: Dockerfile_front
-    volumes: 
-      - ./src/frontend:/app
+      context: ./src
+      dockerfile: Dockerfile-front
     ports:
-      - 8000:8080
+      - 8080:8080
+      - 5000:5000 #To flaks API
+      - 53350:53350 #To web-debug
+    volumes:
+      - ./src/frontend:/app
     networks:
       - cmb-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
-      - graphql 
+      - backend 
     
 
 networks:

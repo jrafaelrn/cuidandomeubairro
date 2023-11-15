@@ -38,7 +38,10 @@
 		"vscode": {
 			"extensions": [
 				"ms-azuretools.vscode-docker",
-				"vue.volar"
+				"vue.volar",
+				"firefox-devtools.vscode-firefox-debug",
+				"ms-vscode.js-debug-nightly",
+				"octref.vetur"
 			]
 		}
 	}

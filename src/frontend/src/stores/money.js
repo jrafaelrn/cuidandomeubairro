@@ -5,7 +5,7 @@ import { http } from '@/utils'
 // Gastos Abertos
 export default new Vapi({
   axios: http,
-  baseURL: baseUrls.money,
+  baseURL: baseUrls.despesas,
   state: {
     yearPoints: {},
     years: [],
@@ -25,18 +25,18 @@ export default new Vapi({
         (payload.data.FeatureColletion[0].properties.uid !==
          state.yearPoints.features[0].properties.uid)
     ) {
-      state.yearPoints = {
-        type: 'FeatureCollection',
-        features: payload.data.FeatureColletion
+      console.log('Payload Data: ', payload.data)
+      state.yearPoints = payload.data.features
       }
+      console.log('Year points retrieved from /minlist: ', state.yearPoints)
     }
-  }
 }).get({
   action: 'getYears',
   property: 'years',
   path: `/info`,
   onSuccess: (state, payload, axios) => {
     state.years = payload.data.data.years.reverse()
+    console.log('Years retrieved: ', state.years)
   }
 }).get({
   action: 'getYearInfo',
