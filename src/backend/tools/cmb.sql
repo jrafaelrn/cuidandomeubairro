@@ -46,6 +46,10 @@ CREATE TABLE IF NOT EXISTS cmb.f_despesa (
 );
 
 
+CREATE TABLE IF NOT EXISTS cmb.metadata (
+    last_update timestamp without time zone NOT NULL
+)
+
 CREATE MATERIALIZED VIEW IF NOT EXISTS cmb.tabela_info AS
 	SELECT 	DESP.ds_funcao_governo, 
 			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Valor Pago') as planejado,
