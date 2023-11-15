@@ -6,6 +6,8 @@
         <p class="text-neutral-light">{{ pointInfo.ds_orgao }}</p>
     </div>
 
+    <!-- # COMMENT TCC 2023 #
+      
     <ul class="list-bare top-bar bottom-bar despesa-details-list">
         <li v-for="el of mainKeys" :key="el[0]" class="my-5">
             <p class="text-neutral-base font-semibold">{{ el[0] }}</p>
@@ -15,7 +17,8 @@
         <li v-for="empenho of empenhos" :key="empenho.codEmpenho">
           <a :href="'http://sfemp.prefeitura.sp.gov.br/extrato_empenho.aspx?Empenho=' + empenho.codEmpenho + '&Ano=' + empenho.anoEmpenho" target="_blank">Nota de empenho</a>
         </li>
-    </ul>
+      </ul>
+    # -->
 
     <!--  CAIXAS COM LINKS PARA PESQUISAR MAIS INFORMAÇÕES 
           SOBRE LICITAÇÕES E CONTRATOS

@@ -151,7 +151,7 @@ export default {
       center: L.latLng(-21.8859505, -51.4036032),
       location_click: null,
       zoom: 7,
-      zoom_click: 13,
+      zoom_click: 18,
       searchAddress: "",
       categories: ["planejado", "empenhado", "liquidado"],
       url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",

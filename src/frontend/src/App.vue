@@ -80,8 +80,8 @@ export default {
       handler (newValue, oldValue) {
         if (newValue) {
           this.getPointInfo({ params: { code: newValue } })
-          this.getPedidos({ params: { key: newValue } })
-          this.getComments({ params: { key: newValue } })
+          //this.getPedidos({ params: { key: newValue } })
+          //this.getComments({ params: { key: newValue } })
         }
       },
       immediate: true
@@ -118,7 +118,7 @@ export default {
       immediate: true
     },
     pointInfo (newValue, oldValue) {
-      if (newValue) this.getEmpenhos({ params: { pointInfo: newValue } })
+      //if (newValue) this.getEmpenhos({ params: { pointInfo: newValue } })
     }
   }
 }

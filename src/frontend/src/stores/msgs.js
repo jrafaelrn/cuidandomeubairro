@@ -30,8 +30,8 @@ export default {
       dispatch('addMsgType', { text, type: 'success' })
     },
     // Add error message
-    addError ({ dispatch }, text) {
-      dispatch('addMsgType', { text, type: 'error' })
-    }
+    //addError ({ dispatch }, text) {
+      //dispatch('addMsgType', { text, type: 'error' })
+    //}
   }
 }
