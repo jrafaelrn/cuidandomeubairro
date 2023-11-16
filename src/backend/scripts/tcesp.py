@@ -13,6 +13,15 @@ from tqdm import tqdm
 log = logging.getLogger(__name__)
 level_bar_counter = 1
 
+
+"""
+    Esta classe é responsável por implementar o Extractor para o TCE-SP
+    Os métodos 'download', 'get_last_update' e 'get_data' são de implementação obrigatória!
+    
+    Devido a dificuldades em fazer a extração da data de atualização direto do site do TCE-SP, 
+    o método 'get_last_update' não está implementado corretamente e será
+    considerada a data de atualização do arquivo como a data de atualização do banco de dados.    
+"""
 class Extractor_tce(Extractor):
     
     def __init__(self):
@@ -144,7 +153,7 @@ def run():
     
     extractor = Extractor_tce()
     extractor.download()
-    extractor.filter_cities(pop=25)
+    extractor.filter_cities(pop=5)
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):
