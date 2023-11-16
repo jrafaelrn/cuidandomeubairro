@@ -2,6 +2,8 @@ import os
 import datetime
 import logging as log
 import timeit
+import time
+import schedule
 
 from tools.telegram import Telegram
 from tools.db_tables import insert_ibge_csv, update_materialized_views
@@ -19,6 +21,7 @@ def configure_logs():
 
     DATA_TEMP_PATH = os.path.join(APP_FOLDER_PATH, "data_temp")
     LOG_PATH = os.path.join(DATA_TEMP_PATH, "logs")
+    print('Starting log configuration...')
     
     try:
         os.makedirs(DATA_TEMP_PATH, exist_ok=True)
@@ -38,6 +41,8 @@ def configure_logs():
         filename=os.path.join(LOG_PATH, "run_etl_cmb.log"),
         filemode='w'
     )
+
+    print('Log configuration finished!')
 
 
 
@@ -74,16 +79,10 @@ def execute(file):
 
 
 
-#################################
-#   Everything starts here...   #
-#################################
+# Método que é chamado pelo schedule
 
-if __name__ == '__main__':
-    
-    # Configure environment
-    configure_paths(APP_FOLDER_PATH)
-    configure_logs()
-    
+def run():
+   
     # Log start process and send Telegram
     message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
     log.info(message)
@@ -109,3 +108,22 @@ if __name__ == '__main__':
     log.info(message.replace('\n', ' '))
     print(message)
     telegram.sendMessage(message)
+    
+
+#################################
+#   Everything starts here...   #
+#################################
+
+if __name__ == '__main__':
+    
+    # Configure environment
+    configure_paths(APP_FOLDER_PATH)
+    configure_logs()
+    
+    #schedule.every().sunday.at("00:00").do(run) -- Uncomment to deploy
+    schedule.every(1).minutes.do(run)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(5)
+

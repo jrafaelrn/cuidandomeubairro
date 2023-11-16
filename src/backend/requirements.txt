@@ -21,3 +21,4 @@ psycopg2-binary
 Flask
 flask-cors
 sqlalchemy
+schedule

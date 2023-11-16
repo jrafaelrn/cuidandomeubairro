@@ -143,8 +143,8 @@ def run_city(file, extractor, config, level_bar):
 def run():
     
     extractor = Extractor_tce()
-    #extractor.download()
-    extractor.filter_cities(pop=3)
+    extractor.download()
+    extractor.filter_cities(pop=25)
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):
