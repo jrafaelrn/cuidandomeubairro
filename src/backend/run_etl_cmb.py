@@ -82,32 +82,39 @@ def execute(file):
 # Método que é chamado pelo schedule
 
 def run():
-   
-    # Log start process and send Telegram
-    message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
-    log.info(message)
-    print(message)
-    telegram.sendMessage(message)
-    
-    # Create IBGE tables
-    insert_ibge_csv()
 
-    # Run every Python file in the 'src/backend/scripts' folder and measure the time
-    total_time_scripts = timeit.timeit(execute_scripts, globals=globals(), number=1)    
-    total_time = total_time_scripts
-    
-    # Update MATERIALIZED VIEWs in the database to speed up the queries
-    total_time_materialized = timeit.timeit(update_materialized_views, globals=globals(), number=1)
-    total_time += total_time_materialized
-    
-    # Convert seconds to hh:mm:ss
-    total_time_readable = convert_seconds_to_human_readable(total_time)
-    
-    # Log end process and send Telegram    
-    message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
-    log.info(message.replace('\n', ' '))
-    print(message)
-    telegram.sendMessage(message)
+    try:
+   
+        # Log start process and send Telegram
+        message = f'Starting ETL at: {datetime.datetime.now().strftime("%H:%M:%S")}'
+        log.info(message)
+        print(message)
+        telegram.sendMessage(message)
+        
+        # Create IBGE tables
+        insert_ibge_csv()
+
+        # Run every Python file in the 'src/backend/scripts' folder and measure the time
+        total_time_scripts = timeit.timeit(execute_scripts, globals=globals(), number=1)    
+        total_time = total_time_scripts
+        
+        # Update MATERIALIZED VIEWs in the database to speed up the queries
+        total_time_materialized = timeit.timeit(update_materialized_views, globals=globals(), number=1)
+        total_time += total_time_materialized
+        
+        # Convert seconds to hh:mm:ss
+        total_time_readable = convert_seconds_to_human_readable(total_time)
+        
+        # Log end process and send Telegram    
+        message = f'Finished ETL at: {datetime.datetime.now().strftime("%H:%M:%S")} \nTotal time: {total_time_readable}'
+        log.info(message.replace('\n', ' '))
+        print(message)
+        telegram.sendMessage(message)
+
+    except Exception as e:
+        message = f'Error running ETL: {e} ... Trying again...'
+        log.error(message.replace('\n', ' '))
+        telegram.sendMessage(message)
     
 
 #################################
