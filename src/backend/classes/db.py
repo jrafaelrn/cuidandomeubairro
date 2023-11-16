@@ -29,13 +29,13 @@ class DB:
 
     
 
-    def insert(self, table_name: str, columns_name: list, columns_value: list, schema: str = 'cmb', update: bool = False): 
+    def insert(self, table_name: str, columns_name: list, columns_value: list, schema: str = 'cmb', update: bool = False, on_conflict: str = ''):
         
         columns_name = self.convert_list_to_string(columns_name)
         text_value = 'VALUES (' + (f'%s, ' * len(columns_value))[:-2] + ')'
 
         if update:
-            command = f'INSERT INTO {schema}.{table_name} ({columns_name}) {text_value} ON CONFLICT ({"origin"}) DO UPDATE SET {"origin"} = EXCLUDED.{"origin"}'
+            command = f'INSERT INTO {schema}.{table_name} ({columns_name}) {text_value} ON CONFLICT ({on_conflict}) DO UPDATE SET {"origin"} = EXCLUDED.{"origin"}'
         else:           
             command = f'INSERT INTO {schema}.{table_name} ({columns_name}) {text_value} ON CONFLICT DO NOTHING'
 
@@ -89,6 +89,7 @@ class DB:
                     columns_name=['last_update_cmb', 'last_update_origin', 'origin'],
                     columns_value=[last_update_cmb, last_update_origin, origin],
                     update=True,
+                    on_conflict='origin'
                      )
  
 
