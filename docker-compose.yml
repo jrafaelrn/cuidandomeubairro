@@ -62,7 +62,8 @@ services:
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     volumes:
       - ./src/backend:/app
-    command: "/entry/entrypoint.sh"
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
 
   
   # Frontend da aplicação em Vue.js
