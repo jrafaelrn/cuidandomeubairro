@@ -93,11 +93,13 @@ if __name__ == '__main__':
     # Create IBGE tables
     insert_ibge_csv()
 
-    # Run every Python file in the scripts folder and measure the time
-    total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)    
-
+    # Run every Python file in the 'src/backend/scripts' folder and measure the time
+    total_time_scripts = timeit.timeit(execute_scripts, globals=globals(), number=1)    
+    total_time = total_time_scripts
+    
     # Update MATERIALIZED VIEWs in the database to speed up the queries
-    update_materialized_views()    
+    total_time_materialized = timeit.timeit(update_materialized_views, globals=globals(), number=1)
+    total_time += total_time_materialized
     
     # Convert seconds to hh:mm:ss
     total_time_readable = convert_seconds_to_human_readable(total_time)

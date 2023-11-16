@@ -62,6 +62,6 @@ class Loader:
 
     def load_metadata(self):
 
-        now = datetime.now()
+        now = datetime.datetime.now()
         self.database.update_metadata(last_update_cmb=now, last_update_origin=self.city.last_update_origin, origin=self.city.origin)
 

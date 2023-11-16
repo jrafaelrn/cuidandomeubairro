@@ -70,6 +70,7 @@ def save_city(header, data, cidade_name, folder_path):
     total_lines += len(data)
     total_cities += 1
     log.debug(f'=> => Salvando arquivo da cidade {total_cities}: {cidade_name} => Total linhas acumuladas: {total_lines}')
+    print(f'=> => Salvando arquivo da cidade {total_cities}: {cidade_name} => Total linhas acumuladas: {total_lines}')
     
     cidade_name = f"{cidade_name}-{datetime.datetime.now().strftime('%Y-%m-%d--%H-%M-%S')}"
     file_path = os.path.join(folder_path, f"{cidade_name}.csv")

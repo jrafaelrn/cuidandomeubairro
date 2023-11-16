@@ -30,6 +30,8 @@ def insert_ibge_csv():
             #orm.insert_ibge(cd_municipio, nome_municipio, populacao)
             db.insert('f_ibge', ['cd_municipio', 'nome_municipio', 'populacao'], [cd_municipio, nome_municipio, populacao])
 
+    print('Dados do IBGE inseridos com sucesso!')
+    
 
 
 ##################################################################

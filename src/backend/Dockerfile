@@ -17,9 +17,12 @@ COPY . .
 # Install Python dependencies
 RUN pip install -r requirements.txt
 
-# Convert entrypoint.sh from Windows to Unix format
-RUN dos2unix ./entrypoint.sh
+# Isola o entrypoint.sh por conta da incompatibilidade de quebra de linha entre Windows e Linux
+RUN mkdir /entry
+COPY ./entrypoint.sh /entry/entrypoint.sh
+RUN dos2unix /entry/entrypoint.sh
+RUN chmod +x /entry/entrypoint.sh
 
 
 # Run the application
-ENTRYPOINT ["/bin/bash", "entrypoint.sh"]
+ENTRYPOINT ["/entry/entrypoint.sh"]

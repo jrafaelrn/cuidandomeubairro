@@ -50,7 +50,8 @@ CREATE TABLE IF NOT EXISTS cmb.f_despesa (
 CREATE TABLE IF NOT EXISTS cmb.metadata (
     origin character varying(100) NOT NULL,
     last_update_cmb timestamp without time zone NOT NULL,
-    last_update_origin timestamp without time zone NOT NULL
+    last_update_origin timestamp without time zone NOT NULL,
+    PRIMARY KEY (origin)
 );
 
 

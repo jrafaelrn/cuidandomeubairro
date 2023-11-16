@@ -36,7 +36,7 @@ class City:
             self.data = data
             self.last_update_origin = datetime.datetime.now()
     
-        Transformer().transform(self, config_columns)
+        #Transformer().transform(self, config_columns)
         
         Loader().load(self)
 

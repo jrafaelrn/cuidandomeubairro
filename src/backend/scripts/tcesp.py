@@ -145,6 +145,7 @@ def run():
     
     extractor = Extractor_tce()
     #extractor.download()
+    extractor.get_last_update()
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):
