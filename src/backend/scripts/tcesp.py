@@ -141,11 +141,10 @@ def run_city(file, extractor, config, level_bar):
     a configuração das tabelas obrigatórias no banco de dados é feita através do dicionário 'config'.
 """
 def run():
-
     
     extractor = Extractor_tce()
     #extractor.download()
-    extractor.get_last_update()
+    extractor.filter_cities(pop=3)
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):
@@ -187,8 +186,5 @@ def run():
         "ds_modalidade_lic": "ds_modalidade_lic",
         "ds_elemento": "ds_elemento"
     }
-    
-    # Filter cities
-    cities_files = cities_files[:1]
     
     run_multiprocessing(cities_files, extractor, config)

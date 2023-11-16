@@ -4,7 +4,6 @@ import os
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_PATH))
 
-#from classes.api.orm import ORM // Necessita de correção para rodar
 from classes.db import DB
 
 
@@ -17,7 +16,6 @@ def insert_ibge_csv():
 
     file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'tables')
     file = os.path.join(file, 'IBGE-SP.csv')
-    #orm = ORM()
     db = DB()
 
     with open(file, 'r', encoding='utf-8') as f:
@@ -27,7 +25,6 @@ def insert_ibge_csv():
             cd_municipio = int(line[0])
             nome_municipio = line[1]
             populacao = int(line[2])
-            #orm.insert_ibge(cd_municipio, nome_municipio, populacao)
             db.insert('f_ibge', ['cd_municipio', 'nome_municipio', 'populacao'], [cd_municipio, nome_municipio, populacao])
 
     print('Dados do IBGE inseridos com sucesso!')

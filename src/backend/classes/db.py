@@ -100,3 +100,18 @@ class DB:
             command = f'REFRESH MATERIALIZED VIEW {view}'
             self.executar_comando(command)
 
+
+    def get_cities_by_population(self, top_filter:int):
+
+        command = ''
+        
+        # select * from (select top(5) * from logins order by USERNAME ASC) a
+        if top_filter > 0:
+            command = f'SELECT cd_municipio FROM cmb.f_ibge ORDER BY populacao DESC LIMIT {top_filter}'
+        elif top_filter < 0:
+            command = f'SELECT cd_municipio FROM cmb.f_ibge ORDER BY populacao ASC LIMIT {-top_filter}'
+        else:
+            command = f'SELECT cd_municipio FROM cmb.f_ibge'
+
+        return self.executar_comando(command)
+
