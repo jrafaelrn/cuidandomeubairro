@@ -92,8 +92,8 @@ services:
       - POSTGRES_SCHEMA=${POSTGRES_SCHEMA}
       - TELEGRAM_API_KEY=${TELEGRAM_API_KEY}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
-    #volumes:
-      #- ./src/backend:/app
+    volumes:
+      - ./src/backend:/app
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 

@@ -74,13 +74,24 @@ class DB:
 
     def save(self):
     
-        #self.conexao.commit()
+        self.conexao.commit()
         self.bd_cursor.close()
         self.conexao.close()
 
 
 
-    def update_metadata(self):
-        
-        last_update = datetime.datetime.now()
+    def update_metadata(self, last_update_cmb, last_update_origin, origin):
+    
+        command = f'UPDATE metadata SET last_update_cmb = %s, last_update_origin = %s WHERE origin = %s'
+        values = (last_update_cmb, last_update_origin, origin)
+
+        self.executar_comando(command, values)
  
+
+    def update_materialized_views(self):
+
+        views = ['cmb.tabela_info', 'cmb.tabela_localizacoes']
+        for view in views:
+            command = f'REFRESH MATERIALIZED VIEW %s'
+            self.executar_comando(command, (view,))
+

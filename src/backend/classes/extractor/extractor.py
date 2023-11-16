@@ -21,6 +21,7 @@ class Extractor(ABC):
         self.unzip = unzip
         self.split_format = split_format
         self.clear_data_temp = clear_data_temp
+        self.last_update = None
         
     
     @abstractmethod

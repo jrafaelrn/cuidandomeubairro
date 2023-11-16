@@ -20,7 +20,7 @@ class Extractor_tce(Extractor):
     
     
     def get_last_update(self):
-        return datetime.datetime.now()
+        self.last_update = datetime.datetime.now()
         
 
     def download(self):
@@ -31,7 +31,9 @@ class Extractor_tce(Extractor):
             super().download_file_from_url(url)
             super().unzip_download()
             super().slice_data()
-            
+        
+        self.get_last_update()
+
             
     # Get data from the file and return a Pandas Dataframe
     def get_data(self, file_path: str) -> pd.DataFrame:
@@ -49,7 +51,9 @@ class Extractor_tce(Extractor):
         
         return data_frame, city_name, city_code
             
-            
+
+
+
 
 # Este método é responsável pelo processamento
 # de todas as cidades em paralelo
@@ -114,7 +118,7 @@ def run_city(file, extractor, config, level_bar):
 
     data_tce, city_name, city_code = extractor.get_data(file)
 
-    city = City(name=city_name, code=city_code)
+    city = City(name=city_name, code=city_code, origin='tcesp')
     
     # Nível da barra de progresso
     city.level_bar = level_bar
@@ -184,6 +188,6 @@ def run():
     }
     
     # Filter cities
-    cities_files = cities_files[:10]
+    cities_files = cities_files[:1]
     
     run_multiprocessing(cities_files, extractor, config)

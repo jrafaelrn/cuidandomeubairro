@@ -1,3 +1,4 @@
+import datetime
 import pandas as pd
 import logging
 
@@ -13,7 +14,7 @@ log = logging.getLogger(__name__)
 
 class City:
     
-    def __init__(self, name: str, code: str, save_statistics: bool = False):
+    def __init__(self, name: str, code: str, origin: str, save_statistics: bool = False):
         self.name = name
         self.code = code
         self.despesas = []
@@ -21,6 +22,8 @@ class City:
         self.statistics = Statistics()
         self.level_bar = 1
         self.default_locations = {}
+        self.origin = origin
+        self.last_update_origin = None
         
     
 
@@ -28,8 +31,10 @@ class City:
     
         if extractor:
             self.data = extractor.download()
+            self.last_update_origin = extractor.last_update
         else:
             self.data = data
+            self.last_update_origin = datetime.datetime.now()
     
         Transformer().transform(self, config_columns)
         

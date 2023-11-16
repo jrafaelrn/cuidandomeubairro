@@ -13,7 +13,6 @@ from classes.db import DB
 #   O arquivo CSV deve estar na pasta 'tables'      
 #####################################################
 
-
 def insert_ibge_csv():
 
     file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'tables')
@@ -30,6 +29,18 @@ def insert_ibge_csv():
             populacao = int(line[2])
             #orm.insert_ibge(cd_municipio, nome_municipio, populacao)
             db.insert('f_ibge', ['cd_municipio', 'nome_municipio', 'populacao'], [cd_municipio, nome_municipio, populacao])
+
+
+
+##################################################################
+#       Atualiza as VIEWS MATERIALIZADAS do banco de dados       #
+##################################################################
+
+def update_materialized_views():
+
+    db = DB()
+    db.update_materialized_views()
+
 
 
 

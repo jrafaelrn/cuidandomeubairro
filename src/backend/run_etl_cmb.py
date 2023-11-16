@@ -4,7 +4,7 @@ import logging as log
 import timeit
 
 from tools.telegram import Telegram
-from tools.db_tables import insert_ibge_csv
+from tools.db_tables import insert_ibge_csv, update_materialized_views
 from tools.human_readable import convert_seconds_to_human_readable
 from config import configure_paths
 from importlib import import_module
@@ -95,7 +95,9 @@ if __name__ == '__main__':
 
     # Run every Python file in the scripts folder and measure the time
     total_time = timeit.timeit(execute_scripts, globals=globals(), number=1)    
-    
+
+    # Update MATERIALIZED VIEWs in the database to speed up the queries
+    update_materialized_views()    
     
     # Convert seconds to hh:mm:ss
     total_time_readable = convert_seconds_to_human_readable(total_time)
