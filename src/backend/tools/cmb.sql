@@ -1,5 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
+
 CREATE SCHEMA IF NOT EXISTS cmb;
 
 
@@ -47,8 +48,12 @@ CREATE TABLE IF NOT EXISTS cmb.f_despesa (
 
 
 CREATE TABLE IF NOT EXISTS cmb.metadata (
-    last_update timestamp without time zone NOT NULL
-)
+    origin character varying(100) NOT NULL,
+    last_update_cmb timestamp without time zone NOT NULL,
+    last_update_origin timestamp without time zone NOT NULL,
+    PRIMARY KEY (origin)
+);
+
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS cmb.tabela_info AS
 	SELECT 	DESP.ds_funcao_governo, 
@@ -57,10 +62,6 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS cmb.tabela_info AS
 			SUM(DESP.valor_despesa) filter (where DESP.tp_despesa = 'Valor Liquidado') as liquidado
 	FROM cmb.f_despesa AS DESP
 	GROUP BY DESP.ds_funcao_governo;
-
-
-REFRESH MATERIALIZED VIEW cmb.tabela_info;
-
 
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS cmb.tabela_localizacoes AS

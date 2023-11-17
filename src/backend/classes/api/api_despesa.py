@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-import geojson
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)

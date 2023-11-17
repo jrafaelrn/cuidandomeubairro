@@ -9,6 +9,7 @@ from abc import ABC, abstractmethod
 from downloader import download_file_from_url as file_from_url
 from unzip import unzip_data as unzip_data
 from slice_tce_dateset import slice_tce_dataset as slice_dataset
+from classes.db import DB
 
 log = logging.getLogger(__name__)
 
@@ -21,6 +22,7 @@ class Extractor(ABC):
         self.unzip = unzip
         self.split_format = split_format
         self.clear_data_temp = clear_data_temp
+        self.last_update = None
         
     
     @abstractmethod
@@ -85,3 +87,39 @@ class Extractor(ABC):
                 file_path = os.path.join(self.get_data_temp_path(), file)
                 slice_dataset(file_path, self.get_data_temp_path())
                 os.remove(file_path)
+
+
+    # Método para filtrar as cidades com base em parametros.
+    # Caso o parametro seja 'pop', referente à populaçoa,
+    # deve ser feita uma consulta no Banco de Dados para obter as cidades
+    # O segundo parametro deve ser um número inteiro, que representa, por exemplo:
+    # 0 => todas as cidades (sem filtro)
+    # 10 => as 10 maiores cidades
+    # -10 => as 10 menores cidades
+
+    def filter_cities(self, **kwargs):
+        
+        if 'pop' in kwargs:
+            pop = kwargs['pop']
+            self.filter_city_by_pop(pop)
+
+
+    def filter_city_by_pop(self, pop):
+        
+        db = DB()
+
+        # Get the cities from the database
+        cities = db.get_cities_by_population(pop)
+        cities = [item for sublist in cities for item in sublist]
+        
+        # Filter the cities and delete the file
+        for file in os.listdir(self.get_data_temp_path(nivel=4)):
+
+            city_code = str(file.split('-')[0])
+
+            if file.endswith('.csv') and city_code not in cities:
+                file_path = os.path.join(self.get_data_temp_path(nivel=4), file)
+                os.remove(file_path)
+                
+        
+        

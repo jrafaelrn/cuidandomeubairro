@@ -29,12 +29,16 @@ class DB:
 
     
 
-    def insert(self, table_name: str, columns_name: list, columns_value: list, schema: str = 'cmb'): 
+    def insert(self, table_name: str, columns_name: list, columns_value: list, schema: str = 'cmb', update: bool = False, on_conflict: str = ''):
         
         columns_name = self.convert_list_to_string(columns_name)
         text_value = 'VALUES (' + (f'%s, ' * len(columns_value))[:-2] + ')'
-           
-        command = f'INSERT INTO {schema}.{table_name} ({columns_name}) {text_value} ON CONFLICT DO NOTHING'
+
+        if update:
+            command = f'INSERT INTO {schema}.{table_name} ({columns_name}) {text_value} ON CONFLICT ({on_conflict}) DO UPDATE SET {"origin"} = EXCLUDED.{"origin"}'
+        else:           
+            command = f'INSERT INTO {schema}.{table_name} ({columns_name}) {text_value} ON CONFLICT DO NOTHING'
+
         self.executar_comando(command, columns_value)
 
 
@@ -46,17 +50,17 @@ class DB:
 
 
 
-
-
-
-    def executar_comando(self, command, values):
+    def executar_comando(self, command, values = None):
         
         #print(f'SQL COMANDO=|{command}|VALUES=|{values}|')
 
         #self.connect()
         return_bd = None
         
-        self.bd_cursor.execute(f'{command}', values)
+        if values:
+            self.bd_cursor.execute(f'{command}', values)
+        else:
+            self.bd_cursor.execute(command)
         self.conexao.commit()
 
         try:
@@ -74,13 +78,40 @@ class DB:
 
     def save(self):
     
-        #self.conexao.commit()
+        self.conexao.commit()
         self.bd_cursor.close()
         self.conexao.close()
 
 
 
-    def update_metadata(self):
-        
-        last_update = datetime.datetime.now()
+    def update_metadata(self, last_update_cmb, last_update_origin, origin, schema: str = 'cmb'):
+        self.insert(table_name='metadata',
+                    columns_name=['last_update_cmb', 'last_update_origin', 'origin'],
+                    columns_value=[last_update_cmb, last_update_origin, origin],
+                    update=True,
+                    on_conflict='origin'
+                     )
  
+
+    def update_materialized_views(self):
+
+        views = ['cmb.tabela_info', 'cmb.tabela_localizacoes']
+        for view in views:
+            command = f'REFRESH MATERIALIZED VIEW {view}'
+            self.executar_comando(command)
+
+
+    def get_cities_by_population(self, top_filter:int):
+
+        command = ''
+        
+        # select * from (select top(5) * from logins order by USERNAME ASC) a
+        if top_filter > 0:
+            command = f'SELECT cd_municipio FROM cmb.f_ibge ORDER BY populacao DESC LIMIT {top_filter}'
+        elif top_filter < 0:
+            command = f'SELECT cd_municipio FROM cmb.f_ibge ORDER BY populacao ASC LIMIT {-top_filter}'
+        else:
+            command = f'SELECT cd_municipio FROM cmb.f_ibge'
+
+        return self.executar_comando(command)
+

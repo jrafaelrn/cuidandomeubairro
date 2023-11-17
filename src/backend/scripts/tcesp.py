@@ -13,6 +13,15 @@ from tqdm import tqdm
 log = logging.getLogger(__name__)
 level_bar_counter = 1
 
+
+"""
+    Esta classe é responsável por implementar o Extractor para o TCE-SP
+    Os métodos 'download', 'get_last_update' e 'get_data' são de implementação obrigatória!
+    
+    Devido a dificuldades em fazer a extração da data de atualização direto do site do TCE-SP, 
+    o método 'get_last_update' não está implementado corretamente e será
+    considerada a data de atualização do arquivo como a data de atualização do banco de dados.    
+"""
 class Extractor_tce(Extractor):
     
     def __init__(self):
@@ -20,7 +29,7 @@ class Extractor_tce(Extractor):
     
     
     def get_last_update(self):
-        return datetime.datetime.now()
+        self.last_update = datetime.datetime.now()
         
 
     def download(self):
@@ -31,7 +40,9 @@ class Extractor_tce(Extractor):
             super().download_file_from_url(url)
             super().unzip_download()
             super().slice_data()
-            
+        
+        self.get_last_update()
+
             
     # Get data from the file and return a Pandas Dataframe
     def get_data(self, file_path: str) -> pd.DataFrame:
@@ -49,7 +60,9 @@ class Extractor_tce(Extractor):
         
         return data_frame, city_name, city_code
             
-            
+
+
+
 
 # Este método é responsável pelo processamento
 # de todas as cidades em paralelo
@@ -114,7 +127,7 @@ def run_city(file, extractor, config, level_bar):
 
     data_tce, city_name, city_code = extractor.get_data(file)
 
-    city = City(name=city_name, code=city_code)
+    city = City(name=city_name, code=city_code, origin='tcesp')
     
     # Nível da barra de progresso
     city.level_bar = level_bar
@@ -137,10 +150,10 @@ def run_city(file, extractor, config, level_bar):
     a configuração das tabelas obrigatórias no banco de dados é feita através do dicionário 'config'.
 """
 def run():
-
     
     extractor = Extractor_tce()
-    #extractor.download()
+    extractor.download()
+    extractor.filter_cities(pop=5)
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):
@@ -182,8 +195,5 @@ def run():
         "ds_modalidade_lic": "ds_modalidade_lic",
         "ds_elemento": "ds_elemento"
     }
-    
-    # Filter cities
-    cities_files = cities_files[:10]
     
     run_multiprocessing(cities_files, extractor, config)

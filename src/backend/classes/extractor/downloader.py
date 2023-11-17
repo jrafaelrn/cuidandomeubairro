@@ -15,7 +15,7 @@ def download_file_from_url(url: str, filename: str):
     
     clean_files(os.path.dirname(filename))
     
-    req = requests.get(url, stream=True)
+    req = requests.get(url, stream=True, timeout=600)
     total_size_bytes = int(req.headers.get('content-length', 0))
     block_size = 1024
     progress_bar = tqdm(total=total_size_bytes, unit='iB', unit_scale=True)

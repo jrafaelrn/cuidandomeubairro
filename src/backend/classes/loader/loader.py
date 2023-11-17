@@ -1,3 +1,5 @@
+from abc import abstractmethod
+import datetime
 import logging
 
 from tqdm import tqdm
@@ -59,4 +61,7 @@ class Loader:
 
 
     def load_metadata(self):
-        self.database.update_metadata()
+
+        now = datetime.datetime.now()
+        self.database.update_metadata(last_update_cmb=now, last_update_origin=self.city.last_update_origin, origin=self.city.origin)
+
