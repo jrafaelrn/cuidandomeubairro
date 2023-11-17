@@ -10,6 +10,7 @@ sys.path.append(SCRIPT_PATH)
 
 from terms import *
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut
 from unidecode import unidecode
 from tqdm import tqdm
 
@@ -141,7 +142,7 @@ class Locator:
         while max_attempts > 0:
 
             try:
-                location_geo = self.geolocator.geocode(text, timeout=600)
+                location_geo = self.do_geocode(text)
 
                 if location_geo:        
                     #log.debug(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
@@ -155,6 +156,15 @@ class Locator:
                 max_attempts -= 1
                 
         return False
+    
+
+    def do_geocode(self, address, attempt=1, max_attempts=500):
+        try:
+            return self.geolocator.geocode(address, timeout=600)
+        except GeocoderTimedOut:
+            if attempt <= max_attempts:
+                return self.do_geocode(address, attempt=attempt+1)
+            raise
 
 
 
