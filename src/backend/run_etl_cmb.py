@@ -122,13 +122,15 @@ def run():
 #################################
 
 if __name__ == '__main__':
+
+    telegram.sendMessage('...Starting Docker script...')
     
     # Configure environment
     configure_paths(APP_FOLDER_PATH)
     configure_logs()
     
     #schedule.every().sunday.at("00:00").do(run) -- Uncomment to deploy
-    schedule.every(1).minutes.do(run)
+    schedule.every(1).seconds.do(run)
 
     while True:
         schedule.run_pending()
