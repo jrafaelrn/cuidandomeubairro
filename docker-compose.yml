@@ -20,7 +20,7 @@ services:
   # Serviço de Nominatim, que faz a geocodificação
   nominatim:
     container_name: nominatim
-    image: mediagis/nominatim:4.2
+    image: mediagis/nominatim:4.3
     restart: always
     ports:
       - "8088:8080"
