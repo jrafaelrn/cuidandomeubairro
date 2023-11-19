@@ -4,6 +4,7 @@ import os
 import sys
 import re
 import threading
+import time
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
@@ -152,8 +153,12 @@ class Locator:
                 
             except Exception as e:
                 log.error(f'Error searching location: {e}')
-                print(f'Error searching location: {e}')
+                #print(f'Error searching location: {e}')
                 max_attempts -= 1
+                time.sleep(30)
+                message = f'Multiples errors. Waiting 30 seconds... Attempts: {max_attempts}'
+                print(message)
+                log.error(message)
                 
         return False
     
