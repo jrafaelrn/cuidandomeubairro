@@ -4,6 +4,7 @@ import datetime
 import os
 import multiprocessing as mp
 import time
+import requests
 
 from classes.city.city import City
 from classes.extractor.extractor import Extractor

@@ -11,6 +11,7 @@ sys.path.append(SCRIPT_PATH)
 
 from terms import *
 from geopy.geocoders import Nominatim
+from geopy.adapters import RequestsAdapter
 from geopy.exc import GeocoderTimedOut
 from unidecode import unidecode
 from tqdm import tqdm
@@ -23,12 +24,13 @@ log = logging.getLogger(__name__)
 class Locator:
 
     def __init__(self):
-        self.geolocator = Nominatim(domain='localhost:8088', scheme='http', timeout=60)
+        self.geolocator = Nominatim(domain='localhost:8088', scheme='http', timeout=60, adapter_factory=RequestsAdapter)
         self.TOTAL_SEARCH_VARIATION = 15 # Variável responsável por definir quantas X palavras serão buscadas para localizar o endereço
 
 
     def search_all_locations(self, city):
         
+        self.city = city
         number_threads = threading.active_count()
         progress_bar = tqdm(total=len(city.despesas), desc=f'{city.name} - Searching all locations...', position=city.level_bar, leave=False, mininterval=5)
         terms_content = Terms().load_terms()
@@ -152,13 +154,12 @@ class Locator:
                     return False
                 
             except Exception as e:
-                log.error(f'\n\n!!! ---> Error searching location: {e}')
-                #print(f'Error searching location: {e}')
+                message = f'\n\n!!!!! {self.city} ----------> Error searching location: {e} \nWaiting 30 seconds... Attempts: {max_attempts}\n'
+                log.error(message)
+                print(message)
                 max_attempts -= 1
                 time.sleep(30)
-                message = f'\n\nMultiples errors. Waiting 30 seconds... Attempts: {max_attempts}'
-                print(message)
-                log.error(message)
+                
                 
         return False
     
@@ -168,7 +169,7 @@ class Locator:
             return self.geolocator.geocode(address, timeout=600)
         except GeocoderTimedOut:
             if attempt <= max_attempts:
-                time.sleep(5)
+                time.sleep(1)
                 return self.do_geocode(address, attempt=attempt+1)
             raise
 
