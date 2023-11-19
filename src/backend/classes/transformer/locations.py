@@ -23,8 +23,8 @@ log = logging.getLogger(__name__)
 class Locator:
 
     def __init__(self):
-        self.geolocator = Nominatim(domain='localhost:8088', scheme='http')
-        self.TOTAL_SEARCH_VARIATION = 3
+        self.geolocator = Nominatim(domain='localhost:8088', scheme='http', timeout=600)
+        self.TOTAL_SEARCH_VARIATION = 15 # Variável responsável por definir quantas X palavras serão buscadas para localizar o endereço
 
 
     def search_all_locations(self, city):
