@@ -5,6 +5,8 @@ import sys
 import re
 import threading
 import time
+import geopy.geocoders
+geopy.geocoders.options.default_adapter_factory = geopy.adapters.RequestsAdapter
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_PATH)
@@ -24,7 +26,7 @@ log = logging.getLogger(__name__)
 class Locator:
 
     def __init__(self):
-        self.geolocator = Nominatim(domain='localhost:8088', scheme='http', timeout=60, adapter_factory=RequestsAdapter)
+        self.geolocator = Nominatim(domain='localhost:8088', scheme='http', timeout=60)
         self.TOTAL_SEARCH_VARIATION = 15 # Variável responsável por definir quantas X palavras serão buscadas para localizar o endereço
 
 
@@ -139,39 +141,33 @@ class Locator:
 
 
     def search_local(self, text: str):
-        
-        max_attempts = 10
-        
-        while max_attempts > 0:
-
-            try:
-                location_geo = self.do_geocode(text)
-
-                if location_geo:        
-                    #log.debug(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
-                    return location_geo
-                else:
-                    return False
-                
-            except Exception as e:
-                message = f'\n\n!!!!! {self.city} ----------> Error searching location: {e} \nWaiting 30 seconds... Attempts: {max_attempts}\n'
-                log.error(message)
-                print(message)
-                max_attempts -= 1
-                time.sleep(30)
-                
-                
-        return False
     
+        try:
+
+            location_geo = self.do_geocode(text)
+
+            if location_geo:        
+                #log.debug(f'Found location at text: {text}\n\t => Address: {location_geo.address}\n\t =>=> Lat: {lat} - Lon: {lon}')
+                return location_geo
+            else:
+                return False
+            
+        except Exception as e:
+            message = f'\n\n!!!!! {self.city} ----------> Error searching location: {e} !!!\n\n'
+            log.error(message)
+            print(message)
+            raise e
+    
+
 
     def do_geocode(self, address, attempt=1, max_attempts=500):
         try:
-            return self.geolocator.geocode(address, timeout=600)
-        except GeocoderTimedOut:
+            return self.geolocator.geocode(address, timeout=60)
+        except GeocoderTimedOut as e:
             if attempt <= max_attempts:
                 time.sleep(1)
                 return self.do_geocode(address, attempt=attempt+1)
-            raise
+            raise e
 
 
 
