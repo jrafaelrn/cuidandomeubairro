@@ -9,6 +9,7 @@ RUN apt-get -y install git
 RUN apt-get -y install postgresql-client
 RUN apt-get -y install libpq5
 RUN apt install -qq --assume-yes mesa-utils libgl1-mesa-glx libxcursor1 libxrandr2 libxxf86vm1 x11-xserver-utils xfonts-base xserver-common dos2unix
+RUN apt install -y netcat
 
 # Set the working directory and copy files
 WORKDIR /app
