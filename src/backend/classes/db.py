@@ -1,14 +1,15 @@
 import datetime
 import psycopg2
+import os
 
 class DB:
 
     def __init__(self):
-        self.host='localhost' 
-        self.port='5432' 
-        self.dbname='cmb' 
-        self.user='usuario' 
-        self.password='senha' 
+        self.host=os.environ.get('POSTGRES_HOST')
+        self.port=os.environ.get('POSTGRES_PORT')
+        self.dbname=os.environ.get('POSTGRES_DB') 
+        self.user=os.environ.get('POSTGRES_USER') 
+        self.password=os.environ.get('POSTGRES_PASSWORD')
         self.connect()
 
 
@@ -17,9 +18,9 @@ class DB:
         try:
             self.connect_now(self.host)
         except Exception as err:
-            self.connect_now('database')
+            self.connect_now('localhost')
         
-        #print(f"Conexão estabelecida com BD - {self.conexao}")
+        print(f"Conexão estabelecida com BD - {self.host}:{self.port}/{self.dbname}")
         self.bd_cursor = self.conexao.cursor()
 
 

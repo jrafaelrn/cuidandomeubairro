@@ -90,3 +90,4 @@ services:
 
 networks:
   cmb-network:
+    driver: bridge

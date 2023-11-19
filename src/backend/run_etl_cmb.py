@@ -36,7 +36,7 @@ def configure_logs():
         print(f'Error creating LOG folder[{LOG_PATH}]: {e}')
     
     log.basicConfig(
-        level=log.DEBUG,
+        level=log.INFO,
         format='%(asctime)s;%(name)s;%(levelname)s;%(message)s',
         filename=os.path.join(LOG_PATH, "run_etl_cmb.log"),
         filemode='w'
