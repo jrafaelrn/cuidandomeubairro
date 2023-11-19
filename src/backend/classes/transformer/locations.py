@@ -163,9 +163,9 @@ class Locator:
     def do_geocode(self, address, attempt=1, max_attempts=500):
         try:
             return self.geolocator.geocode(address, timeout=60)
-        except GeocoderTimedOut as e:
+        except Exception as e:
             if attempt <= max_attempts:
-                time.sleep(1)
+                time.sleep(3)
                 return self.do_geocode(address, attempt=attempt+1)
             raise e
 
