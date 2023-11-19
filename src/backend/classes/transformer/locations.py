@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 class Locator:
 
     def __init__(self):
-        self.geolocator = Nominatim(domain='localhost:8088', scheme='http', timeout=600)
+        self.geolocator = Nominatim(domain='localhost:8088', scheme='http', timeout=60)
         self.TOTAL_SEARCH_VARIATION = 15 # Variável responsável por definir quantas X palavras serão buscadas para localizar o endereço
 
 
@@ -152,11 +152,11 @@ class Locator:
                     return False
                 
             except Exception as e:
-                log.error(f'Error searching location: {e}')
+                log.error(f'\n\n!!! ---> Error searching location: {e}')
                 #print(f'Error searching location: {e}')
                 max_attempts -= 1
                 time.sleep(30)
-                message = f'Multiples errors. Waiting 30 seconds... Attempts: {max_attempts}'
+                message = f'\n\nMultiples errors. Waiting 30 seconds... Attempts: {max_attempts}'
                 print(message)
                 log.error(message)
                 
@@ -168,6 +168,7 @@ class Locator:
             return self.geolocator.geocode(address, timeout=600)
         except GeocoderTimedOut:
             if attempt <= max_attempts:
+                time.sleep(5)
                 return self.do_geocode(address, attempt=attempt+1)
             raise
 
