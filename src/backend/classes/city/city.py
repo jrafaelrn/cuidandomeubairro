@@ -38,7 +38,7 @@ class City:
     
         Transformer().transform(self, config_columns)
         
-        Loader().load(self)
+        self.loader = Loader().load(self)
 
         log.info('ETL -- SUCCESSFULLY FINISHED')
     

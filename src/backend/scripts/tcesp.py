@@ -12,7 +12,6 @@ from multiprocessing import Process
 from tqdm import tqdm
 
 log = logging.getLogger(__name__)
-level_bar_counter = 1
 
 
 """
@@ -74,47 +73,52 @@ class Extractor_tce(Extractor):
 
 def run_multiprocessing(files, extractor, config):
             
-    global level_bar_counter
+    level_bar_counter = 1
 
     # Variables for multiprocessing
     cores = mp.cpu_count()
-    CORE_MULTIPLIER = 0.5
+    CORE_MULTIPLIER = 1
+    PARALLEL_PROCESS = cores * CORE_MULTIPLIER
     log.debug(f'Running in {cores} cores...')
     processes = []
     running = 0
     completed = 0
     num_files = len(files)
+    cls()
     
+    print(f'Running {num_files} files in {PARALLEL_PROCESS} parallel processes...')
     progress_bar = tqdm(total=num_files, position=0)
+    print('\n')
 
     while completed < num_files:
         
-        while running <= (cores * CORE_MULTIPLIER) and len(files) > 0:
+        while running <= PARALLEL_PROCESS and num_files > 0:
             file = files.pop(0)
 
             # Executa o método 'run_city' em um processo separado, passando o arquivo da cidade
             p = Process(target=run_city, args=(file, extractor, config, level_bar_counter))
-
             processes.append(p)
             level_bar_counter += 1
             p.start()
             running += 1
+            time.sleep(1)
         
         # Organiza a lista de processos, removendo os que já terminaram
         for process in processes:
             if not process.is_alive():
                 completed += 1
                 running -= 1
-                level_bar_counter -= 1
                 processes.remove(process)
                 progress_bar.update(1)
+                                
                 
         time.sleep(5)
 
 
     log.info(f'Finished all files!')
     progress_bar.close()
-    
+
+
 
 
 # Esse método cria uma instância da classe City e executa o método 'etl'
@@ -137,11 +141,10 @@ def run_city(file, extractor, config, level_bar):
     city.etl(data=data_tce, config_columns=config)
     
     log.info(f'----- > Finished file {file}...')
+        
 
-
-
-
-
+def cls():
+    os.system('cls' if os.name=='nt' else 'clear')
 
 
 """
@@ -153,8 +156,8 @@ def run_city(file, extractor, config, level_bar):
 def run():
     
     extractor = Extractor_tce()
-    extractor.download()
-    extractor.filter_cities(pop=5)
+    #extractor.download()
+    #extractor.filter_cities(pop=100)
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):

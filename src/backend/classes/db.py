@@ -12,23 +12,37 @@ class DB:
         self.password=os.environ.get('POSTGRES_PASSWORD')
         self.connect()
 
+    
+    ##############################################################
+    #              Conexão com o banco de dados                  #
+    ##############################################################
 
     def connect(self):
 
-        try:
-            self.connect_now(self.host)
-        except Exception as err:
-            self.connect_now('localhost')
-        
-        print(f"Conexão estabelecida com BD - {self.host}:{self.port}/{self.dbname}")
+        hosts = [self.host, 'localhost']
+        ports = [self.port, '5499']
+
+        for host in hosts:
+            for port in ports:
+                try:
+                    self.connect_now(host=host, port=port, dbname=self.dbname, user=self.user, password=self.password)
+                    #print(f"Conexão estabelecida com BD - {host}:{port}/{self.dbname}")
+                    return
+                except Exception as err:
+                    #print(f'Erro ao conectar no banco de dados - host={host} port={port} \n{err} \nTentando outros parâmetros...')
+                    pass
+
+    
+    def connect_now(self, host, port, dbname, user, password):
+        #print(f'\n...Tentando conexão com os parâmetros: host={host} port={port} dbname={dbname} user={user} password={password}')
+        conexao_formato = f'dbname={dbname} user={user} host={host} password={password} port={port}'
+        self.conexao = psycopg2.connect(conexao_formato)
         self.bd_cursor = self.conexao.cursor()
 
 
-    def connect_now(self, host):
-        conexao_formato = f'dbname={self.dbname} user={self.user} host={host} password={self.password} port={self.port}'
-        self.conexao = psycopg2.connect(conexao_formato)
-
-    
+    ##############################################################
+    #              Métodos de manipulação do BD                  #
+    ##############################################################
 
     def insert(self, table_name: str, columns_name: list, columns_value: list, schema: str = 'cmb', update: bool = False, on_conflict: str = ''):
         

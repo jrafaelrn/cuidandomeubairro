@@ -33,8 +33,7 @@ class Locator:
     def search_all_locations(self, city):
         
         self.city = city
-        number_threads = threading.active_count()
-        progress_bar = tqdm(total=len(city.despesas), desc=f'{city.name} - Searching all locations...', position=city.level_bar, leave=False, mininterval=5)
+        #print(f'1/2 - Searching all locations for {city.name}... - Level: {city.level_bar}')
         terms_content = Terms().load_terms()
         city.statistics.total_search_variations = self.TOTAL_SEARCH_VARIATION
         
@@ -44,13 +43,13 @@ class Locator:
         for desp in city.despesas:
             if desp not in despesas:
                 despesas.append(desp)
-                progress_bar.update(1)            
 
-        progress_bar.reset(total=len(despesas))
+        
+        progress_bar = tqdm(total=len(despesas), desc=f'{city.name} - Searching all locations...', position=city.level_bar, leave=False, mininterval=5)
         
         for despesa in despesas:
 
-            description = unidecode(despesa.historico_despesa.lower())
+            description = unidecode(str(despesa.historico_despesa).lower())
             id = despesa.id_despesa_detalhe
 
             # Primeiro verifica se existe algum termo "avenida, escola, etc" na linha

@@ -14,9 +14,6 @@ class Transformer:
     def transform(self, city, config_columns):
         
         # Remove duplicates to speed up the process, lowercase and undecode and finally search for locations
-
-        # Get just 1000 first rows (TEMP - remove before production and uncomment the next line)
-        city.data_transformed = city.data[:500]
         city.data_transformed = city.data.drop_duplicates(subset=[config_columns['historico_despesa']])
 
         self.create_despesas(city, config_columns)        

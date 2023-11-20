@@ -18,31 +18,32 @@ class Loader:
         self.data = city.data
 
         log.info('Starting load...')
-        print('Starting load...')
+        #print('Starting load...')
         
         self.database = DB()
         self.load_data()
         self.load_metadata()
 
         log.info('LOAD -- SUCCESSFULLY FINISHED')
-        print('LOAD -- SUCCESSFULLY FINISHED')
+        #print('LOAD -- SUCCESSFULLY FINISHED')
 
 
 
     def load_data(self):
 
-        progress_bar_bd = tqdm(total=len(self.data), desc=f'{self.city.name} >>> Database...', position=1, leave=False, mininterval=5)
+        #self.progress_bar_bd = tqdm(total=len(self.data), desc=f'{self.city.name} >>> Database...', position=self.city.level_bar, leave=False, mininterval=5)
+        #print(f'2/2 - Loading data for {self.city.name}... - Level: {self.city.level_bar}')
         table_name = "f_despesa"
 
         for despesa in self.city.despesas:
 
-            progress_bar_bd.update(1)
+            #self.progress_bar_bd.update(1)
             
             names, values = self.get_values_from_despesa(despesa)
 
             self.database.insert(table_name, names, values)
         
-        progress_bar_bd.close()
+        #self.progress_bar_bd.close()
 
 
 
