@@ -92,7 +92,7 @@ def run_multiprocessing(files, extractor, config):
 
     while completed < num_files:
         
-        while running <= PARALLEL_PROCESS and num_files > 0:
+        while running <= PARALLEL_PROCESS and len(files) > 0:
             file = files.pop(0)
 
             # Executa o método 'run_city' em um processo separado, passando o arquivo da cidade
@@ -157,7 +157,7 @@ def run():
     
     extractor = Extractor_tce()
     #extractor.download()
-    #extractor.filter_cities(pop=100)
+    extractor.filter_cities(pop=3)
     
     cities_files = []
     for file in os.listdir(extractor.get_data_temp_path(nivel=2)):
